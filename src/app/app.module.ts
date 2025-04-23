@@ -3,14 +3,16 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule
+    CoreModule, // importing this makes HeaderComponent available for use
+    BrowserModule, // this includes CommonModule
+    AppRoutingModule, // this imports routerModule -> configured router service 
   ],
   providers: [],
   bootstrap: [AppComponent]
