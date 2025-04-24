@@ -1,9 +1,11 @@
 <ng-container *ngIf="rental">
-    <a class="item-card-link">
+    <a class="item-card-link" (click)="navigateToDetail()">
         <div class="item-card">
-            <div class="premium-tag">Premium</div>
+            <ng-container *ngIf="rental.isPremium">
+                <div class="premium-tag">Premium</div>
+            </ng-container>
             <img
-                src="assets/images/item-placeholder.jpg"
+                [src]="rental.mainImage"
                 alt="Equipment"
                 class="item-image" />
             <div class="item-details">

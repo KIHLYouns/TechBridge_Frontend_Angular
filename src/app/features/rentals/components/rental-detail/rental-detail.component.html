@@ -1,1 +1,122 @@
-<p>rental-detail works!</p>
+<ng-template #isPremium>
+   
+</ng-template>
+
+<ng-container *ngIf="this.rental$ | async as rental">
+
+<main class="detail-container">
+    <!-- Partie haute avec galerie et colonne d'infos -->
+    <div class="detail-culumn">
+      <div>
+        <div class="main-image-container">
+          <img [src]="rental.mainImage" [alt]="rental.name" id="main-image" class="main-image">
+          <ng-container *ngIf="rental.isPremium">
+            <div class="premium-tag">Premium</div>
+          </ng-container>
+        </div>
+        <div class="thumbnail-container">
+          <img [src]="rental.mainImage" alt="Thumbnail 1" class="thumbnail active">
+          <img [src]="rental.mainImage" alt="Thumbnail 2" class="thumbnail">
+        </div>
+        <div class="detail-content">
+          <div class="detail-main wide">
+            <div class="detail-section">
+              <h2 class="section-title">Description</h2>
+              <div class="description">
+                <p>{{rental.description}}</p>
+              </div>
+            </div>
+            
+            <!-- Nouvelle section calendrier -->
+            <div class="detail-section availability-section">
+              <h2 class="section-title">Availability</h2>
+              <div class="availability-container">
+                <div class="calendar-wrapper">
+                  <div id="reservation-calendar"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Fin section calendrier -->
+          </div>
+        </div>
+      </div>
+      
+      <div class="info-booking-column">
+        <!-- Item essentials -->
+        <div class="item-essentials">
+          <h1 class="item-title">{{rental.name}}</h1>
+          <div class="partner-info">
+            <img src="assets/images/default-avatar.jpeg" alt="Partner" class="partner-avatar">
+            <div class="partner-details">
+              <div class="partner-name">PhotoPro</div>
+              <div class="partner-rating">
+                <i class="fas fa-star star"></i>
+                <i class="fas fa-star star"></i>
+                <i class="fas fa-star star"></i>
+                <i class="fas fa-star star"></i>
+                <i class="fas fa-star-half-alt star"></i>
+                <span class="rating-value">4.5</span>
+                <span class="rating-count">(42 reviews)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nouvelle section pour la catégorie et la livraison -->
+          <div class="item-details">
+            <div class="detail-item">
+              <i class="fas fa-tag"></i>
+              <span>Photography Equipment</span>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-truck"></i>
+              <span>Delivery available</span>
+            </div>
+          </div>
+          <!-- Fin nouvelle section -->
+
+          <div class="item-location">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{rental.location}}</span>
+          </div>
+          <!-- Section de la carte déplacée ici -->
+          <div class="detail-section location-map-section">
+            <div id="map"></div>
+          </div>
+          <!-- Fin carte -->
+        </div>
+        <!-- Fin item-essentials -->
+         
+        <!-- Booking card -->
+        <div class="booking-card">
+          <h3 class="booking-title">Book This Item</h3>
+          <div class="item-price">${{rental.price}} <span class="price-period">/ day</span></div>
+          <div class="booking-form">
+            <div class="price-breakdown">
+              <div class="breakdown-item">
+                <span class="item-label">Selected dates:</span>
+                <span id="selected-dates" class="item-value">Select dates</span>
+              </div>
+              <div class="breakdown-item">
+                <span class="item-label">Rental cost</span>
+                <span id="rental-cost" class="item-value">-</span>
+              </div>
+              <div class="breakdown-item total">
+                <span class="item-label">Total</span>
+                <span id="total-price" class="item-value">-</span>
+              </div>
+            </div>
+            <button class="reserve-button" (click)="rent(rental.id)">
+              <i class="fas fa-calendar-check"></i>
+              Reserve Now
+            </button>
+            <div class="booking-note">
+              <i class="fas fa-info-circle"></i>
+              You won't be charged yet. Payment is due at pickup.
+            </div>
+          </div>
+        </div>        
+      </div>
+    </div>
+  </main>
+
+</ng-container>
