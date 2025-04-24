@@ -25,7 +25,7 @@ export class RentalsService {
       price: 200,
       description:
         'Capture stunning photos with the Canon 1000d, a versatile DSLR camera perfect for both beginners and enthusiasts. This camera delivers high-quality images with its 10.1 MP sensor and advanced features.',
-      isPremium: true,
+      isPremium: false,
       mainImage: 'images/item-placeholder1.jpg',
       thumbnail1: 'images/item-placeholder1.jpg',
       thumbnail2: 'images/item-placeholder1.jpg',
@@ -42,6 +42,29 @@ export class RentalsService {
       thumbnail1: 'images/playstation1.jpg',
       thumbnail2: 'images/playstation1.jpg',
     },
+    {
+      id: 4,
+      name: 'Pro Lighting',
+      location: 'Rabat',
+      price: 100,
+      description: 'Contact me for more details',
+      isPremium: true,
+      mainImage: 'images/item-placeholder-.jpg',
+      thumbnail1: 'images/item-placeholder-.jpg',
+      thumbnail2: 'images/item-placeholder-.jpg',
+    },
+    {
+      id: 5,
+      name: 'Camera Canon 1000d',
+      location: 'Tétouan',
+      price: 200,
+      description:
+        'Capture stunning photos with the Canon 1000d, a versatile DSLR camera perfect for both beginners and enthusiasts. This camera delivers high-quality images with its 10.1 MP sensor and advanced features.',
+      isPremium: false,
+      mainImage: 'images/item-placeholder1.jpg',
+      thumbnail1: 'images/item-placeholder1.jpg',
+      thumbnail2: 'images/item-placeholder1.jpg',
+    }
   ];
 
   constructor() {}
