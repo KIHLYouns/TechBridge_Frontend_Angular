@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Rental } from '../../models/rental.model';
+import { RentalsService } from '../../services/rentals.service';
 
 @Component({
   selector: 'app-rentals',
@@ -6,6 +9,14 @@ import { Component } from '@angular/core';
   templateUrl: './rentals.component.html',
   styleUrl: './rentals.component.scss'
 })
-export class RentalsComponent {
+export class RentalsComponent implements OnInit {
+
+  public rentals$!: Observable<Rental[]>;
+
+  constructor(private rentalsService: RentalsService){}
+
+  ngOnInit(): void {
+    this.rentals$ = this.rentalsService.getRentals();
+  }
 
 }

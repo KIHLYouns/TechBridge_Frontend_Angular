@@ -1,1 +1,61 @@
-<p>filters-side-bar works!</p>
+<div class="filter-section">
+    <h3 class="filter-title">Location</h3>
+    <select class="location-filter">
+        <option value>All locations</option>
+        <option value="San Francisco">Tétouan</option>
+        <option value="New York">New York, NY</option>
+        <option value="Brooklyn">Tanger</option>
+        <option value="Austin">Rabat</option>
+        <option value="Los Angeles">Los Angeles, CA</option>
+        <option value="Chicago">Chicago, IL</option>
+        <option value="Miami">Miami, FL</option>
+        <option value="Seattle">Seattle, WA</option>
+    </select>
+</div>
+<div class="filter-section">
+    <h3 class="filter-title">Rental Rate (/day)</h3>
+    <div class="price-inputs">
+        <input type="number" placeholder="Min $" class="price-input" />
+        <span>-</span>
+        <input type="number" placeholder="Max $" class="price-input" />
+    </div>
+</div>
+<div class="filter-section">
+    <h3 class="filter-title">Availability</h3>
+    <label for="start-date">From:</label>
+    <input
+        type="date"
+        id="start-date"
+        name="start-date"
+        class="date-input" />
+    <label for="end-date">To:</label>
+    <input
+        type="date"
+        id="end-date"
+        name="end-date"
+        class="date-input" />
+</div>
+<div class="filter-section">
+    <h3 class="filter-title">Minimum Rating</h3>
+    <div class="rating-filter">
+        <label>
+            <input type="radio" name="rating" value="4" /> 4★ & plus
+        </label>
+        <label>
+            <input type="radio" name="rating" value="3" /> 3★ & plus
+        </label>
+        <label>
+            <input type="radio" name="rating" value="0" checked /> Tous
+        </label>
+    </div>
+</div>
+<div class="filter-section">
+    <h3 class="filter-title">Sort By</h3>
+    <select class="sort-select">
+        <option>Recently Added</option>
+        <option>Rate: Low to High</option>
+        <option>Rate: High to Low</option>
+        <option>Distance: Nearest First</option>
+    </select>
+</div>
+<button class="filter-button">Clear All</button>

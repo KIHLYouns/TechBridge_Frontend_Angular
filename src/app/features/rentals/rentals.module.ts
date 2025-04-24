@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
+import { SharedModule } from '../../shared/shared.module';
 import { RentalsRoutingModule } from './rentals-routing.module';
+
 import { RentalsComponent } from './components/rentals/rentals.component';
 import { RentalsListComponent } from './components/rentals/rentals-list/rentals-list.component';
 import { RentalDetailComponent } from './components/rental-detail/rental-detail.component';
@@ -10,6 +11,7 @@ import { CategoriesComponent } from './components/rentals/categories/categories.
 import { FiltersSideBarComponent } from './components/rentals/filters-side-bar/filters-side-bar.component';
 
 
+ 
 @NgModule({
   declarations: [
     RentalsComponent, // this wrapps other components (smart component)
@@ -17,8 +19,8 @@ import { FiltersSideBarComponent } from './components/rentals/filters-side-bar/f
     RentalDetailComponent, ListingCardComponent, CategoriesComponent, FiltersSideBarComponent // this is to view details about an object for Rental 
   ],
   imports: [
-    CommonModule,
-    RentalsRoutingModule
+    SharedModule, 
+    RentalsRoutingModule // this provides child routes to the singleton router service
   ]
 })
 export class RentalsModule { }

@@ -1,1 +1,27 @@
-<p>listing-card works!</p>
+<ng-container *ngIf="rental">
+    <a class="item-card-link">
+        <div class="item-card">
+            <div class="premium-tag">Premium</div>
+            <img
+                src="assets/images/item-placeholder.jpg"
+                alt="Equipment"
+                class="item-image" />
+            <div class="item-details">
+                <div class="item-header">
+                    <h3 class="item-title">{{this.rental.name}}</h3>
+                    <div class="item-price">$ {{this.rental.price}} / day</div>
+                </div>
+                <div class="item-info-line">
+                    <div class="item-partner-container">
+                        <span class="item-partner">AudioPro</span>
+                        <div class="partner-rating">
+                            <i class="fas fa-star star"></i>
+                            <span>4.5</span>
+                        </div>
+                    </div>
+                    <div class="item-location">{{this.rental.location}}</div>
+                </div>
+            </div>
+        </div>
+    </a>
+</ng-container>

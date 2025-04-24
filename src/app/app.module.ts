@@ -12,7 +12,7 @@ import { CoreModule } from './core/core.module';
   imports: [
     CoreModule, // importing this makes HeaderComponent available for use
     BrowserModule, // this includes CommonModule
-    AppRoutingModule, // this imports routerModule -> configured router service 
+    AppRoutingModule, // this configures the router service with root routes
   ],
   providers: [],
   bootstrap: [AppComponent]

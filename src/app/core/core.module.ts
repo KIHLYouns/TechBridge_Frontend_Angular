@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
@@ -13,7 +12,7 @@ import { SharedModule } from '../shared/shared.module';
   ],
   imports: [
     SharedModule, // SharedModule for shared components and Modules
-    RouterModule, // Import RouterModule to enable routerLink in header
+    RouterModule, // this makes routing directives like routerLink available 
   ],
   exports: [
     HeaderComponent

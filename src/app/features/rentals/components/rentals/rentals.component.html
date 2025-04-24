@@ -1,3 +1,11 @@
-<app-categories></app-categories>
-<app-filters-side-bar></app-filters-side-bar>
-<app-rentals-list></app-rentals-list>
+<div class="home-container">
+    <app-categories class="categories"></app-categories>
+    <div class="content-wrapper">
+        <app-filters-side-bar class="filter-sidebar"></app-filters-side-bar>
+        <!-- we will render the containt of this ng-container only if the observable exists -->
+        <ng-container *ngIf="this.rentals$ | async as rentals">
+            <!-- here we subscribe to the observable that emits arrays of our data -->
+            <app-rentals-list [rentals]="rentals" class="items-grid"></app-rentals-list>
+        </ng-container>
+    </div>
+</div>

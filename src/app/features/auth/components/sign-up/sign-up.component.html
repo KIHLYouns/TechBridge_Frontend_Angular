@@ -1,1 +1,140 @@
-<p>sign-up works!</p>
+<main class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Create an Account</h1>
+        <p class="auth-subtitle">
+          Join TechBridge to rent high-tech equipment
+        </p>
+      </div>
+      <form class="auth-form" id="signup-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            class="form-input"
+            placeholder="Choose a username"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            class="form-input"
+            placeholder="your@email.com"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            type="tel"
+            id="phone"
+            class="form-input"
+            placeholder="+212 6 XX XX XX XX"
+          />
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input
+            type="text"
+            id="address"
+            class="form-input"
+            placeholder="Your complete address"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-input"
+            placeholder="Minimum 8 characters"
+            required
+            minlength="8"
+          />
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input
+            type="password"
+            id="confirm-password"
+            class="form-input"
+            placeholder="Confirm your password"
+            required
+          />
+          <div
+            class="error-message"
+            id="password-error"
+            style="display: none"
+          >
+            Passwords do not match
+          </div>
+        </div>
+        <!-- Partner option -->
+        <div class="partner-section">
+          <div class="partner-checkbox-wrapper">
+            <div class="checkbox-group">
+              <input type="checkbox" id="become-partner" />
+              <label for="become-partner" class="checkbox-label"
+                >I also want to become a partner (offer equipment for rent)</label
+              >
+            </div>
+          </div>
+          <div id="partner-details" style="display: none">
+            <div class="partner-info">
+              <h3 class="partner-info-title">
+                Become a TechBridge Partner
+              </h3>
+              <p class="partner-info-text">
+                As a partner, you can list your high-tech equipment for rent and manage your bookings.
+              </p>
+              <ul class="partner-info-list">
+                <li>Publish up to 5 active listings simultaneously</li>
+                <li>
+                  Benefit from increased visibility with Premium option
+                </li>
+                <li>Easily manage your reservations and schedule</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Terms -->
+        <div class="terms-section">
+          <div class="terms-group">
+            <input type="checkbox" id="terms-general" required />
+            <div class="terms-text">
+              I accept the
+              <a href="#" class="terms-link"
+                >Terms and Conditions</a
+              >
+              and
+              <a href="#" class="terms-link">Privacy Policy</a>
+              of TechBridge
+            </div>
+          </div>
+
+          <div class="terms-group" id="partner-terms" >
+            <input type="checkbox" id="terms-partner" />
+            <div class="terms-text">
+              I accept the
+              <a href="#" class="terms-link"
+                >Specific Terms for Partners</a
+              >
+              of TechBridge and the applicable regulations for equipment rental
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="auth-btn">Create my account</button>
+        <div class="auth-footer">
+          <span
+            >Already registered?
+            <a routerLink="/auth/sign-in" class="auth-link">Log in</a></span
+          >
+        </div>
+      </form>
+    </div>
+  </main>

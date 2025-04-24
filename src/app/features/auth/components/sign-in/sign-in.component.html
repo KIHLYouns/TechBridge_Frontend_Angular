@@ -1,1 +1,27 @@
-<p>sign-in works!</p>
+<main class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>Login</h1>
+        <p class="auth-subtitle">Sign in to access your account</p>
+      </div>
+      <form class="auth-form">
+        <div class="form-group">
+          <label for="username">Username or Email</label>
+          <input type="text" id="username" class="form-input" placeholder="Your username or email" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" class="form-input" placeholder="••••••••" required />
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="remember-me" />
+          <label for="remember-me" class="checkbox-label">Remember me</label>
+        </div>
+        <button type="submit" class="auth-btn">Login</button>
+        <div class="auth-footer">
+          <span>Not registered yet? <a routerLink="/auth/sign-up" class="auth-link">Create an account</a></span>
+        </div>
+      </form>
+      
+    </div>
+  </main>

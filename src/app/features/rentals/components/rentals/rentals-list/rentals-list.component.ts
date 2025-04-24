@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Rental } from '../../../models/rental.model';
 
 @Component({
   selector: 'app-rentals-list',
@@ -7,5 +8,8 @@ import { Component } from '@angular/core';
   styleUrl: './rentals-list.component.scss'
 })
 export class RentalsListComponent {
+
+  // this will contain an array of rentals, these rentals are passed down from the parent component 
+  @Input() rentals: Rental[] = [];
 
 }

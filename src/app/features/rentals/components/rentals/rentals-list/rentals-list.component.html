@@ -1,7 +1,11 @@
-<app-listing-card></app-listing-card>
-<app-listing-card></app-listing-card>
-<app-listing-card></app-listing-card>
-<app-listing-card></app-listing-card>
-<app-listing-card></app-listing-card>
-<app-listing-card></app-listing-card>
-<app-listing-card></app-listing-card>
+<ng-template #noRentals>
+    <div class="no-rentals">
+        No rentals available
+    </div>
+</ng-template>
+
+<ng-container *ngIf="rentals && rentals.length > 0; else noRentals">
+    <ng-container *ngFor="let rental of rentals" >
+        <app-listing-card [rental]="rental"></app-listing-card>
+    </ng-container>
+</ng-container>

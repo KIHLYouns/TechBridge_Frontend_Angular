@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Rental } from '../../../../models/rental.model';
 
 @Component({
   selector: 'app-listing-card',
@@ -7,5 +8,6 @@ import { Component } from '@angular/core';
   styleUrl: './listing-card.component.scss'
 })
 export class ListingCardComponent {
+  @Input() rental!: Rental;
 
 }
