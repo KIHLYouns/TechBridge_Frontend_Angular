@@ -9,3 +9,5 @@ export interface Rental {
     thumbnail1: string,
     thumbnail2: string
 }
+
+// id client , id l annonce , start date end date 
