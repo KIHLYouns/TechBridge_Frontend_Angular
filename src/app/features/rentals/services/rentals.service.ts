@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Rental } from '../models/rental.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -67,7 +68,7 @@ export class RentalsService {
     }
   ];
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   getRentals(): Observable<Rental[]> {
     return new Observable<Rental[]>((observer) => {
