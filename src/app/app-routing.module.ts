@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'listings', loadChildren: () => import('./features/listings/listings.module').then(m => m.ListingsModule) }, // /listings loads the ListingsModule
   { path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) },
   { path: 'my-rentals', loadChildren: () => import('./features/my-rentals/my-rentals.module').then(m => m.MyRentalsModule) }, // /my-rentals loads the MyRentalsModule
+  { path: 'profile', loadChildren: () => import('./features/profile/profile.module').then(m => m.ProfileModule)}
 ];
 
 @NgModule({
