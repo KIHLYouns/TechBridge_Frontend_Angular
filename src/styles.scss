@@ -1,3 +1,7 @@
+@import 'leaflet/dist/leaflet.css';
+@import 'flatpickr/dist/flatpickr.min.css';
+@import 'flatpickr/dist/themes/dark.css'; 
+
 :root {
   --color-primary: #f4ce14;
   --color-secondary: #7da097;
@@ -159,5 +163,173 @@ label {
   }
   .header-logo {
     margin-bottom: 0.5rem;
+  }
+}
+
+
+/* Section de la carte de localisation */
+
+#map {
+  height: 250px;      /* Hauteur légèrement réduite pour un design intégré */
+  width: 100%;
+  border-radius: 6px; /* Bordure moins arrondie */
+  margin-top: 15px;
+  z-index: 0;
+  border: 1px solid #dee2e6; /* Bordure subtile */
+  background-color: #f8f9fa; /* Fond affiché pendant le chargement */
+}
+
+/* Style pour l'attribution Leaflet */
+.leaflet-control-attribution {
+  font-size: 10px !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  padding: 2px 4px !important;
+  border-radius: 3px;
+}
+.leaflet-control-attribution a {
+  color: #f4ce14 !important;
+}
+
+/* Styles pour le calendrier de disponibilité */
+.availability-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.calendar-wrapper {
+  width: 100%;
+  background-color: var(--color-bg-dark);
+  border-radius: 8px;
+  border: 1px solid var(--color-border-light);
+  padding: 1rem;
+  overflow: hidden; /* Pour éviter les débordements */
+}
+.flatpickr-calendar {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  background-color: transparent !important; /* Utilise le fond du wrapper */
+  border: none !important;
+}
+.flatpickr-months {
+  background-color: var(--color-bg-dark) !important;
+  padding: 0.5rem 0 !important;
+}
+.flatpickr-month {
+  height: 40px !important;
+}
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  fill: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  height: 32px !important;
+}
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+  fill: var(--color-primary-dark) !important;
+}
+.flatpickr-weekdays {
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--color-border-light) !important;
+}
+.flatpickr-weekdaycontainer {
+  background-color: transparent !important;
+}
+.flatpickr-days,
+.dayContainer {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 4px 0 !important;
+}
+.flatpickr-day {
+  border: 1px solid transparent !important;
+  color: var(--color-text-light) !important;
+  border-radius: 4px !important;
+  margin: 2px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  background-color: transparent !important;
+}
+.flatpickr-day:hover {
+  background-color: var(--color-bg-light) !important;
+  border-color: var(--color-border-light) !important;
+}
+.flatpickr-day.today {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  background-color: transparent !important;
+  font-weight: bold !important;
+}
+.flatpickr-day.today:hover {
+  background-color: var(--color-primary-lighter-bg) !important;
+}
+.flatpickr-day.selected, 
+.flatpickr-day.startRange, 
+.flatpickr-day.endRange {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-bg-dark) !important;
+  font-weight: bold !important;
+}
+.flatpickr-day.inRange {
+  background-color: var(--color-primary-lighter-bg) !important;
+  border-color: var(--color-primary-lighter-bg) !important;
+  color: var(--color-text-light) !important;
+  box-shadow: none !important;
+}
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover,
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay,
+.flatpickr-day.notAllowed {
+  color: var(--color-text-dark) !important;
+  background-color: transparent !important;
+  opacity: 0.5;
+}
+.flatpickr-day.flatpickr-disabled {
+  text-decoration: line-through !important;
+  color: var(--color-text-dark) !important;
+  opacity: 0.6 !important;
+}
+.flatpickr-day.reserved {
+  text-decoration: line-through;
+  color: var(--color-text-dark) !important;
+  background-color: rgba(255, 59, 48, 0.1) !important;
+  border: 1px solid rgba(255, 59, 48, 0.2) !important;
+  cursor: not-allowed !important;
+  opacity: 0.8 !important;
+}
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-monthDropdown-month {
+  background: var(--color-bg-dark) !important;
+  color: var(--color-text-light) !important;
+  fill: var(--color-text-light) !important;
+}
+.flatpickr-current-month input.cur-year[disabled],.flatpickr-current-month input.cur-year[disabled]:hover {
+  color:var(--color-text-light) !important;
+}
+.flatpickr-weekdays,
+span.flatpickr-weekday {
+  color: var(--color-text-medium) !important;
+  background: var(--color-bg-dark) !important;
+}
+/* Pour l'affichage de deux mois côte à côte */
+.flatpickr-calendar.multiMonth {
+  width: 100% !important;
+}
+.flatpickr-calendar.multiMonth .flatpickr-days {
+  border-right: none !important;
+}
+/* Responsive pour les mois multiples */
+@media (max-width: 992px) {
+  .flatpickr-calendar.multiMonth {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .flatpickr-calendar.multiMonth .flatpickr-monthcontainer {
+    width: 100% !important;
+    margin-bottom: 1rem;
   }
 }

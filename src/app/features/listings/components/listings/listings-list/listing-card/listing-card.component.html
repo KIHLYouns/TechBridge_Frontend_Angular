@@ -16,24 +16,21 @@
         </div>
         <div class="item-info-line">
           <div class="item-partner-container">
-            <span class="item-partner"
-              >{{ listing.partner?.firstname }}
-              {{ listing.partner?.lastname }}</span
-            >
-            <div
-              class="partner-rating"
-              *ngIf="listing.partner && listing.partner.partner_rating"
-            >
-              <i
-                class="fas fa-star star"
-                *ngFor="
-                  let star of getStarArray(listing.partner.partner_rating!)
-                "
-              ></i>
-              <i
-                class="fas fa-star-half-alt star"
-                *ngIf="listing.partner.partner_rating! % 1 !== 0"
-              ></i>
+            <img
+              [src]="
+                listing.partner?.avatar_url ||
+                'assets/images/default-avatar.jpeg'
+              "
+              alt="{{ listing.partner?.firstname }} {{
+                listing.partner?.lastname
+              }}"
+              class="partner-avatar"
+            />
+            <span class="item-partner">
+              {{ listing.partner?.firstname }} {{ listing.partner?.lastname }}
+            </span>
+            <div class="partner-rating" *ngIf="listing.partner">
+              <i class="fas fa-star star"></i>
               <span>{{ listing.partner.partner_rating }}</span>
             </div>
           </div>

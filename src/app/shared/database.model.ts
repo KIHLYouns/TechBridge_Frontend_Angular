@@ -15,21 +15,21 @@ export interface User {
   username: string;
   firstname: string;
   lastname: string;
-  password?: string; // Often excluded from frontend models
+  password?: string;
   email: string;
   phone_number: string;
-  address?: string; // Optional based on usage
+  address?: string;
   role: UserRole;
   is_partner: boolean;
   avatar_url?: string;
-  join_date: string; // Or Date
+  join_date: string;
   client_rating?: number;
   client_reviews?: number;
   partner_rating?: number;
   partner_reviews?: number;
   longitude?: number;
   latitude?: number;
-  city?: City; // Optional relation object
+  city?: City;
 }
 
 export type ListingStatus = 'active' | 'archived' | 'inactive';
@@ -41,46 +41,51 @@ export interface Listing {
   price_per_day: number;
   status: ListingStatus;
   is_premium: boolean;
-  premium_start_date?: string; // Or Date
-  premium_end_date?: string; // Or Date
-  created_at: string; // Or Date
+  premium_start_date?: string;
+  premium_end_date?: string;
+  created_at: string;
   delivery_option: boolean;
-  category?: Category; // Optional relation object
-  city?: City; // Optional relation object
-  partner?: User; // Optional relation object
-  images?: Image[]; // Optional relation object
-  availabilities?: Availability[]; // Optional relation object
+  category?: Category;
+  city?: City;
+  partner?: User;
+  images?: Image[];
+  availabilities?: Availability[];
 }
 
-export type ReservationStatus = 'pending' | 'confirmed' | 'ongoing' | 'canceled' | 'completed';
+export type ReservationStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'ongoing'
+  | 'canceled'
+  | 'completed';
 
 export interface Reservation {
   id: number;
-  start_date: string; // Or Date
-  end_date: string; // Or Date
+  start_date: string;
+  end_date: string;
   total_cost: number;
   status: ReservationStatus;
   contract_url?: string;
-  created_at: string; // Or Date
+  created_at: string;
   delivery_option: boolean;
-  client?: User; // Optional relation object
-  partner?: User; // Optional relation object
-  listing?: Listing; // Optional relation object
-  payment?: Payment; // Optional relation object
-  reviews?: Review[]; // Optional relation object
+  client?: User;
+  partner?: User;
+  listing?: Listing;
+  payment?: Payment;
+  reviews?: Review[];
 }
 
 export interface Availability {
-  listing_id: number; // Foreign key (part of composite key potentially)
-  start_date: string; // Or Date
-  end_date: string; // Or Date
-  listing?: Listing; // Optional relation object
+  listing_id: number;
+  start_date: string;
+  end_date: string;
+  listing?: Listing;
 }
 
 export interface Image {
   id: number;
   url: string;
-  listing?: Listing; // Optional relation object
+  listing?: Listing;
 }
 
 export type ReviewType = 'forObject' | 'forClient' | 'forPartner';
@@ -90,12 +95,12 @@ export interface Review {
   rating: number;
   comment?: string;
   is_visible: boolean;
-  created_at: string; // Or Date
+  created_at: string;
   type: ReviewType;
-  reviewer?: User; // Optional relation object
-  reviewee?: User; // Optional relation object
-  reservation?: Reservation; // Optional relation object
-  listing?: Listing; // Optional relation object
+  reviewer?: User;
+  reviewee?: User;
+  reservation?: Reservation;
+  listing?: Listing;
 }
 
 export type NotificationType = 'reservation' | 'review' | 'reminder' | 'system';
@@ -105,8 +110,8 @@ export interface Notification {
   type: NotificationType;
   message: string;
   is_read: boolean;
-  created_at: string; // Or Date
-  user?: User; // Optional relation object
+  created_at: string;
+  user?: User;
 }
 
 export type PaymentStatus = 'pending' | 'completed' | 'refunded';
@@ -117,11 +122,11 @@ export interface Payment {
   amount: number;
   commission_fee: number;
   partner_payout: number;
-  payment_date: string; // Or Date
+  payment_date: string;
   status: PaymentStatus;
   payment_method: PaymentMethod;
   transaction_id?: string;
-  client?: User; // Optional relation object
-  partner?: User; // Optional relation object
-  reservation?: Reservation; // Optional relation object
+  client?: User;
+  partner?: User;
+  reservation?: Reservation;
 }

@@ -1,7 +1,16 @@
-<div class="category-item active">All High-Tech</div>
-<div class="category-item">Laptops</div>
-<div class="category-item">Smartphones</div>
-<div class="category-item">Tablets</div>
-<div class="category-item">Gaming Consoles</div>
-<div class="category-item">Drones</div>
-<div class="category-item">Wearables</div>
+<div
+  class="category-item"
+  [class.active]="activeCategory === null"
+  (click)="setActiveCategory(null)">
+  All Equipment
+</div>
+
+<ng-container *ngIf="categories$ | async as categories">
+  <div
+    *ngFor="let category of categories"
+    class="category-item"
+    [class.active]="activeCategory?.id === category.id"
+    (click)="setActiveCategory(category)">
+    {{ category.name }}
+  </div>
+</ng-container>
