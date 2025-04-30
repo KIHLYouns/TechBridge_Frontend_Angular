@@ -73,8 +73,6 @@ export class SignInComponent implements OnInit {
       this.authService.login(loginRequest).subscribe({
         next: () => {
           this.loadingStateSubject.next(false);
-          // Navigate to dashboard
-          // this.router.navigate(['/dashboard']);
         },
         error: (error) => {
           this.loadingStateSubject.next(false);

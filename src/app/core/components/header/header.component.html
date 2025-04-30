@@ -1,6 +1,16 @@
 <div class="header-logo">TechBridge</div>
 <nav class="header-nav">
     <a routerLink="/listings" class="header-nav-item">Browse Listings</a>
-    <a routerLink="/auth/sign-up" class="header-nav-item">Sign Up</a>
-    <a routerLink="/auth/sign-in" class="header-nav-item">Sign In</a>
+        <!-- The key is using the else template -->
+        <ng-container *ngIf="(isAuthenticated$ | async); else notAuthenticatedBlock">
+            <!-- Authenticated links -->
+            <a routerLink="/my-rentals" class="header-nav-item">My Rentals</a>
+            <a routerLink="/profile" class="header-nav-item">Profile</a>
+        </ng-container>
+        
+        <!-- This template will render when isAuthenticated$ emits false -->
+        <ng-template #notAuthenticatedBlock>
+            <a routerLink="/auth/sign-up" class="header-nav-item">Sign Up</a>
+            <a routerLink="/auth/sign-in" class="header-nav-item">Sign In</a>
+        </ng-template>
 </nav>

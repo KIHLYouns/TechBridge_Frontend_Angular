@@ -16,16 +16,22 @@ export class AppComponent implements OnInit {
   ) {}
   
   ngOnInit(): void {
-    // Check token validity when app starts
-    this.restoreStateIfTokenStillValid();
+      // Check token validity when app starts - do this with minimal delay
+    // to ensure it runs before other components are fully initialized
+    setTimeout(() => {
+      this.restoreStateIfTokenStillValid();
+    }, 0);
   }
   
   private restoreStateIfTokenStillValid(): void {
-    if (this.authService.checkAndRestoreAuth()) {
+    const isAuthenticated = this.authService.checkAndRestoreAuth();
+    console.log('AppComponent: Auth state after restoration:', isAuthenticated);
+    
+    if (isAuthenticated) {
       console.log('Valid token found, user is authenticated');
       // Redirect if on auth pages
       if (this.router.url.includes('/auth')) {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/listings']);
       }
     } else {
       console.log('No valid token found or token expired');

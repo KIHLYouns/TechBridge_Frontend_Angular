@@ -38,6 +38,7 @@ L.Marker.prototype.options.icon = defaultIcon;
 export class ListingDetailComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
+
   listing$: Observable<Listing | null>;
   listingData: Listing | null = null;
   selectedImageUrl: string | null = null;
@@ -232,5 +233,9 @@ export class ListingDetailComponent
 
   getStarArray(rating: number | undefined | null): number[] {
     return rating ? Array(Math.floor(rating)).fill(0) : [];
+  }
+
+  rentObject() {
+    throw new Error('Method not implemented.');
   }
 }

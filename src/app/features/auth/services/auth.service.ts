@@ -1,17 +1,28 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { SignUpRequest, SignUpResponse } from '../models/sign-up.model';
 import { SignInRequest, SignInResponse } from '../models/sign-in.model';
 import { TokenService } from './token.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  // BehaviorSubject to track authentication state - it holds the current value and emits it to new subscribers
+  private authStateSubject: BehaviorSubject<boolean>;
+  
+  // Observable that components can subscribe to
+  public authState$: Observable<boolean>;
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) {
+
+    const initialAuthState = this.tokenService.hasValidToken();
+    this.authStateSubject = new BehaviorSubject<boolean>(initialAuthState);
+    this.authState$ = this.authStateSubject.asObservable();
+   }
 
 
   private createMockJwt(claims: any): string {
@@ -59,6 +70,9 @@ export class AuthService {
       tap(response => {
         if (response && response['access-token']) {
           this.tokenService.saveAccessToken(response['access-token']);
+          // Publish auth state change to subscribers
+          this.authStateSubject.next(true);
+          this.router.navigate(['/listings']);
         }
       })
     );
@@ -99,18 +113,25 @@ export class AuthService {
       tap(response => {
         if (response && response['access-token']) {
           this.tokenService.saveAccessToken(response['access-token']);
+          this.authStateSubject.next(true);
+          this.router.navigate(['/listings']);
         }
       })
     );
   }
 
   checkAndRestoreAuth(): boolean {
-    if (this.tokenService.hasValidToken()) {
-      return true;
-    } else {
+    const isAuthenticated = this.tokenService.hasValidToken();
+    console.log('checkAndRestoreAuth: Token validity check result:', isAuthenticated);
+    
+    // Make sure the auth state is updated
+    this.authStateSubject.next(isAuthenticated);
+    
+    if (!isAuthenticated) {
       this.tokenService.clearStorage();
-      return false;
     }
+    
+    return isAuthenticated;
   }
 
   getUser(): any {
@@ -120,6 +141,7 @@ export class AuthService {
 
   logout(): void {
     this.tokenService.clearStorage();
+    this.authStateSubject.next(false);
   }
 
   isAuthenticated(): boolean {
