@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Camera Canon 1000d - TechBridge</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/listing-detail.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <!-- Flatpickr - Calendrier style Airbnb -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo">TechBridge</div>
+      <nav class="header-nav">
+        <a href="home.html" class="header-nav-item active">Browse</a>
+        <a href="my-rentals.html" class="header-nav-item">My Rentals</a>
+        <a href="profile.html" class="header-nav-item">Profile</a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="detail-container">
+      <!-- Partie haute avec galerie et colonne d'infos -->
+      <div class="detail-culumn">
+        <div>
+          <div class="main-image-container">
+            <img src="assets/images/item-placeholder.jpg" alt="Camera Canon 1000d" id="main-image" class="main-image">
+            <div class="premium-tag">Premium</div>
+          </div>
+          <div class="thumbnail-container">
+            <img src="assets/images/item-placeholder.jpg" alt="Thumbnail 1" class="thumbnail active">
+            <img src="assets/images/item-placeholder1.jpg" alt="Thumbnail 2" class="thumbnail">
+          </div>
+          <div class="detail-content">
+            <div class="detail-main wide">
+              <div class="detail-section">
+                <h2 class="section-title">Description</h2>
+                <div class="description">
+                  <p>Capture stunning photos with the Canon 1000d, a versatile DSLR camera perfect for both beginners and enthusiasts. This camera delivers high-quality images with its 10.1 MP sensor and advanced features.</p>
+                  <p>The package includes the camera body, an 18-55mm lens, a battery, a charger, and a protective carrying case. Ideal for travel, events, and everyday photography.</p>
+                </div>
+              </div>
+              
+              <!-- Nouvelle section calendrier -->
+              <div class="detail-section availability-section">
+                <h2 class="section-title">Availability</h2>
+                <div class="availability-container">
+                  <div class="calendar-wrapper">
+                    <div id="reservation-calendar"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- Fin section calendrier -->
+            </div>
+          </div>
+        </div>
+        
+        <div class="info-booking-column">
+          <!-- Item essentials -->
+          <div class="item-essentials">
+            <h1 class="item-title">Camera Canon 1000d</h1>
+            <div class="partner-info">
+              <img src="assets/images/default-avatar.jpeg" alt="Partner" class="partner-avatar">
+              <div class="partner-details">
+                <div class="partner-name">PhotoPro</div>
+                <div class="partner-rating">
+                  <i class="fas fa-star star"></i>
+                  <i class="fas fa-star star"></i>
+                  <i class="fas fa-star star"></i>
+                  <i class="fas fa-star star"></i>
+                  <i class="fas fa-star-half-alt star"></i>
+                  <span class="rating-value">4.5</span>
+                  <span class="rating-count">(42 reviews)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nouvelle section pour la catégorie et la livraison -->
+            <div class="item-details">
+              <div class="detail-item">
+                <i class="fas fa-tag"></i>
+                <span>Photography Equipment</span>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-truck"></i>
+                <span>Delivery available</span>
+              </div>
+            </div>
+            <!-- Fin nouvelle section -->
+
+            <div class="item-location">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Tétouan</span>
+            </div>
+            <!-- Section de la carte déplacée ici -->
+            <div class="detail-section location-map-section">
+              <div id="map"></div>
+            </div>
+            <!-- Fin carte -->
+          </div>
+          <!-- Fin item-essentials -->
+           
+          <!-- Booking card -->
+          <div class="booking-card">
+            <h3 class="booking-title">Book This Item</h3>
+            <div class="item-price">$150 <span class="price-period">/ day</span></div>
+            <div class="booking-form">
+              <div class="price-breakdown">
+                <div class="breakdown-item">
+                  <span class="item-label">Selected dates:</span>
+                  <span id="selected-dates" class="item-value">Select dates</span>
+                </div>
+                <div class="breakdown-item">
+                  <span class="item-label">Rental cost</span>
+                  <span id="rental-cost" class="item-value">-</span>
+                </div>
+                <div class="breakdown-item total">
+                  <span class="item-label">Total</span>
+                  <span id="total-price" class="item-value">-</span>
+                </div>
+              </div>
+              <button class="reserve-button">
+                <i class="fas fa-calendar-check"></i>
+                Reserve Now
+              </button>
+              <div class="booking-note">
+                <i class="fas fa-info-circle"></i>
+                You won't be charged yet. Payment is due at pickup.
+              </div>
+            </div>
+          </div>
+          <!-- Fin booking card -->
+          
+        </div>
+      </div>
+      
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Gallery functionality
+        const mainImage = document.getElementById('main-image');
+        const thumbnails = document.querySelectorAll('.thumbnail');
+        
+        thumbnails.forEach(thumb => {
+          thumb.addEventListener('click', function() {
+            // Update main image
+            mainImage.src = this.src;
+            
+            // Update active thumbnail
+            thumbnails.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+          });
+        });
+      });
+    </script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // --- Nouvelle initialisation de la carte ---
+        const latitude = 35.56219;  // Remplacer par les vraies données
+        const longitude = -5.364456; // Remplacer par les vraies données
+        const approximateRadius = 350; // Rayon en mètres
+
+        const map = L.map('map', {
+          scrollWheelZoom: false,
+          attributionControl: false
+        }).setView([latitude, longitude], 13);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: 'abcd',
+          maxZoom: 19
+        }).addTo(map);
+
+        L.circle([latitude, longitude], {
+            color: '#d4b210',
+            weight: 1,
+            fillColor: '#f4ce14',
+            fillOpacity: 0.3,
+            radius: approximateRadius
+        }).addTo(map);
+
+        L.control.attribution({
+          position: 'bottomright',
+          prefix: ''
+        }).addTo(map);
+
+        setTimeout(() => map.invalidateSize(), 100);
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const pricePerDay = 150;
+        // Configuration Flatpickr
+        const reservedDates = [
+          { from: "2025-04-25", to: "2025-04-28" },
+          { from: "2025-05-10", to: "2025-05-15" },
+          { from: "2025-05-20", to: "2025-05-22" }
+        ];
+
+        const calendar = flatpickr("#reservation-calendar", {
+          mode: "range",
+          inline: true,
+          minDate: "today",
+          locale: "en",
+          showMonths: 2,
+          disable: reservedDates,
+          onChange: function(selectedDates) {
+            updatePriceCalculation(selectedDates);
+          }
+        });
+
+        function updatePriceCalculation(dates) {
+          // Calcule le nombre de jours sélectionnés (inclusif)
+          const days = dates.length > 1 ?
+            Math.ceil((dates[1] - dates[0]) / (1000 * 3600 * 24)) + 1 : 0;
+
+          const rentalCost = days * pricePerDay;
+          const total = rentalCost;
+
+          document.getElementById('selected-dates').textContent =
+            days > 0 ? `${formatDate(dates[0])} to ${formatDate(dates[1])}` : 'Select dates';
+          document.getElementById('rental-cost').textContent = `$${rentalCost}`;
+          document.getElementById('total-price').textContent = `$${total}`;
+        }
+
+        function formatDate(date) {
+          return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric'
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

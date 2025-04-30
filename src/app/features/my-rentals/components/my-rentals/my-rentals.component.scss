@@ -1,0 +1,345 @@
+/* Styles pour la page des locations */
+/* Note: Assurez-vous que les variables CSS (--color-primary, etc.) sont définies globalement (par exemple dans styles.scss) */
+
+.rentals-container {
+  padding-inline: 4rem;
+  min-height: calc(
+    100vh - var(--core-header-height, 60px)
+  ); /* Provide a fallback for header height */
+  margin-top: var(--core-header-height, 60px); /* Provide a fallback */
+  position: relative;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.page-header {
+  margin: 0;
+}
+
+.page-header h1 {
+  font-size: var(--font-size-2xl, 2rem); /* Provide fallback */
+  font-weight: var(--font-bold, 700); /* Provide fallback */
+  color: var(--color-text-light, #f0f0f0); /* Provide fallback */
+  padding: 1rem 0;
+}
+
+/* Onglets */
+.rentals-tabs {
+  display: flex;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--color-border-light, #444); /* Provide fallback */
+}
+
+.tab {
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  color: var(--color-text-medium, #aaa); /* Provide fallback */
+  font-weight: var(--font-medium, 500); /* Provide fallback */
+  position: relative;
+  transition: color 0.3s ease, font-weight 0.3s ease; /* Add transition */
+}
+
+.tab.active {
+  color: var(--color-primary, #007bff); /* Provide fallback */
+  font-weight: var(--font-semibold, 600); /* Provide fallback */
+}
+
+.tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-primary, #007bff); /* Provide fallback */
+}
+
+/* Contenu des onglets */
+.tab-content {
+  display: none; /* Managed by Angular [class.active] now */
+}
+
+.tab-content.active {
+  display: block; /* Managed by Angular [class.active] now */
+}
+
+/* Liste des locations */
+.rentals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rental-card {
+  display: flex;
+  background-color: var(--color-bg-dark, #222); /* Provide fallback */
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--color-border-light, #444); /* Provide fallback */
+}
+
+.rental-card.past {
+  opacity: 0.85;
+}
+
+.rental-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  flex-shrink: 0; /* Prevent image shrinking */
+}
+
+.rental-details {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.rental-title {
+  font-weight: var(--font-semibold, 600); /* Provide fallback */
+  font-size: var(--font-size-base, 1rem); /* Provide fallback */
+  color: var(--color-text-light, #f0f0f0); /* Provide fallback */
+  margin-bottom: 0.5rem;
+  /* Style pour le titre cliquable (optionnel, peut être inline) */
+  /* &:hover {
+    color: var(--color-primary-light, #4dabf7); // Ou une autre couleur de survol
+  } */
+}
+
+.rental-info {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  gap: 0.5rem; /* Add gap for wrapped items */
+  margin-bottom: 0.5rem;
+}
+
+.rental-date,
+.rental-price {
+  font-size: var(--font-size-sm, 0.875rem); /* Provide fallback */
+  color: var(--color-text-medium, #aaa); /* Provide fallback */
+  display: flex; /* Align icon and text */
+  align-items: center;
+  gap: 0.3rem;
+
+  .rental-days {
+    margin-left: 0.4rem; /* Ajoute un petit espace avant le nombre de jours */
+    font-size: var(--font-size-xs, 0.75rem); /* Taille légèrement plus petite */
+    color: var(--color-secondary-light, #888); /* Couleur plus discrète */
+  }
+}
+
+.rental-partner {
+  font-size: var(--font-size-xs, 0.75rem); /* Provide fallback */
+  color: var(--color-secondary-light, #888); /* Provide fallback */
+  margin-bottom: 0.5rem;
+}
+
+.rental-partner span {
+  color: var(--color-text-medium, #aaa); /* Provide fallback */
+}
+
+.rental-status {
+  font-size: var(--font-size-xs, 0.75rem); /* Provide fallback */
+  padding: 0.2rem 0.5rem; /* Slightly increased padding for better readability */
+  border-radius: 4px;
+  display: inline-flex; /* Use inline-flex to align icon and text */
+  align-items: center; /* Center icon and text vertically */
+  gap: 0.3rem; /* Add space between icon and text */
+  font-weight: var(--font-semibold, 600); /* Provide fallback */
+  align-self: flex-start;
+  margin-top: auto; /* Push status to the bottom */
+  border: 1px solid transparent; /* Base border */
+  text-transform: capitalize; /* Ensure consistent capitalization */
+}
+
+/* Style for 'confirmed' (using 'available' class for consistency if needed, or rename) */
+/* If you use 'confirmed' directly from the model: */
+.rental-status.confirmed {
+  color: var(--color-success, #4caf50); /* Provide fallback */
+  background-color: rgba(76, 175, 80, 0.15); /* Slightly adjusted alpha */
+  border-color: var(--color-success, #4caf50); /* Provide fallback */
+}
+
+.rental-status.pending {
+  color: var(--color-warning, #ffc107); /* Use a warning color variable */
+  background-color: rgba(255, 193, 7, 0.15);
+  border-color: var(--color-warning, #ffc107);
+}
+
+/* Added style for 'ongoing' */
+.rental-status.ongoing {
+  color: var(--color-info, #2196f3); /* Using info color */
+  background-color: rgba(33, 150, 243, 0.15);
+  border-color: var(--color-info, #2196f3);
+}
+
+.rental-status.completed {
+  color: var(
+    --color-secondary-dark,
+    #5a6268
+  ); /* Using a darker secondary/gray color */
+  background-color: rgba(108, 117, 125, 0.15); /* Grayish background */
+  border-color: var(--color-secondary-dark, #5a6268);
+}
+
+/* Added style for 'canceled' */
+.rental-status.canceled {
+  color: var(--color-error, #f44336); /* Using error color */
+  background-color: rgba(244, 67, 54, 0.15);
+  border-color: var(--color-error, #f44336);
+  /* Optional: Add text-decoration for clarity */
+  /* text-decoration: line-through; */
+}
+
+/* Modification des actions */
+.rental-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1rem;
+  gap: 0.75rem;
+  border-left: 1px solid var(--color-border-light, #444); /* Provide fallback */
+  width: 206px; /* Assure une largeur minimale pour les actions */
+  flex-shrink: 0; /* Prevent actions shrinking */
+}
+
+.rental-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: var(--font-medium, 500); /* Provide fallback */
+  cursor: pointer;
+  font-size: var(--font-size-xs, 0.75rem); /* Provide fallback */
+  border: none;
+  width: 100%; /* Assure que le bouton prend toute la largeur disponible */
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease; /* Add transition */
+}
+
+.rental-action-btn i {
+  font-size: 0.85em; /* Adjust icon size slightly */
+}
+
+/* Style pour le bouton Accepter (Nouveau) */
+.rental-action-btn.approve {
+  background-color: rgba(76, 175, 80, 0.2); /* Vert clair (comme success) */
+  color: var(--color-success, #4caf50);
+  border: 1px solid var(--color-success, #4caf50);
+}
+.rental-action-btn.approve:hover {
+  background-color: rgba(76, 175, 80, 0.4);
+}
+
+.rental-action-btn.contact {
+  background-color: var(--color-primary, #007bff); /* Provide fallback */
+  color: var(--color-bg-dark, #fff); /* Provide fallback */
+}
+.rental-action-btn.contact:hover {
+  filter: brightness(90%);
+}
+
+.rental-action-btn.cancel {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: var(--color-error, #f44336); /* Provide fallback */
+  border: 1px solid var(--color-error, #f44336); /* Provide fallback */
+}
+.rental-action-btn.cancel:hover {
+  background-color: rgba(244, 67, 54, 0.4);
+}
+
+.rental-action-btn.review {
+  background-color: var(--color-bg-light, #333); /* Provide fallback */
+  color: var(--color-text-light, #f0f0f0); /* Provide fallback */
+  border: 1px solid var(--color-border, #555); /* Provide fallback */
+}
+.rental-action-btn.review:hover {
+  background-color: var(--color-border, #555);
+}
+
+.rental-action-btn.rent-again {
+  background-color: var(--color-secondary, #6c757d); /* Provide fallback */
+  color: var(--color-bg-dark, #fff); /* Provide fallback */
+}
+.rental-action-btn.rent-again:hover {
+  filter: brightness(90%);
+}
+
+.rental-action-btn.review.completed {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: var(--color-success, #4caf50); /* Provide fallback */
+  border: 1px solid var(--color-success, #4caf50); /* Provide fallback */
+  cursor: default;
+  opacity: 0.7;
+}
+.rental-action-btn.review.completed:hover {
+  background-color: rgba(76, 175, 80, 0.1); /* Prevent hover effect */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .rentals-container {
+    padding: 1rem;
+    margin-top: var(
+      --core-header-height-mobile,
+      50px
+    ); /* Adjust if mobile header height differs */
+    min-height: calc(100vh - var(--core-header-height-mobile, 50px));
+  }
+
+  .rental-card {
+    flex-direction: column;
+  }
+
+  .rental-image {
+    width: 100%;
+    height: 180px;
+  }
+
+  .rental-details {
+    padding: 0.75rem; /* Slightly reduce padding */
+  }
+
+  .rental-actions {
+    flex-direction: row;
+    flex-wrap: wrap; /* Allow buttons to wrap */
+    justify-content: flex-start; /* Align buttons to the start */
+    border-left: none;
+    border-top: 1px solid var(--color-border-light, #444); /* Provide fallback */
+    min-width: auto; /* Réinitialiser la largeur minimale sur mobile */
+    padding: 0.75rem; /* Adjust padding */
+  }
+
+  .rental-action-btn {
+    width: auto; /* Permettre au bouton de prendre sa taille naturelle sur mobile */
+    flex-grow: 1; /* Allow buttons to grow if space allows */
+    min-width: 100px; /* Ensure minimum tappable area */
+    padding: 0.4rem 0.8rem; /* Adjust padding */
+  }
+}
+
+@media (max-width: 480px) {
+  .page-header h1 {
+    font-size: var(--font-size-xl, 1.5rem); /* Adjust font size */
+  }
+  .tab {
+    padding: 0.5rem 1rem; /* Adjust tab padding */
+  }
+  .rental-info {
+    flex-direction: column; /* Stack date and price */
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+  .rental-actions {
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: stretch; /* Make buttons full width */
+  }
+  .rental-action-btn {
+    width: 100%;
+  }
+}

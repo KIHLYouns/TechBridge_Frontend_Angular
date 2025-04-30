@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechBridge - Find Equipment</title>
+    <link rel="stylesheet" href="css/home.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo">TechBridge</div>
+      <nav class="header-nav">
+        <a href="home.html" class="header-nav-item">Browse</a>
+        <a href="my-rentals.html" class="header-nav-item">My Rentals</a>
+        <a href="profile.html" class="header-nav-item">Profile</a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="home-container">
+      <!-- Categories Section -->
+      <div class="categories">
+        <div class="category-item active">All High-Tech</div>
+        <div class="category-item">Laptops</div>
+        <div class="category-item">Smartphones</div>
+        <div class="category-item">Tablets</div>
+        <div class="category-item">Gaming Consoles</div>
+        <div class="category-item">Drones</div>
+        <div class="category-item">Wearables</div>
+      </div>
+
+      <div class="content-wrapper">
+        <!-- Filter Sidebar -->
+        <aside class="filter-sidebar">
+          <div class="filter-section">
+            <h3 class="filter-title">Location</h3>
+            <select class="location-filter">
+              <option value="">All locations</option>
+              <option value="San Francisco">Tétouan</option>
+              <option value="New York">New York, NY</option>
+              <option value="Brooklyn">Tanger</option>
+              <option value="Austin">Rabat</option>
+              <option value="Los Angeles">Los Angeles, CA</option>
+              <option value="Chicago">Chicago, IL</option>
+              <option value="Miami">Miami, FL</option>
+              <option value="Seattle">Seattle, WA</option>
+            </select>
+          </div>
+          <div class="filter-section">
+            <h3 class="filter-title">Rental Rate (/day)</h3>
+            <div class="price-inputs">
+              <input type="number" placeholder="Min $" class="price-input" />
+              <span>-</span>
+              <input type="number" placeholder="Max $" class="price-input" />
+            </div>
+          </div>
+          <div class="filter-section">
+            <h3 class="filter-title">Availability</h3>
+            <label for="start-date">From:</label>
+            <input
+              type="date"
+              id="start-date"
+              name="start-date"
+              class="date-input"
+            />
+            <label for="end-date">To:</label>
+            <input
+              type="date"
+              id="end-date"
+              name="end-date"
+              class="date-input"
+            />
+          </div>
+          <div class="filter-section">
+            <h3 class="filter-title">Minimum Rating</h3>
+            <div class="rating-filter">
+              <label>
+                <input type="radio" name="rating" value="4" /> 4★ & plus
+              </label>
+              <label>
+                <input type="radio" name="rating" value="3" /> 3★ & plus
+              </label>
+              <label>
+                <input type="radio" name="rating" value="0" checked /> Tous
+              </label>
+            </div>
+          </div>
+          <div class="filter-section">
+            <h3 class="filter-title">Sort By</h3>
+            <select class="sort-select">
+              <option>Recently Added</option>
+              <option>Rate: Low to High</option>
+              <option>Rate: High to Low</option>
+              <option>Distance: Nearest First</option>
+            </select>
+          </div>
+          <button class="filter-button">Clear All</button>
+        </aside>
+
+        <div class="items-grid">
+          <!-- Carte cliquable pour Portable PA System -->
+          <a href="listing-detail.html" class="item-card-link">
+            <div class="item-card">
+              <div class="premium-tag">Premium</div>
+              <img
+                src="assets/images/item-placeholder.jpg"
+                alt="Equipment"
+                class="item-image"
+              />
+              <div class="item-details">
+                <div class="item-header">
+                  <h3 class="item-title">Portable PA System</h3>
+                  <div class="item-price">$150 / day</div>
+                </div>
+                <div class="item-info-line">
+                  <div class="item-partner-container">
+                    <span class="item-partner">AudioPro</span>
+                    <div class="partner-rating">
+                      <i class="fas fa-star star"></i>
+                      <span>4.5</span>
+                    </div>
+                  </div>
+                  <div class="item-location">Tétouan</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Carte cliquable pour LED Uplighting Pack -->
+          <a href="listing-detail.html" class="item-card-link">
+            <div class="item-card">
+              <div class="premium-tag">Premium</div>
+              <img
+                src="assets/images/item-placeholder.jpg"
+                alt="Equipment"
+                class="item-image"
+              />
+              <div class="item-details">
+                <div class="item-header">
+                  <h3 class="item-title">LED Uplighting Pack (x8)</h3>
+                  <div class="item-price">$100 / day</div>
+                </div>
+                <div class="item-info-line">
+                  <div class="item-partner-container">
+                    <span class="item-partner">LightFX</span>
+                    <div class="partner-rating">
+                      <i class="fas fa-star star"></i>
+                      <span>4.2</span>
+                    </div>
+                  </div>
+                  <div class="item-location">Tanger</div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Carte cliquable pour Folding Chairs -->
+          <a href="listing-detail.html" class="item-card-link">
+            <div class="item-card">
+              <img
+                src="assets/images/item-placeholder.jpg"
+                alt="Equipment"
+                class="item-image"
+              />
+              <div class="item-details">
+                <div class="item-header">
+                  <h3 class="item-title">Folding Chairs (Set of 50)</h3>
+                  <div class="item-price">$75 / day</div>
+                </div>
+                <div class="item-info-line">
+                  <div class="item-partner-container">
+                    <span class="item-partner">EventFurnish</span>
+                    <div class="partner-rating">
+                      <i class="fas fa-star star"></i>
+                      <span>4.0</span>
+                    </div>
+                  </div>
+                  <div class="item-location">Rabat</div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Mobile Filter Toggle -->
+      <button class="filter-toggle">
+        <i class="fas fa-filter"></i>
+      </button>
+
+      <!-- Mobile Overlay -->
+      <div class="overlay"></div>
+    </main>
+
+    <script>
+      // Simple JavaScript for the mobile filter toggle functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        const filterToggle = document.querySelector(".filter-toggle");
+        const filterSidebar = document.querySelector(".filter-sidebar");
+        const overlay = document.querySelector(".overlay");
+
+        filterToggle.addEventListener("click", function () {
+          filterSidebar.classList.toggle("open");
+          overlay.classList.toggle("show");
+        });
+
+        overlay.addEventListener("click", function () {
+          filterSidebar.classList.remove("open");
+          overlay.classList.remove("show");
+        });
+
+        // Handle category selection
+        const categoryItems = document.querySelectorAll(".category-item");
+        categoryItems.forEach((item) => {
+          item.addEventListener("click", function () {
+            // Don't remove active class if clicking the already active item
+            if (!this.classList.contains("active")) {
+              categoryItems.forEach((cat) => cat.classList.remove("active"));
+              this.classList.add("active");
+              // Add logic here to filter items based on the selected category
+              console.log("Selected category:", this.textContent);
+            }
+          });
+        });
+
+        const clearButton = document.querySelector(".filter-button");
+        clearButton.addEventListener("click", function () {
+          // Reset price inputs
+          document
+            .querySelectorAll(".price-input")
+            .forEach((input) => (input.value = ""));
+          // Uncheck event type checkboxes
+          document
+            .querySelectorAll('.filter-section input[type="checkbox"]')
+            .forEach((checkbox) => (checkbox.checked = false));
+          // Reset date inputs
+          document
+            .querySelectorAll(".date-input")
+            .forEach((input) => (input.value = ""));
+          // Reset sort select
+          document.querySelector(".sort-select").selectedIndex = 0;
+          // Add logic here to re-fetch/display all items
+          console.log("Filters cleared");
+        });
+      });
+    </script>
+  </body>
+</html>

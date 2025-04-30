@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Bookings - TechBridge</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/partner-dashboard.css" />
+    <link rel="stylesheet" href="css/partner-bookings.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo">TechBridge</div>
+      <nav class="header-nav">
+        <a href="home.html" class="header-nav-item">Browse</a>
+        <a href="partner-dashboard.html" class="header-nav-item">Dashboard</a>
+        <a href="partner-bookings.html" class="header-nav-item active">Bookings</a>
+        <a href="partner-profile.html" class="header-nav-item">Profile</a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-container">
+      <div class="page-header">
+        <h1>My Bookings</h1>
+        <div class="search-filter">
+          <div class="search-wrapper">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Search..." class="search-input" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Bookings Tabs -->
+      <div class="bookings-tabs">
+        <button class="tab-btn active" data-tab="all">
+          All <span class="count">12</span>
+        </button>
+        <button class="tab-btn" data-tab="pending">
+          Pending <span class="count">3</span>
+        </button>
+        <button class="tab-btn" data-tab="upcoming">
+          Upcoming <span class="count">4</span>
+        </button>
+        <button class="tab-btn" data-tab="ongoing">
+          Ongoing <span class="count">1</span>
+        </button>
+        <button class="tab-btn" data-tab="completed">
+          Completed <span class="count">4</span>
+        </button>
+      </div>
+
+      <!-- Additional Filters -->
+      <div class="booking-filters">
+        <div class="filter-group">
+          <label for="date-filter">Period</label>
+          <select id="date-filter" class="filter-select">
+            <option value="all">All dates</option>
+            <option value="upcoming">Next 30 days</option>
+            <option value="past">Last 30 days</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="listing-filter">Equipment</label>
+          <select id="listing-filter" class="filter-select">
+            <option value="all">All equipment</option>
+            <option value="1">Portable PA System</option>
+            <option value="2">LED Lighting Pack (x8)</option>
+            <option value="3">Wireless Microphone Set</option>
+          </select>
+        </div>
+
+        <button class="clear-filters-btn">
+          <i class="fas fa-times"></i> Clear Filters
+        </button>
+      </div>
+
+      <!-- Bookings List -->
+      <div class="bookings-list">
+        <!-- Pending Booking -->
+        <div class="booking-item" data-status="pending">
+          <div class="booking-item-header">
+            <div class="booking-status pending">Pending Confirmation</div>
+            <div class="booking-date">Request received on April 15, 2025</div>
+          </div>
+
+          <div class="booking-item-content">
+            <div class="booking-item-details">
+              <img src="assets/images/item-placeholder.jpg" alt="Equipment" class="booking-item-image" />
+              <div class="booking-info">
+                <h3 class="booking-item-title">Portable PA System</h3>
+                <div class="booking-period">
+                  <i class="fas fa-calendar"></i> April 20 - April 22, 2025 (2 days)
+                </div>
+                <div class="booking-price">€300.00</div>
+              </div>
+            </div>
+
+            <div class="booking-renter-info">
+              <img src="assets/images/default-avatar.jpeg" alt="Client" class="renter-avatar" />
+              <div class="renter-details">
+                <div class="renter-name">Sophie Laurent</div>
+                <div class="renter-rating">
+                  <i class="fas fa-star"></i> 4.8 <span class="reviews-count">(15 reviews)</span>
+                </div>
+                <button class="contact-btn">
+                  <i class="fas fa-comment"></i> Contact
+                </button>
+              </div>
+            </div>
+
+            <div class="booking-actions">
+              <div class="action-text">Request pending for 1 day</div>
+              <div class="action-buttons">
+                <button class="action-btn approve">
+                  <i class="fas fa-check"></i> Approve
+                </button>
+                <button class="action-btn deny">
+                  <i class="fas fa-times"></i> Deny
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confirmed/Upcoming Booking -->
+        <div class="booking-item" data-status="upcoming">
+          <div class="booking-item-header">
+            <div class="booking-status confirmed">Confirmed</div>
+            <div class="booking-date">Confirmed on April 14, 2025</div>
+          </div>
+
+          <div class="booking-item-content">
+            <div class="booking-item-details">
+              <img src="assets/images/item-placeholder.jpg" alt="Equipment" class="booking-item-image" />
+              <div class="booking-info">
+                <h3 class="booking-item-title">LED Lighting Pack (x8)</h3>
+                <div class="booking-period">
+                  <i class="fas fa-calendar"></i> April 25 - April 26, 2025 (2 days)
+                </div>
+                <div class="booking-price">€200.00</div>
+              </div>
+            </div>
+
+            <div class="booking-renter-info">
+              <img src="assets/images/default-avatar.jpeg" alt="Client" class="renter-avatar" />
+              <div class="renter-details">
+                <div class="renter-name">Thomas Dupont</div>
+                <div class="renter-rating">
+                  <i class="fas fa-star"></i> 4.6 <span class="reviews-count">(9 reviews)</span>
+                </div>
+                <button class="contact-btn">
+                  <i class="fas fa-comment"></i> Contact
+                </button>
+              </div>
+            </div>
+
+            <div class="booking-actions">
+              <div class="action-text">Rental starts in 9 days</div>
+              <div class="action-buttons">
+                <button class="action-btn details">
+                  <i class="fas fa-info-circle"></i> Details
+                </button>
+                <button class="action-btn calendar">
+                  <i class="fas fa-calendar"></i> Add to Calendar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ongoing Booking -->
+        <div class="booking-item" data-status="ongoing">
+          <div class="booking-item-header">
+            <div class="booking-status ongoing">Ongoing</div>
+            <div class="booking-date">Start: April 10, 2025</div>
+          </div>
+
+          <div class="booking-item-content">
+            <div class="booking-item-details">
+              <img src="assets/images/item-placeholder.jpg" alt="Equipment" class="booking-item-image" />
+              <div class="booking-info">
+                <h3 class="booking-item-title">Wireless Microphone Set</h3>
+                <div class="booking-period">
+                  <i class="fas fa-calendar"></i> April 10 - April 20, 2025 (10 days)
+                </div>
+                <div class="booking-price">€800.00</div>
+              </div>
+            </div>
+
+            <div class="booking-renter-info">
+              <img src="assets/images/default-avatar.jpeg" alt="Client" class="renter-avatar" />
+              <div class="renter-details">
+                <div class="renter-name">Marie Clément</div>
+                <div class="renter-rating">
+                  <i class="fas fa-star"></i> 4.9 <span class="reviews-count">(22 reviews)</span>
+                </div>
+                <button class="contact-btn">
+                  <i class="fas fa-comment"></i> Contact
+                </button>
+              </div>
+            </div>
+
+            <div class="booking-actions">
+              <div class="action-text">Rental ends in 4 days</div>
+              <div class="action-buttons">
+                <button class="action-btn details">
+                  <i class="fas fa-info-circle"></i> Details
+                </button>
+                <button class="action-btn extend">
+                  <i class="fas fa-calendar-plus"></i> Extend
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completed Booking -->
+        <div class="booking-item" data-status="completed">
+          <div class="booking-item-header">
+            <div class="booking-status completed">Completed</div>
+            <div class="booking-date">Completed on April 5, 2025</div>
+          </div>
+
+          <div class="booking-item-content">
+            <div class="booking-item-details">
+              <img src="assets/images/item-placeholder.jpg" alt="Equipment" class="booking-item-image" />
+              <div class="booking-info">
+                <h3 class="booking-item-title">Portable PA System</h3>
+                <div class="booking-period">
+                  <i class="fas fa-calendar"></i> April 3 - April 5, 2025 (3 days)
+                </div>
+                <div class="booking-price">€450.00</div>
+              </div>
+            </div>
+
+            <div class="booking-renter-info">
+              <img src="assets/images/default-avatar.jpeg" alt="Client" class="renter-avatar" />
+              <div class="renter-details">
+                <div class="renter-name">Pierre Martin</div>
+                <div class="renter-rating">
+                  <i class="fas fa-star"></i> 4.2 <span class="reviews-count">(7 reviews)</span>
+                </div>
+                <button class="contact-btn">
+                  <i class="fas fa-comment"></i> Contact
+                </button>
+              </div>
+            </div>
+
+            <div class="booking-actions">
+              <div class="action-text">Rental successfully completed</div>
+              <div class="action-buttons">
+                <button class="action-btn details">
+                  <i class="fas fa-info-circle"></i> Details
+                </button>
+                <button class="action-btn review">
+                  <i class="fas fa-star"></i> Leave a Review
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completed but Needs Review -->
+        <div class="booking-item" data-status="completed">
+          <div class="booking-item-header">
+            <div class="booking-status needs-review">Awaiting Review</div>
+            <div class="booking-date">Completed on April 1, 2025</div>
+          </div>
+
+          <div class="booking-item-content">
+            <div class="booking-item-details">
+              <img src="assets/images/item-placeholder.jpg" alt="Equipment" class="booking-item-image" />
+              <div class="booking-info">
+                <h3 class="booking-item-title">LED Lighting Pack (x8)</h3>
+                <div class="booking-period">
+                  <i class="fas fa-calendar"></i> March 28 - April 1, 2025 (4 days)
+                </div>
+                <div class="booking-price">€400.00</div>
+              </div>
+            </div>
+
+            <div class="booking-renter-info">
+              <img src="assets/images/default-avatar.jpeg" alt="Client" class="renter-avatar" />
+              <div class="renter-details">
+                <div class="renter-name">Lucie Girard</div>
+                <div class="renter-rating">
+                  <i class="fas fa-star"></i> 4.7 <span class="reviews-count">(12 reviews)</span>
+                </div>
+                <button class="contact-btn">
+                  <i class="fas fa-comment"></i> Contact
+                </button>
+              </div>
+            </div>
+
+            <div class="booking-actions highlight-action">
+              <div class="action-text">Don't forget to leave your review!</div>
+              <div class="action-buttons">
+                <button class="action-btn review-highlight">
+                  <i class="fas fa-star"></i> Leave a Review
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <button class="pagination-btn prev disabled">
+          <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <div class="pagination-pages">
+          <button class="pagination-page active">1</button>
+          <button class="pagination-page">2</button>
+          <button class="pagination-page">3</button>
+        </div>
+        <button class="pagination-btn next">
+          Next <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Tab switching functionality
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const bookingItems = document.querySelectorAll('.booking-item');
+        
+        tabButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            const tabName = this.getAttribute('data-tab');
+            
+            // Show/hide booking items based on selected tab
+            bookingItems.forEach(item => {
+              if (tabName === 'all' || item.getAttribute('data-status') === tabName) {
+                item.style.display = 'block';
+              } else {
+                item.style.display = 'none';
+              }
+            });
+          });
+        });
+        
+        // Clear filters functionality
+        const clearFiltersBtn = document.querySelector('.clear-filters-btn');
+        clearFiltersBtn.addEventListener('click', function() {
+          document.getElementById('date-filter').value = 'all';
+          document.getElementById('listing-filter').value = 'all';
+          
+          // Reset tabs to show all
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          document.querySelector('[data-tab="all"]').classList.add('active');
+          
+          // Show all booking items
+          bookingItems.forEach(item => {
+            item.style.display = 'block';
+          });
+        });
+        
+        // Booking action buttons functionality (example)
+        const actionButtons = document.querySelectorAll('.action-btn');
+        actionButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            if (this.classList.contains('approve')) {
+              console.log('Booking approved');
+              // Code to handle booking approval
+              this.closest('.booking-item').querySelector('.booking-status').textContent = "Confirmed";
+              this.closest('.booking-item').querySelector('.booking-status').classList.remove('pending');
+              this.closest('.booking-item').querySelector('.booking-status').classList.add('confirmed');
+            } else if (this.classList.contains('deny')) {
+              console.log('Booking denied');
+              // Code to handle booking denial
+            } else if (this.classList.contains('review') || this.classList.contains('review-highlight')) {
+              console.log('Leave review');
+              // Code to open review form
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
