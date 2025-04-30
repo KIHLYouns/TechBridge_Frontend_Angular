@@ -1,7 +1,6 @@
 <div class="header-logo">TechBridge</div>
 <nav class="header-nav">
     <a routerLink="/listings" class="header-nav-item">Browse Listings</a>
-<<<<<<< HEAD
         <!-- The key is using the else template -->
         <ng-container *ngIf="(isAuthenticated$ | async); else notAuthenticatedBlock">
             <!-- Authenticated links -->
@@ -14,9 +13,4 @@
             <a routerLink="/auth/sign-up" class="header-nav-item">Sign Up</a>
             <a routerLink="/auth/sign-in" class="header-nav-item">Sign In</a>
         </ng-template>
-=======
-    <a routerLink="/my-rentals" class="header-nav-item">My Rentals</a>
-    <a routerLink="/auth/sign-up" class="header-nav-item">Sign Up</a>
-    <a routerLink="/auth/sign-in" class="header-nav-item">Sign In</a>
->>>>>>> f5332826be192c230a0f3e6e0625fd93bed1b8d2
 </nav>
