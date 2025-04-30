@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en"></html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechBridge - Add a Listing</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/add-listing.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-logo">TechBridge</div>
+    <nav class="header-nav">
+      <a href="home.html" class="header-nav-item">Home</a>
+      <a href="partner-dashboard.html" class="header-nav-item">Dashboard</a>
+      <a href="partner-bookings.html" class="header-nav-item">My Bookings</a>
+      <a href="partner-profile.html" class="header-nav-item">Profile</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="add-listing-section">
+      <h1>Add a New Listing</h1>
+      <form id="add-listing-form">
+
+        <!-- Images -->
+        <div class="form-group">
+          <h2>Images</h2>
+          <div class="image-upload-container">
+            <div class="image-preview-container" id="image-preview">
+              <div class="image-upload-box">
+                <i class="fas fa-camera"></i>
+                <p>Click or drop an image</p>
+                <input type="file" id="images" name="images" multiple accept="image/*" class="image-input">
+              </div>
+            </div>
+            <div class="image-notes">
+              <p>• Accepted formats: JPG, PNG, WEBP</p>
+              <p>• Max size: 5 MB per image</p>
+              <p>• Maximum 5 images</p>
+              <p>• The first image will be the main image</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- General Information -->
+        <div class="form-group">
+          <h2>Equipment Information</h2>
+          <div class="form-field">
+            <label for="title">Listing Title*</label>
+            <input type="text" id="title" name="title" placeholder="E.g., Canon EOS R5 with 24-70mm lens" required>
+          </div>
+          <div class="form-field">
+            <label for="category">Category*</label>
+            <select id="category" name="category_id" required>
+              <option value="">Select a category</option>
+              <option value="1">Photo & Video</option>
+              <option value="2">Audio</option>
+              <option value="3">Computing</option>
+              <option value="4">Tools</option>
+              <option value="5">Appliances</option>
+              <option value="6">Sports</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="price">Price per Day ($)*</label>
+            <input type="number" id="price" name="price_per_day" step="0.01" min="1" placeholder="E.g., 25.50" required>
+          </div>
+          <div class="form-field">
+            <label for="description">Detailed Description*</label>
+            <textarea id="description" name="description" rows="5" placeholder="Describe your item in detail (features, condition, included accessories...)" required></textarea>
+          </div>
+        </div>
+
+        <!-- Availability -->
+        <div class="form-group">
+          <h2>Availability</h2>
+          <div class="form-field">
+            <label>Availability Periods</label>
+            <div id="availability-container">
+              <div class="availability-row">
+                <input type="date" name="start_dates[]" required>
+                <span>to</span>
+                <input type="date" name="end_dates[]" required>
+                <button type="button" class="btn-icon remove-date-btn"><i class="fas fa-trash-alt"></i></button>
+              </div>
+            </div>
+            <button type="button" id="add-date-btn" class="btn btn-secondary">
+              <i class="fas fa-plus"></i> Add a Period
+            </button>
+          </div>
+        </div>
+
+        <!-- Options -->
+        <div class="form-group">
+          <h2>Options</h2>
+          <div class="form-field checkbox-field">
+            <input type="checkbox" id="delivery" name="delivery_option">
+            <label for="delivery">Offer Delivery</label>
+          </div>
+          <div class="premium-option">
+            <h3>Premium Option</h3>
+            <p>Highlight your listing on the platform</p>
+            <div class="premium-choices">
+              <div class="premium-choice">
+                <input type="radio" id="premium-none" name="premium_duration" value="0" checked>
+                <label for="premium-none">No premium option</label>
+              </div>
+              <div class="premium-choice">
+                <input type="radio" id="premium-week" name="premium_duration" value="7">
+                <label for="premium-week">1 week ($5)</label>
+              </div>
+              <div class="premium-choice">
+                <input type="radio" id="premium-2weeks" name="premium_duration" value="15">
+                <label for="premium-2weeks">15 days ($9)</label>
+              </div>
+              <div class="premium-choice">
+                <input type="radio" id="premium-month" name="premium_duration" value="30">
+                <label for="premium-month">1 month ($15)</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary">Publish Listing</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    // Image preview
+    document.getElementById('images').addEventListener('change', function(event) {
+      const preview = document.getElementById('image-preview');
+      const files = event.target.files;
+      if (files) {
+        for (let i = 0; i < files.length && i < 5; i++) {
+          const file = files[i];
+          if (file.type.match('image.*')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              const imgBox = document.createElement('div');
+              imgBox.className = 'image-preview-box';
+              imgBox.innerHTML = `
+                <img src="${e.target.result}" alt="Image preview">
+                <button type="button" class="btn-icon remove-image-btn"><i class="fas fa-times"></i></button>
+              `;
+              preview.insertBefore(imgBox, preview.firstChild);
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      }
+    });
+
+    // Add and remove availability periods
+    document.getElementById('add-date-btn').addEventListener('click', function() {
+      const container = document.getElementById('availability-container');
+      const row = document.createElement('div');
+      row.className = 'availability-row';
+      row.innerHTML = `
+        <input type="date" name="start_dates[]" required>
+        <span>to</span>
+        <input type="date" name="end_dates[]" required>
+        <button type="button" class="btn-icon remove-date-btn"><i class="fas fa-trash-alt"></i></button>
+      `;
+      container.appendChild(row);
+    });
+    document.getElementById('availability-container').addEventListener('click', function(e) {
+      if (e.target.closest('.remove-date-btn')) {
+        const row = e.target.closest('.availability-row');
+        if (document.querySelectorAll('.availability-row').length > 1) {
+          row.remove();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

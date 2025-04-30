@@ -1,0 +1,67 @@
+ User Stories – Projet Location d'Objets
+Ce document recense les besoins fonctionnels du projet sous forme de User Stories (Récits Utilisateur), décrivant les actions que les différents types d'utilisateurs souhaitent pouvoir réaliser sur la plateforme et les bénéfices attendus.
+I. Client (Utilisateur souhaitant louer un objet)
+● Recherche et Consultation :
+○ En tant que Client, je veux rechercher des objets/matériels disponibles à la location en
+utilisant des filtres (ville, catégorie, prix, note), afin de trouver facilement ce dont j'ai besoin.
+○ En tant que Client, je veux visualiser les résultats de recherche sous forme de liste (avec
+objet, photo, nom, surnom partenaire, note, prix/jour) et sur une carte interactive, afin de
+comparer les options et leur localisation.
+○ En tant que Client, je veux pouvoir consulter la fiche détaillée d'une annonce (incluant les
+informations sur l'objet et le partenaire : surnom, note, nombre d'avis, nombre de locations/annonces, photo, nom, description, etc.), afin d'obtenir toutes les informations nécessaires avant de réserver.
+○ En tant que Client, je veux pouvoir parcourir les annonces sans être obligé de me connecter, afin de découvrir librement les offres disponibles.
+●
+● Réservation :
+○ En tant que Client, je veux me connecter ou créer un compte (m'authentifier) pour pouvoir effectuer une réservation, afin de sécuriser le processus et permettre le suivi.
+○ En tant que Client (authentifié), je veux pouvoir sélectionner des dates et réserver un objet, afin de m'assurer de sa disponibilité pour mon usage.
+○ En tant que Client, je veux recevoir une confirmation de ma réservation par email, contenant les détails de la location et les informations personnelles du partenaire, afin d'avoir une preuve et les moyens de contacter le partenaire.
+○ En tant que Client, je veux pouvoir choisir une option de livraison si elle est proposée par le partenaire, afin de faciliter la réception de l'objet loué.
+●
+● Évaluation et Commentaires :
+○ En tant que Client, je veux recevoir une notification (par email via un formulaire) après la fin de ma location, m'invitant à évaluer mon expérience, afin de ne pas oublier de donner mon avis.
+○ En tant que Client, je veux pouvoir laisser une note et/ou un commentaire sur l'état de l'objet reçu et sur la sympathie du partenaire, afin de partager mon expérience avec la communauté.
+○ En tant que Client, je veux que mon commentaire ne soit visible qu'après que le partenaire ait aussi soumis le sien, ou après un délai d'une semaine, afin d'encourager des retours honnêtes et éviter les influences.
+○ En tant que Client, je veux recevoir un rappel si je n'ai pas encore laissé de commentaire après un certain temps, afin d'être encouragé à partager mon feedback.
+●
+● Notifications :
+○ En tant que Client (ayant activé l'option), je veux être notifié lorsqu'une annonce correspondant à mes intérêts est ajoutée ou modifiée, afin de rester informée des nouvelles opportunités.
+
+ II. Partenaire (Utilisateur mettant un objet en location)
+● Gestion des Annonces :
+○ En tant que Partenaire, je veux me connecter à mon espace personnel pour gérer mes
+annonces, afin de sécuriser l'accès à mes informations et mes offres.
+○ En tant que Partenaire, je veux pouvoir créer une nouvelle annonce en fournissant tous les
+détails requis (catégorie, objet/matériel, photo, nom, description, prix/jour, ville, dates de
+disponibilité, etc.), afin de proposer mes biens à la location.
+○ En tant que Partenaire, je veux pouvoir gérer plusieurs annonces pour différents
+objets/matériels, afin de mettre en location divers articles.
+○ En tant que Partenaire, je veux être limité à un maximum de cinq annonces actives
+simultanément, afin de respecter les règles de la plateforme.
+○ En tant que Partenaire, je veux pouvoir archiver (retirer temporairement) ou désarchiver
+(réactiver)une annonce, afin de gérer la visibilité de mes offres en fonction de leur
+disponibilité réelle.
+○ En tant que Partenaire, je veux pouvoir consulter mes annonces archivées, afin de garder
+un historique ou de les réutiliser facilement.
+○ En tant que Partenaire, je veux pouvoir choisir une option payante "annonce premium"
+(pour 1 semaine, 15 jours ou 1 mois), afin de mettre mon annonce en avant sur la première page et augmenter sa visibilité.
+●
+● Gestion des Locations et Évaluation :
+○ En tant que Partenaire, je veux être notifié lorsqu'un client effectue une réservation pour l'un de mes objets, afin de pouvoir préparer la location et communiquer avec le client.
+○ En tant que Partenaire, je veux recevoir une notification (par email via un formulaire) après la fin d'une location, m'invitant à évaluer le client, afin de ne pas oublier de donner mon avis.
+○ En tant que Partenaire, je veux pouvoir laisser une note et/ou un commentaire sur le client (respect des horaires, état de l'objet au retour, etc.), afin de partager mon expérience avec la
+communauté des partenaires.
+○ En tant que Partenaire, je veux que mon commentaire ne soit visible qu'après que le client
+ait aussi soumis le sien, ou après un délai d'une semaine, afin d'encourager des retours
+honnêtes et éviter les influences.
+○ En tant que Partenaire, je veux recevoir un rappel si je n'ai pas encore laissé de commentaire
+après un certain temps, afin d'être encouragé à partager mon feedback.
+III. Système / Agent (Fonctionnalités gérées automatiquement par la plateforme)
+● En tant que Système, je veux faciliter la communication initiale entre le client et le partenaire une fois la réservation confirmée (par l'envoi des coordonnées), afin de permettre l'organisation de la location.
+● En tant que Système, je veux envoyer automatiquement les emails de confirmation de réservation au client et au partenaire, afin de formaliser l'accord.
+● En tant que Système, je veux envoyer automatiquement les liens vers les formulaires d'évaluation au client et au partenaire après la fin de la période de location, afin d'initier le processus de feedback mutuel.
+● En tant que Système, je veux gérer l'affichage conditionnel des commentaires (ne les montrer qu'une fois les deux parties commentées ou après une semaine), afin de garantir l'impartialité initiale des avis.
+● En tant que Système, je veux envoyer des emails de rappel pour les commentaires non soumis après un certain délai, afin d'augmenter le taux de participation aux évaluations.
+
+ ● En tant que Système, je veux générer ou rendre accessible un contrat type de location lié à chaque réservation confirmée, afin de fournir un cadre formel à la transaction.
+● En tant que Système, je veux mettre en évidence les annonces "premium" sur la première page des résultats de recherche pendant la durée choisie par le partenaire, afin de remplir l'engagement lié à cette option payante.
+ 

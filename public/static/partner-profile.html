@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil Partenaire - TechBridge</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/partner-dashboard.css" />
+    <link rel="stylesheet" href="css/partner-profile.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo">TechBridge</div>
+      <nav class="header-nav">
+        <a href="home.html" class="header-nav-item">Parcourir</a>
+        <a href="partner-dashboard.html" class="header-nav-item">Tableau de bord</a>
+        <a href="partner-bookings.html" class="header-nav-item">Réservations</a>
+        <a href="partner-profile.html" class="header-nav-item active">Profil</a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-container">
+      <div class="page-header">
+        <h1>Mon Profil Partenaire</h1>
+      </div>
+
+      <!-- Profile Section -->
+      <div class="profile-container">
+        <!-- Sidebar Navigation -->
+        <div class="profile-sidebar">
+          <div class="profile-avatar-container">
+            <img src="assets/images/default-avatar.jpeg" alt="Photo de profil" class="profile-avatar" />
+            <button class="change-avatar-btn">
+              <i class="fas fa-camera"></i>
+            </button>
+          </div>
+          <div class="profile-name">Jean Dupont</div>
+          <div class="profile-type">Partenaire depuis Mars 2025</div>
+          
+          <nav class="profile-nav">
+            <a href="#personal-info" class="profile-nav-item active">
+              <i class="fas fa-user"></i> Informations personnelles
+            </a>
+            <a href="#business-info" class="profile-nav-item">
+              <i class="fas fa-briefcase"></i> Informations professionnelles
+            </a>
+            <a href="#payment-methods" class="profile-nav-item">
+              <i class="fas fa-credit-card"></i> Méthodes de paiement
+            </a>
+            <a href="#reviews" class="profile-nav-item">
+              <i class="fas fa-star"></i> Avis et évaluations
+              <span class="notification-badge">4</span>
+            </a>
+            <a href="#security" class="profile-nav-item">
+              <i class="fas fa-shield-alt"></i> Sécurité
+            </a>
+            <a href="#notifications" class="profile-nav-item">
+              <i class="fas fa-bell"></i> Notifications
+            </a>
+          </nav>
+          
+          <div class="profile-verification">
+            <div class="verification-title">Statut de vérification</div>
+            <div class="verification-item verified">
+              <i class="fas fa-check-circle"></i> Email vérifié
+            </div>
+            <div class="verification-item verified">
+              <i class="fas fa-check-circle"></i> Téléphone vérifié
+            </div>
+            <div class="verification-item verified">
+              <i class="fas fa-check-circle"></i> Identité vérifiée
+            </div>
+            <div class="verification-item pending">
+              <i class="fas fa-clock"></i> Certification professionnelle
+              <button class="verify-now-btn">Vérifier</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="profile-content">
+          <!-- Personal Information Section -->
+          <section id="personal-info" class="profile-section">
+            <div class="section-header">
+              <h2>Informations personnelles</h2>
+              <button class="edit-section-btn" data-section="personal-info">
+                <i class="fas fa-edit"></i> Modifier
+              </button>
+            </div>
+
+            <form class="profile-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="first-name">Prénom</label>
+                  <input
+                    type="text"
+                    id="first-name"
+                    class="form-input"
+                    value="Jean"
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="last-name">Nom</label>
+                  <input
+                    type="text"
+                    id="last-name"
+                    class="form-input"
+                    value="Dupont"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    class="form-input"
+                    value="jean.dupont@example.com"
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="phone">Téléphone</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    class="form-input"
+                    value="+33 6 12 34 56 78"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="address">Adresse</label>
+                  <input
+                    type="text"
+                    id="address"
+                    class="form-input"
+                    value="123 Rue de Paris"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="city">Ville</label>
+                  <input
+                    type="text"
+                    id="city"
+                    class="form-input"
+                    value="Lyon"
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="zip">Code postal</label>
+                  <input
+                    type="text"
+                    id="zip"
+                    class="form-input"
+                    value="69000"
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="country">Pays</label>
+                  <input
+                    type="text"
+                    id="country"
+                    class="form-input"
+                    value="France"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="form-actions" style="display: none;">
+                <button type="button" class="cancel-btn">Annuler</button>
+                <button type="submit" class="save-btn">Enregistrer</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Business Information Section -->
+          <section id="business-info" class="profile-section">
+            <div class="section-header">
+              <h2>Informations professionnelles</h2>
+              <button class="edit-section-btn" data-section="business-info">
+                <i class="fas fa-edit"></i> Modifier
+              </button>
+            </div>
+
+            <form class="profile-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="business-name">Nom de l'entreprise</label>
+                  <input
+                    type="text"
+                    id="business-name"
+                    class="form-input"
+                    value="SoundTech Pro"
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="business-type">Type d'entreprise</label>
+                  <select id="business-type" class="form-select" disabled>
+                    <option selected>SARL</option>
+                    <option>Auto-entrepreneur</option>
+                    <option>SAS</option>
+                    <option>Association</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="siret">Numéro SIRET</label>
+                  <input
+                    type="text"
+                    id="siret"
+                    class="form-input"
+                    value="123 456 789 00012"
+                    disabled
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="tax-id">Numéro de TVA</label>
+                  <input
+                    type="text"
+                    id="tax-id"
+                    class="form-input"
+                    value="FR 12 123456789"
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group full-width">
+                  <label for="business-description">Description de l'entreprise</label>
+                  <textarea
+                    id="business-description"
+                    class="form-textarea"
+                    rows="4"
+                    disabled
+                  >Spécialiste de la location d'équipement audio professionnel pour événements, concerts et conférences depuis 2020.</textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="business-category">Catégorie principale</label>
+                <select id="business-category" class="form-select" disabled>
+                  <option selected>Équipement Audio</option>
+                  <option>Équipement Vidéo</option>
+                  <option>Éclairage</option>
+                  <option>Accessoires</option>
+                </select>
+              </div>
+
+              <div class="form-actions" style="display: none;">
+                <button type="button" class="cancel-btn">Annuler</button>
+                <button type="submit" class="save-btn">Enregistrer</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Payment Methods Section -->
+          <section id="payment-methods" class="profile-section">
+            <div class="section-header">
+              <h2>Méthodes de paiement</h2>
+              <button class="add-btn">
+                <i class="fas fa-plus"></i> Ajouter un compte
+              </button>
+            </div>
+
+            <div class="payment-methods-list">
+              <div class="payment-method">
+                <div class="payment-method-icon">
+                  <i class="fas fa-university"></i>
+                </div>
+                <div class="payment-method-details">
+                  <div class="payment-method-name">Compte bancaire principal</div>
+                  <div class="payment-method-info">IBAN ••••••••••••3456</div>
+                  <div class="payment-method-status">Vérifié</div>
+                </div>
+                <div class="payment-method-actions">
+                  <button class="edit-btn"><i class="fas fa-edit"></i></button>
+                  <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                </div>
+              </div>
+
+              <div class="payment-method">
+                <div class="payment-method-icon">
+                  <i class="fab fa-cc-stripe"></i>
+                </div>
+                <div class="payment-method-details">
+                  <div class="payment-method-name">Compte Stripe</div>
+                  <div class="payment-method-info">Connecté le 15/03/2025</div>
+                  <div class="payment-method-status">Actif</div>
+                </div>
+                <div class="payment-method-actions">
+                  <button class="info-btn"><i class="fas fa-info-circle"></i></button>
+                  <button class="disconnect-btn"><i class="fas fa-unlink"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="payment-history">
+              <div class="payment-history-header">
+                <h3>Historique des paiements</h3>
+                <select class="period-select">
+                  <option>Ce mois-ci</option>
+                  <option>3 derniers mois</option>
+                  <option>6 derniers mois</option>
+                  <option>Cette année</option>
+                </select>
+              </div>
+
+              <div class="payment-list">
+                <div class="payment-item">
+                  <div class="payment-date">15 avril 2025</div>
+                  <div class="payment-description">Paiement pour la réservation #3542</div>
+                  <div class="payment-amount income">+€450.00</div>
+                </div>
+                <div class="payment-item">
+                  <div class="payment-date">10 avril 2025</div>
+                  <div class="payment-description">Frais de service TechBridge</div>
+                  <div class="payment-amount expense">-€45.00</div>
+                </div>
+                <div class="payment-item">
+                  <div class="payment-date">5 avril 2025</div>
+                  <div class="payment-description">Paiement pour la réservation #3498</div>
+                  <div class="payment-amount income">+€200.00</div>
+                </div>
+                <div class="payment-item">
+                  <div class="payment-date">1 avril 2025</div>
+                  <div class="payment-description">Frais d'abonnement Premium mensuel</div>
+                  <div class="payment-amount expense">-€29.99</div>
+                </div>
+              </div>
+
+              <button class="view-all-payments-btn">
+                Voir tous les paiements <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </section>
+
+          <!-- Reviews Section -->
+          <section id="reviews" class="profile-section">
+            <div class="section-header">
+              <h2>Avis et évaluations</h2>
+              <div class="rating-overview">
+                <div class="rating-stars">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="rating-value">4.8</div>
+                <div class="rating-count">(35 avis)</div>
+              </div>
+            </div>
+
+            <div class="reviews-tabs">
+              <button class="review-tab active" data-tab="received">Avis reçus</button>
+              <button class="review-tab" data-tab="given">Avis laissés</button>
+              <button class="review-tab" data-tab="pending">En attente <span class="notification-badge">4</span></button>
+            </div>
+
+            <div class="reviews-container">
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="assets/images/default-avatar.jpeg" alt="Client" class="review-avatar" />
+                  <div class="review-user-info">
+                    <div class="review-username">Sophie Laurent</div>
+                    <div class="review-date">15 mars 2025</div>
+                  </div>
+                  <div class="review-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <span class="review-rating-value">5.0</span>
+                  </div>
+                </div>
+                <div class="review-content">
+                  Excellent service, matériel audio de très haute qualité et très bien entretenu. La livraison était ponctuelle et Jean a été d'une grande aide pour l'installation. Je recommande vivement !
+                </div>
+                <div class="review-item-details">
+                  <div class="review-booking-info">
+                    Réservation: <a href="#">Système PA portable</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="assets/images/default-avatar.jpeg" alt="Client" class="review-avatar" />
+                  <div class="review-user-info">
+                    <div class="review-username">Thomas Dupont</div>
+                    <div class="review-date">2 mars 2025</div>
+                  </div>
+                  <div class="review-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <span class="review-rating-value">4.0</span>
+                  </div>
+                </div>
+                <div class="review-content">
+                  Très bon service, équipement de qualité. Petit problème avec un des micros sans fil mais résolu rapidement par le propriétaire. Je recommande.
+                </div>
+                <div class="review-item-details">
+                  <div class="review-booking-info">
+                    Réservation: <a href="#">Set microphones sans fil</a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="assets/images/default-avatar.jpeg" alt="Client" class="review-avatar" />
+                  <div class="review-user-info">
+                    <div class="review-username">Marie Clément</div>
+                    <div class="review-date">20 février 2025</div>
+                  </div>
+                  <div class="review-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <span class="review-rating-value">4.5</span>
+                  </div>
+                </div>
+                <div class="review-content">
+                  Le pack d'éclairage était parfait pour notre événement, exactement ce dont nous avions besoin. Service impeccable et matériel en parfait état.
+                </div>
+                <div class="review-item-details">
+                  <div class="review-booking-info">
+                    Réservation: <a href="#">Pack éclairage LED (x8)</a>
+                  </div>
+                </div>
+              </div>
+
+              <button class="load-more-btn">
+                Charger plus d'avis <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+
+            <!-- Pending Reviews Section -->
+            <div class="pending-reviews-container" style="display: none;">
+              <div class="pending-review-item">
+                <div class="pending-review-header">
+                  <img src="assets/images/default-avatar.jpeg" alt="Client" class="review-avatar" />
+                  <div class="review-user-info">
+                    <div class="review-username">Lucie Girard</div>
+                    <div class="review-date">Location: 28 mars - 1 avril 2025</div>
+                  </div>
+                </div>
+                <div class="pending-review-content">
+                  <div class="pending-review-item-details">
+                    <img src="assets/images/item-placeholder.jpg" alt="Équipement" class="pending-review-item-image" />
+                    <div class="pending-review-item-info">
+                      <h4>Pack éclairage LED (x8)</h4>
+                      <div class="pending-review-item-price">€400.00 (4 jours)</div>
+                    </div>
+                  </div>
+                  <div class="pending-review-actions">
+                    <button class="review-now-btn">
+                      <i class="fas fa-star"></i> Laisser un avis
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Additional pending reviews would go here -->
+            </div>
+          </section>
+
+          <!-- Security Section -->
+          <section id="security" class="profile-section">
+            <div class="section-header">
+              <h2>Sécurité</h2>
+            </div>
+
+            <div class="security-options">
+              <div class="security-option">
+                <div class="security-option-info">
+                  <div class="security-option-title">Mot de passe</div>
+                  <div class="security-option-description">Dernière modification il y a 3 mois</div>
+                </div>
+                <button class="change-password-btn">Modifier</button>
+              </div>
+
+              <div class="security-option">
+                <div class="security-option-info">
+                  <div class="security-option-title">Authentification à deux facteurs</div>
+                  <div class="security-option-description">Non activée</div>
+                </div>
+                <button class="enable-2fa-btn">Activer</button>
+              </div>
+
+              <div class="security-option">
+                <div class="security-option-info">
+                  <div class="security-option-title">Historique des connexions</div>
+                  <div class="security-option-description">Vérifiez les dernières connexions à votre compte</div>
+                </div>
+                <button class="view-login-history-btn">Voir</button>
+              </div>
+
+              <div class="security-option">
+                <div class="security-option-info">
+                  <div class="security-option-title">Sessions actives</div>
+                  <div class="security-option-description">Gérez les appareils connectés à votre compte</div>
+                </div>
+                <button class="view-active-sessions-btn">Gérer</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Notifications Section -->
+          <section id="notifications" class="profile-section">
+            <div class="section-header">
+              <h2>Notifications</h2>
+            </div>
+
+            <div class="notification-preferences">
+              <div class="notification-group">
+                <h3>Email</h3>
+                <div class="notification-option">
+                  <div class="notification-title">Nouvelles réservations</div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="notification-option">
+                  <div class="notification-title">Confirmations de réservation</div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="notification-option">
+                  <div class="notification-title">Annulations</div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="notification-option">
+                  <div class="notification-title">Avis reçus</div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="notification-option">
+                  <div class="notification-title">Alertes paiements</div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="notification-option">
+                  <div class="notification-title">Mises à jour de la plateforme</div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="notification-group">
+                <h3>SMS</h3>
+                <div class="notification-option">
+                  <div class="notification-title">Nouvelles réservations</div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="notification-option">
+                  <div class="notification-title">Confirmations de réservation</div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+                <div class="notification-option">
+                  <div class="notification-title">Annulations</div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="notification-group">
+                <h3>Notifications Push (Application mobile)</h3>
+                <div class="notification-option">
+                  <div class="notification-title">Toutes les notifications</div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Navigation active state
+        const profileNavItems = document.querySelectorAll('.profile-nav-item');
+        profileNavItems.forEach(item => {
+          item.addEventListener('click', function(e) {
+            // Remove active class from all items
+            profileNavItems.forEach(i => i.classList.remove('active'));
+            // Add active class to clicked item
+            this.classList.add('active');
+          });
+        });
+
+        // Edit section functionality
+        const editButtons = document.querySelectorAll('.edit-section-btn');
+        editButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const sectionId = this.getAttribute('data-section');
+            const section = document.getElementById(sectionId);
+            const inputs = section.querySelectorAll('.form-input, .form-select, .form-textarea');
+            const formActions = section.querySelector('.form-actions');
+            
+            // Toggle edit mode
+            inputs.forEach(input => {
+              input.disabled = !input.disabled;
+            });
+            
+            if (formActions.style.display === 'none') {
+              formActions.style.display = 'flex';
+              this.innerHTML = '<i class="fas fa-times"></i> Annuler';
+            } else {
+              formActions.style.display = 'none';
+              this.innerHTML = '<i class="fas fa-edit"></i> Modifier';
+              // Reset form
+              section.querySelector('form').reset();
+            }
+          });
+        });
+
+        // Cancel button functionality
+        const cancelButtons = document.querySelectorAll('.cancel-btn');
+        cancelButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            const section = this.closest('.profile-section');
+            const inputs = section.querySelectorAll('.form-input, .form-select, .form-textarea');
+            const formActions = section.querySelector('.form-actions');
+            const editButton = section.querySelector('.edit-section-btn');
+            
+            // Disable inputs and hide actions
+            inputs.forEach(input => {
+              input.disabled = true;
+            });
+            
+            formActions.style.display = 'none';
+            editButton.innerHTML = '<i class="fas fa-edit"></i> Modifier';
+            
+            // Reset form
+            section.querySelector('form').reset();
+          });
+        });
+
+        // Reviews tabs functionality
+        const reviewTabs = document.querySelectorAll('.review-tab');
+        const reviewsContainer = document.querySelector('.reviews-container');
+        const pendingReviewsContainer = document.querySelector('.pending-reviews-container');
+        
+        reviewTabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            reviewTabs.forEach(t => t.classList.remove('active'));
+            // Add active class to clicked tab
+            this.classList.add('active');
+            
+            const tabName = this.getAttribute('data-tab');
+            
+            if (tabName === 'pending') {
+              reviewsContainer.style.display = 'none';
+              pendingReviewsContainer.style.display = 'block';
+            } else {
+              reviewsContainer.style.display = 'block';
+              pendingReviewsContainer.style.display = 'none';
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - TechBridge</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/profile.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo">TechBridge</div>
+      <nav class="header-nav">
+        <a href="home.html" class="header-nav-item">Browse</a>
+        <a href="my-rentals.html" class="header-nav-item">My Rentals</a>
+        <a href="profile.html" class="header-nav-item active">Profile</a>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="profile-container">
+      <!-- Simplified Profile Header -->
+      <div class="profile-header-wrapper">
+        <div class="profile-header">
+          <div class="profile-avatar-container">
+            <img src="assets/images/default-avatar.jpeg" alt="Profile" class="profile-avatar" />
+            <button class="edit-avatar-btn">
+              <i class="fas fa-camera"></i>
+            </button>
+          </div>
+          <div class="profile-info">
+            <div class="profile-name-container">
+              <h1 class="profile-name">Julien Martin</h1>
+              <span class="verification-badge" title="Verified User">
+                <i class="fas fa-check-circle"></i>
+              </span>
+            </div>
+            <p class="profile-location"><i class="fas fa-map-marker-alt"></i> Paris, France</p>
+            <div class="profile-stats">
+              <div class="stat-item">
+                <span class="stat-value">4.8</span>
+                <div class="star-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star-half-alt"></i>
+                </div>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <span class="stat-value">Since 2023</span>
+                <span class="stat-label">Member</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-tabs">
+        <div class="tab active" data-tab="info">Personal Information</div>
+        <div class="tab" data-tab="reviews">Reviews</div>
+      </div>
+
+      <div class="profile-content">
+        <!-- Personal Information Tab (visible by default) -->
+        <div class="tab-content active" id="info-content">
+          <h2>Personal Information</h2>
+          <form class="profile-form">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" value="Julien Martin" />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" value="julien.martin@example.com" />
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" value="06 12 34 56 78" />
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <textarea id="address">123 Paris Street, 75001 Paris, France</textarea>
+            </div>
+            <button type="submit" class="save-btn">Save Changes</button>
+          </form>
+        </div>
+
+        <div class="tab-content" id="reviews-content">
+          <h2>Reviews Received</h2>
+          <div class="reviews-list">
+            <div class="review-card">
+              <div class="review-header">
+                <span class="review-author">LightFX</span>
+                <div class="review-rating">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                </div>
+                <span class="review-date">March 10, 2025</span>
+              </div>
+              <p class="review-text">
+                Excellent client, took care of the equipment and returned it in the same condition as received. Easy and pleasant communication.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Tab management
+        const tabs = document.querySelectorAll('.tab');
+        
+        tabs.forEach(tab => {
+          tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            tabs.forEach(t => t.classList.remove('active'));
+            // Add active class to the clicked tab
+            this.classList.add('active');
+            
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+              content.classList.remove('active');
+            });
+            
+            // Show the selected tab content
+            const tabId = this.getAttribute('data-tab');
+            document.getElementById(`${tabId}-content`).classList.add('active');
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

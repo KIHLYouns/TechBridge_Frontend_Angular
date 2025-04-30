@@ -1,0 +1,589 @@
+/* Styles pour la page de détail d'annonce */
+.detail-container {
+  padding-inline: 4rem;
+  min-height: calc(100vh - var(--core-header-height));
+  margin-top: var(--core-header-height);
+  position: relative;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 3rem;
+}
+
+/* En-tête avec galerie et infos essentielles */
+.detail-culumn {
+  display: grid;
+  grid-template-columns: 60% 40%;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding-top: 2rem;
+}
+
+/* Nouvelle classe pour contenir booking card et item essentials */
+.info-booking-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.main-image-container {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.main-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+.premium-tag {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: var(--color-primary);
+  color: var(--color-bg-dark);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-semibold);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.thumbnail-container {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.thumbnail:hover {
+  opacity: 0.9;
+}
+
+.thumbnail.active {
+  opacity: 1;
+  border-color: var(--color-primary);
+}
+
+/* Informations essentielles - fixed spacing */
+.item-essentials {
+  background-color: var(--color-bg-dark);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 2px solid var(--color-border-light);
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+
+.item-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-light);
+  margin-bottom: 1rem;
+}
+
+.item-price {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-primary);
+  background-color: var(--color-primary-lighter-bg);
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.price-period {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-medium);
+  color: var(--color-text-medium);
+}
+
+.partner-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.partner-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.partner-name {
+  font-weight: var(--font-semibold);
+  color: var(--color-secondary-light);
+  margin-bottom: 0.25rem;
+}
+
+.partner-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  color: var(--color-text-medium);
+}
+
+.partner-rating .star {
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+}
+
+.rating-value {
+  font-weight: var(--font-semibold);
+  margin-left: 0.3rem;
+}
+
+.rating-count {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-medium);
+  margin-left: 0.3rem;
+}
+
+.item-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-medium);
+}
+
+/* Styles pour les détails de l'élément (catégorie et livraison) */
+.item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-text-medium);
+}
+
+.detail-item i {
+  width: 16px;
+  color: var(--color-primary);
+}
+
+/* Étendre .detail-main pour prendre toute la largeur */
+.detail-main.wide {
+  grid-column: 1 / -1;
+}
+
+/* Sections principales */
+
+.section-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-light);
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border-light);
+  padding-bottom: 0.5rem;
+}
+
+.description p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Section de réservation */
+.booking-sidebar {
+  position: static;
+}
+
+.booking-card {
+  background-color: var(--color-bg-dark);
+  border-radius: 8px;
+  border: 2px solid var(--color-border-light);
+  padding: 1.5rem;
+}
+
+/* Styles pour les dates sélectionnées */
+#selected-dates {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.booking-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-light);
+  margin-bottom: 1rem;
+}
+
+.price-display {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1.5rem;
+}
+
+.price-value {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-primary);
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: var(--font-medium);
+  color: var(--color-text-light);
+}
+
+.date-inputs {
+  display: flex;
+  gap: 1rem;
+}
+
+.date-input-group {
+  flex-grow: 1;
+}
+
+.date-input-group label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-medium);
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.date-input {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--color-bg-light);
+  color: var(--color-text-light);
+  border: 2px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-btn {
+  width: 36px;
+  height: 36px;
+  background-color: var(--color-bg-light);
+  color: var(--color-text-light);
+  border: 2px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  user-select: none;
+}
+
+.quantity-btn.decrease {
+  border-radius: 4px 0 0 4px;
+}
+
+.quantity-btn.increase {
+  border-radius: 0 4px 4px 0;
+}
+
+.quantity-input {
+  width: 50px;
+  height: 36px;
+  text-align: center;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+}
+
+.price-breakdown {
+  background-color: var(--color-bg-light);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.breakdown-item:last-child {
+  margin-bottom: 0;
+}
+
+.breakdown-item.total {
+  font-weight: var(--font-semibold);
+  color: var(--color-text-light);
+  border-top: 1px solid var(--color-border-light);
+  padding-top: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.item-label {
+  color: var(--color-text-medium);
+}
+
+.reserve-button {
+  background-color: var(--color-primary);
+  color: var(--color-bg-dark);
+  border: none;
+  padding: 1rem;
+  border-radius: 4px;
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.booking-note {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-medium);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.contact-host {
+  margin-top: 1.5rem;
+  border-top: 1px solid var(--color-border-light);
+  padding-top: 1.5rem;
+}
+
+.contact-host-button {
+  width: 100%;
+  background-color: var(--color-bg-light);
+  color: var(--color-text-light);
+  border: 2px solid var(--color-border);
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-weight: var(--font-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.contact-host-button:hover {
+  background-color: var(--color-bg-medium);
+  border-color: var(--color-primary);
+}
+
+/* Section de la carte de localisation */
+
+#map {
+  height: 250px;      /* Hauteur légèrement réduite pour un design intégré */
+  width: 100%;
+  border-radius: 6px; /* Bordure moins arrondie */
+  margin-top: 15px;
+  z-index: 0;
+  border: 1px solid #dee2e6; /* Bordure subtile */
+  background-color: #f8f9fa; /* Fond affiché pendant le chargement */
+}
+
+/* Style pour l'attribution Leaflet */
+.leaflet-control-attribution {
+  font-size: 10px !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  padding: 2px 4px !important;
+  border-radius: 3px;
+}
+.leaflet-control-attribution a {
+  color: #f4ce14 !important;
+}
+
+/* Styles pour le calendrier de disponibilité */
+.availability-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.calendar-wrapper {
+  width: 100%;
+  background-color: var(--color-bg-dark);
+  border-radius: 8px;
+  border: 1px solid var(--color-border-light);
+  padding: 1rem;
+  overflow: hidden; /* Pour éviter les débordements */
+}
+.flatpickr-calendar {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  background-color: transparent !important; /* Utilise le fond du wrapper */
+  border: none !important;
+}
+.flatpickr-months {
+  background-color: var(--color-bg-dark) !important;
+  padding: 0.5rem 0 !important;
+}
+.flatpickr-month {
+  height: 40px !important;
+}
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  fill: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  height: 32px !important;
+}
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+  fill: var(--color-primary-dark) !important;
+}
+.flatpickr-weekdays {
+  background-color: transparent !important;
+  border-bottom: 1px solid var(--color-border-light) !important;
+}
+.flatpickr-weekdaycontainer {
+  background-color: transparent !important;
+}
+.flatpickr-days,
+.dayContainer {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 4px 0 !important;
+}
+.flatpickr-day {
+  border: 1px solid transparent !important;
+  color: var(--color-text-light) !important;
+  border-radius: 4px !important;
+  margin: 2px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  background-color: transparent !important;
+}
+.flatpickr-day:hover {
+  background-color: var(--color-bg-light) !important;
+  border-color: var(--color-border-light) !important;
+}
+.flatpickr-day.today {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+  background-color: transparent !important;
+  font-weight: bold !important;
+}
+.flatpickr-day.today:hover {
+  background-color: var(--color-primary-lighter-bg) !important;
+}
+.flatpickr-day.selected, 
+.flatpickr-day.startRange, 
+.flatpickr-day.endRange {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-bg-dark) !important;
+  font-weight: bold !important;
+}
+.flatpickr-day.inRange {
+  background-color: var(--color-primary-lighter-bg) !important;
+  border-color: var(--color-primary-lighter-bg) !important;
+  color: var(--color-text-light) !important;
+  box-shadow: none !important;
+}
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover,
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay,
+.flatpickr-day.notAllowed {
+  color: var(--color-text-dark) !important;
+  background-color: transparent !important;
+  opacity: 0.5;
+}
+.flatpickr-day.flatpickr-disabled {
+  text-decoration: line-through !important;
+  color: var(--color-text-dark) !important;
+  opacity: 0.6 !important;
+}
+.flatpickr-day.reserved {
+  text-decoration: line-through;
+  color: var(--color-text-dark) !important;
+  background-color: rgba(255, 59, 48, 0.1) !important;
+  border: 1px solid rgba(255, 59, 48, 0.2) !important;
+  cursor: not-allowed !important;
+  opacity: 0.8 !important;
+}
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-monthDropdown-month {
+  background: var(--color-bg-dark) !important;
+  color: var(--color-text-light) !important;
+  fill: var(--color-text-light) !important;
+}
+.flatpickr-current-month input.cur-year[disabled],.flatpickr-current-month input.cur-year[disabled]:hover {
+  color:var(--color-text-light) !important;
+}
+.flatpickr-weekdays,
+span.flatpickr-weekday {
+  color: var(--color-text-medium) !important;
+}
+/* Pour l'affichage de deux mois côte à côte */
+.flatpickr-calendar.multiMonth {
+  width: 100% !important;
+}
+.flatpickr-calendar.multiMonth .flatpickr-days {
+  border-right: none !important;
+}
+/* Responsive pour les mois multiples */
+@media (max-width: 992px) {
+  .flatpickr-calendar.multiMonth {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .flatpickr-calendar.multiMonth .flatpickr-monthcontainer {
+    width: 100% !important;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .detail-container {
+    padding: 1rem;
+  }
+  .main-image {
+    height: 300px;
+  }
+  .date-inputs {
+    flex-direction: column;
+  }
+  .info-booking-column {
+    gap: 1rem;
+  }
+  .booking-card {
+    margin-top: 2rem;
+    position: static;
+    width: 100%;
+  }
+}
