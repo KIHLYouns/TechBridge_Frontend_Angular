@@ -1,29 +1,27 @@
 <ng-template #isPremium>
-   
+  <div class="premium-tag">Premium</div>
 </ng-template>
 
-<ng-container *ngIf="this.rental$ | async as rental">
-
-<main class="detail-container">
+<ng-container *ngIf="this.listing$ | async as listing">
+  <main class="detail-container">
     <!-- Partie haute avec galerie et colonne d'infos -->
     <div class="detail-culumn">
       <div>
         <div class="main-image-container">
-          <img [src]="rental.mainImage" [alt]="rental.name" id="main-image" class="main-image">
-          <ng-container *ngIf="rental.isPremium">
-            <div class="premium-tag">Premium</div>
+          <img [src]="listing.images?.[0]?.url" [alt]="listing.title" id="main-image" class="main-image">
+          <ng-container *ngIf="listing.is_premium">
+            <ng-container *ngTemplateOutlet="isPremium"></ng-container>
           </ng-container>
         </div>
         <div class="thumbnail-container">
-          <img [src]="rental.mainImage" alt="Thumbnail 1" class="thumbnail active">
-          <img [src]="rental.mainImage" alt="Thumbnail 2" class="thumbnail">
+          <img *ngFor="let image of listing.images" [src]="image.url" [alt]="listing.title" class="thumbnail">
         </div>
         <div class="detail-content">
           <div class="detail-main wide">
             <div class="detail-section">
               <h2 class="section-title">Description</h2>
               <div class="description">
-                <p>{{rental.description}}</p>
+                <p>{{listing.description}}</p>
               </div>
             </div>
             
@@ -44,39 +42,36 @@
       <div class="info-booking-column">
         <!-- Item essentials -->
         <div class="item-essentials">
-          <h1 class="item-title">{{rental.name}}</h1>
-          <div class="partner-info">
-            <img src="assets/images/default-avatar.jpeg" alt="Partner" class="partner-avatar">
+          <h1 class="item-title">{{listing.title}}</h1>
+          <div class="partner-info" *ngIf="listing.partner">
+            <img [src]="listing.partner.avatar_url || 'assets/images/default-avatar.jpeg'" alt="Partner" class="partner-avatar">
             <div class="partner-details">
-              <div class="partner-name">PhotoPro</div>
-              <div class="partner-rating">
-                <i class="fas fa-star star"></i>
-                <i class="fas fa-star star"></i>
-                <i class="fas fa-star star"></i>
-                <i class="fas fa-star star"></i>
-                <i class="fas fa-star-half-alt star"></i>
-                <span class="rating-value">4.5</span>
-                <span class="rating-count">(42 reviews)</span>
+              <div class="partner-name">{{listing.partner.firstname}} {{listing.partner.lastname}}</div>
+              <div class="partner-rating" *ngIf="listing.partner.partner_rating">
+                <i class="fas fa-star star" *ngFor="let star of getStarArray(listing.partner.partner_rating)"></i>
+                <i class="fas fa-star-half-alt star" *ngIf="listing.partner.partner_rating % 1 !== 0"></i>
+                <span class="rating-value">{{listing.partner.partner_rating}}</span>
+                <span class="rating-count">({{listing.partner.partner_reviews || 0}} reviews)</span>
               </div>
             </div>
           </div>
 
           <!-- Nouvelle section pour la catégorie et la livraison -->
           <div class="item-details">
-            <div class="detail-item">
+            <div class="detail-item" *ngIf="listing.category">
               <i class="fas fa-tag"></i>
-              <span>Photography Equipment</span>
+              <span>{{listing.category.name}}</span>
             </div>
-            <div class="detail-item">
+            <div class="detail-item" *ngIf="listing.delivery_option">
               <i class="fas fa-truck"></i>
               <span>Delivery available</span>
             </div>
           </div>
           <!-- Fin nouvelle section -->
 
-          <div class="item-location">
+          <div class="item-location" *ngIf="listing.city">
             <i class="fas fa-map-marker-alt"></i>
-            <span>{{rental.location}}</span>
+            <span>{{listing.city.name}}</span>
           </div>
           <!-- Section de la carte déplacée ici -->
           <div class="detail-section location-map-section">
@@ -89,7 +84,7 @@
         <!-- Booking card -->
         <div class="booking-card">
           <h3 class="booking-title">Book This Item</h3>
-          <div class="item-price">${{rental.price}} <span class="price-period">/ day</span></div>
+          <div class="item-price">${{listing.price_per_day}} <span class="price-period">/ day</span></div>
           <div class="booking-form">
             <div class="price-breakdown">
               <div class="breakdown-item">
@@ -98,14 +93,14 @@
               </div>
               <div class="breakdown-item">
                 <span class="item-label">Rental cost</span>
-                <span id="rental-cost" class="item-value">-</span>
+                <span id="listing-cost" class="item-value">-</span>
               </div>
               <div class="breakdown-item total">
                 <span class="item-label">Total</span>
                 <span id="total-price" class="item-value">-</span>
               </div>
             </div>
-            <button class="reserve-button" (click)="rent(rental.id)">
+            <button class="reserve-button" (click)="rent(listing.id)">
               <i class="fas fa-calendar-check"></i>
               Reserve Now
             </button>
@@ -118,5 +113,4 @@
       </div>
     </div>
   </main>
-
 </ng-container>

@@ -3,9 +3,9 @@
     <div class="content-wrapper">
         <app-filters-side-bar class="filter-sidebar"></app-filters-side-bar>
         <!-- we will render the containt of this ng-container only if the observable exists -->
-        <ng-container *ngIf="this.rentals$ | async as rentals">
+        <ng-container *ngIf="this.listings$ | async as listings">
             <!-- here we subscribe to the observable that emits arrays of our data -->
-            <app-rentals-list [rentals]="rentals" class="items-grid"></app-rentals-list>
+            <app-listings-list [listings]="listings" class="items-grid"></app-listings-list>
         </ng-container>
     </div>
 </div>

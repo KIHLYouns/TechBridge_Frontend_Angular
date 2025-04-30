@@ -1,0 +1,11 @@
+<ng-template #noListings>
+    <div class="no-listings">
+        No listings available
+    </div>
+</ng-template>
+
+<ng-container *ngIf="listings && listings.length > 0; else noListings">
+    <ng-container *ngFor="let listing of listings">
+        <app-listing-card [listing]="listing"></app-listing-card>
+    </ng-container>
+</ng-container>

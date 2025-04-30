@@ -1,0 +1,47 @@
+<ng-container *ngIf="listing">
+  <a class="item-card-link" (click)="navigateToDetail()">
+    <div class="item-card">
+      <ng-container *ngIf="listing.is_premium">
+        <div class="premium-tag">Premium</div>
+      </ng-container>
+      <img
+        [src]="listing.images?.[0]?.url"
+        alt="Equipment"
+        class="item-image"
+      />
+      <div class="item-details">
+        <div class="item-header">
+          <h3 class="item-title">{{ listing.title }}</h3>
+          <div class="item-price">$ {{ listing.price_per_day }} / day</div>
+        </div>
+        <div class="item-info-line">
+          <div class="item-partner-container">
+            <span class="item-partner"
+              >{{ listing.partner?.firstname }}
+              {{ listing.partner?.lastname }}</span
+            >
+            <div
+              class="partner-rating"
+              *ngIf="listing.partner && listing.partner.partner_rating"
+            >
+              <i
+                class="fas fa-star star"
+                *ngFor="
+                  let star of getStarArray(listing.partner.partner_rating!)
+                "
+              ></i>
+              <i
+                class="fas fa-star-half-alt star"
+                *ngIf="listing.partner.partner_rating! % 1 !== 0"
+              ></i>
+              <span>{{ listing.partner.partner_rating }}</span>
+            </div>
+          </div>
+          <div class="item-location" *ngIf="listing.city">
+            {{ listing.city.name }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+</ng-container>

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Rental } from '../../../../models/rental.model';
 import { Router } from '@angular/router';
+import { Listing } from '../../../../../../shared/database.model';
 
 @Component({
   selector: 'app-listing-card',
@@ -9,9 +9,12 @@ import { Router } from '@angular/router';
   styleUrl: './listing-card.component.scss',
 })
 export class ListingCardComponent {
-  @Input() rental!: Rental;
-  constructor(private router: Router){}
+  @Input() listing!: Listing;
+  constructor(private router: Router) {}
   public navigateToDetail() {
-    this.router.navigate(['/rentals', this.rental.id]);
+    this.router.navigate(['/listings', this.listing.id]);
+  }
+  getStarArray(rating: number): number[] {
+    return Array(Math.floor(rating)).fill(0);
   }
 }
