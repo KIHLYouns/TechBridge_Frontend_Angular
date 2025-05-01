@@ -1,16 +1,32 @@
 <div class="header-logo">TechBridge</div>
 <nav class="header-nav">
-    <a routerLink="/listings" class="header-nav-item">Browse Listings</a>
-        <!-- The key is using the else template -->
-        <ng-container *ngIf="(isAuthenticated$ | async); else notAuthenticatedBlock">
-            <!-- Authenticated links -->
-            <a routerLink="/my-rentals" class="header-nav-item">My Rentals</a>
-            <a routerLink="/profile" class="header-nav-item">Profile</a>
-        </ng-container>
-        
-        <!-- This template will render when isAuthenticated$ emits false -->
-        <ng-template #notAuthenticatedBlock>
+    
+    <ng-container *ngIf="navState$ | async as nav">
+        <!-- Not authenticated -->
+        <ng-container *ngIf="!nav.isAuthenticated">
+            <a routerLink="/listings" class="header-nav-item">Browse Listings</a>
             <a routerLink="/auth/sign-up" class="header-nav-item">Sign Up</a>
             <a routerLink="/auth/sign-in" class="header-nav-item">Sign In</a>
-        </ng-template>
+        </ng-container>
+        
+       
+        
+        <!-- Client-only links -->
+        <ng-container *ngIf="nav.isAuthenticated && !nav.isPartner">
+            <a routerLink="/listings" class="header-nav-item">Browse Listings</a>
+            <a routerLink="/my-rentals" class="header-nav-item">My Rentals</a>
+        </ng-container>
+        
+        <!-- Partner links -->
+        <ng-container *ngIf="nav.isAuthenticated && nav.isPartner">
+            <a routerLink="/partner-dashboard" class="header-nav-item">Partner Dashboard</a>
+            <a routerLink="/partner-bookings" class="header-nav-item">Partner Bookings</a>
+            <a routerLink="/add-listing" class="header-nav-item">Add Listing</a>
+        </ng-container>
+
+         <!-- Authenticated - common links -->
+         <ng-container *ngIf="nav.isAuthenticated">
+            <a routerLink="/profile" class="header-nav-item">Profile</a>
+        </ng-container>
+    </ng-container>
 </nav>

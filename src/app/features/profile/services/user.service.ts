@@ -1,18 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, delay, Observable, of, tap } from 'rxjs';
 import { TokenService } from '../../auth/services/token.service';
-
-export type UserRole = 'CLIENT' | 'PARTNER';
-
-export interface User {
-  accessToken: string;
-  expiresIn: number;
-  is_partner: boolean,
-  id: number;
-  roles: UserRole[];
-  tokenType: string;
-  username: string;
-}
+import { User } from '../../../shared/database.model'; // Adjust path as needed
 
 @Injectable({
   providedIn: 'root',
@@ -22,16 +12,17 @@ export class UserService {
 
   // BehaviorSubject to track partner status
   private isPartnerSubject = new BehaviorSubject<boolean>(false);
-  
+
   // Observable that components can subscribe to
   public isPartner$ = this.isPartnerSubject.asObservable();
 
-  constructor() {
-    // Initialize with partner status from localStorage if available
-    this.initializePartnerStatus();
-  }
-  
-  private initializePartnerStatus(): void {
+  private apiUrl = '/api/users'; // Example API endpoint
+
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
+
+  // state management
+
+  public initializePartnerStatus(): void {
     const userJson = localStorage.getItem(this.CURRENT_USER_KEY);
     if (userJson) {
       try {
@@ -45,11 +36,51 @@ export class UserService {
     }
   }
 
+  public isPartner(): boolean {
+    return this.isPartnerSubject.value;
+  }
 
-   public getCurrentUser(): User | null {
+  public reset(): void {
+    localStorage.removeItem(this.CURRENT_USER_KEY);
+    this.isPartnerSubject.next(false);
+  }
+
+  // User management
+
+  public getUserById(userId: number): Observable<User> {
+    console.log(`Getting user by ID: ${userId}`);
+
+    const mockUser: User = {
+      id: userId,
+      firstname: 'Youns',
+      lastname: 'Kihl',
+      email: 'youns.dev@example.com',
+      phone_number: '123-456-7890',
+      address: '123 Main St, Tetouan',
+      avatar_url: `https://ui-avatars.com/api/?name=Kihl+Youns`,
+      client_rating: 4.8,
+      partner_rating: null,
+      join_date: new Date('2022-01-15'),
+      city: { id: 1, name: 'Tétouan' },
+      role: 'USER',
+      is_partner: true,
+    };
+
+    return of(mockUser).pipe(
+      delay(300),
+      tap((user) => {
+        // Save to localStorage
+        this.saveUserToStorage(user);
+        // Update partner status
+        this.isPartnerSubject.next(user.is_partner);
+      })
+    );
+  }
+
+  public getCurrentUserFromLocalStorage(): User | null {
     const userJson = localStorage.getItem(this.CURRENT_USER_KEY);
     if (!userJson) return null;
-    
+
     try {
       return JSON.parse(userJson) as User;
     } catch (e) {
@@ -57,73 +88,91 @@ export class UserService {
       return null;
     }
   }
-  
-  /**
-   * Save user to localStorage
-   */
+
   private saveUserToStorage(user: User): void {
     localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
   }
 
-  public isPartner(): boolean {
-    return this.isPartnerSubject.value;
-  }
-  
-  /**
-   * Switch user to partner role
-   */
   public switchToPartner(): Observable<boolean> {
     console.log('Switching user to partner role');
-    
-    // Simulate API call
     return of(true).pipe(
-      delay(1000), // Simulate network delay
+      delay(1000),
       tap(() => {
         // Get current user from storage
-        const user = this.getCurrentUser();
+        const user = this.getCurrentUserFromLocalStorage();
         if (!user) {
           console.error('No user found in storage');
           return;
         }
-        
         // Update is_partner flag
         user.is_partner = true;
-        
         // Save updated user to storage
         this.saveUserToStorage(user);
-        
         // Publish partner status change
         this.isPartnerSubject.next(true);
       })
     );
   }
-  
-  /**
-   * Switch user back to client role only
-   */
+
   public switchToClient(): Observable<boolean> {
     console.log('Switching user to client-only role');
-    
-    // Simulate API call
+
     return of(true).pipe(
       delay(1000), // Simulate network delay
       tap(() => {
-        // Get current user from storage
-        const user = this.getCurrentUser();
+        const user = this.getCurrentUserFromLocalStorage();
         if (!user) {
           console.error('No user found in storage');
           return;
         }
-        
         // Set is_partner flag to false
         user.is_partner = false;
-        
         // Save updated user to storage
         this.saveUserToStorage(user);
-        
         // Publish partner status change
         this.isPartnerSubject.next(false);
       })
     );
   }
+
+  getCurrentUserId(): number | null {
+    return this.tokenService.getUserIdFromToken();
+  }
+
+  getCurrentUserProfile(): Observable<User> {
+    const userId = this.getCurrentUserId();
+    if (!userId) {
+      return of({} as User);
+    }
+     return this.getUserById(userId);
+  }
+  // Method to update a user's profile
+  updateUserProfile(userId: number, userData: Partial<User>): Observable<User> {
+    console.log('Updating user profile:', userId, userData);
+    const updatedMockUser: User = {
+      id: userId,
+      firstname: userData.firstname || 'Youns', // Example update logic
+      lastname: userData.lastname || 'Kihl',
+      email: userData.email || 'youns.dev@example.com',
+      phone_number: userData.phone_number || '123-456-7890',
+      address: userData.address || '123 Main St, Tétouan',
+      avatar_url:
+        userData.avatar_url ||
+        `https://ui-avatars.com/api/?name=${userData.firstname}+${userData.lastname}`,
+      client_rating: 4.8,
+      partner_rating: null,
+      join_date: new Date('2022-01-15'),
+      city: { id: 1, name: 'Tétouan' },
+      role: 'USER', // Added role
+      is_partner: false, // Added is_partner
+    };
+    return of(updatedMockUser).pipe(
+      delay(500),
+      tap((data) => {
+        this.saveUserToStorage(data);
+      })
+    );
+  }
+
+  // Add other methods as needed (e.g., uploadAvatar)
 }

@@ -1,6 +1,7 @@
 export interface City {
   id: number;
   name: string;
+  // Add other relevant city properties if needed
 }
 
 export interface Category {
@@ -12,24 +13,25 @@ export type UserRole = 'USER' | 'ADMIN';
 
 export interface User {
   id: number;
-  username: string;
+  username?: string; // Assuming username might be available
   firstname: string;
   lastname: string;
-  password?: string;
   email: string;
-  phone_number: string;
-  address?: string;
+  phone_number: string | null;
+  address: string | null;
+  avatar_url: string | null;
+  client_rating: number | null;
+  partner_rating: number | null; // If applicable
+  join_date: string | Date; // Use string if it comes as ISO string, Date otherwise
+  city: City | null; // Assuming city is an object or null
   role: UserRole;
   is_partner: boolean;
-  avatar_url?: string;
-  join_date: string;
-  client_rating?: number;
+  password?: string;
   client_reviews?: number;
-  partner_rating?: number;
   partner_reviews?: number;
   longitude?: number;
   latitude?: number;
-  city?: City;
+  // Add other relevant user properties
 }
 
 export type ListingStatus = 'active' | 'archived' | 'inactive';
@@ -92,15 +94,16 @@ export type ReviewType = 'forObject' | 'forClient' | 'forPartner';
 
 export interface Review {
   id: number;
+  reviewer?: Partial<User>; // Information about the person who left the review
+  reviewee?: Partial<User>; // Information about the person being reviewed (likely the current user)
   rating: number;
-  comment?: string;
+  comment: string | null;
   is_visible: boolean;
-  created_at: string;
+  created_at: string | Date;
   type: ReviewType;
-  reviewer?: User;
-  reviewee?: User;
   reservation?: Reservation;
   listing?: Listing;
+  // Add other relevant review properties
 }
 
 export type NotificationType = 'reservation' | 'review' | 'reminder' | 'system';

@@ -40,6 +40,8 @@ export class ListingsService {
       lastname: 'Dupont',
       email: 'jean.dupont@example.com',
       phone_number: '0123456789',
+      address: '123 Rue Principale, Casablanca', // Added address
+      client_rating: 4.5, // Added client_rating
       role: 'USER',
       is_partner: true,
       join_date: '2023-01-15T10:00:00Z',
@@ -57,6 +59,8 @@ export class ListingsService {
       lastname: 'Martin',
       email: 'alice.martin@example.com',
       phone_number: '0987654321',
+      address: '45 Avenue Hassan II, Marrakech', // Added address
+      client_rating: 4.8, // Added client_rating
       role: 'USER',
       is_partner: true,
       join_date: '2022-11-20T14:30:00Z',
@@ -74,6 +78,8 @@ export class ListingsService {
       lastname: 'Bernard',
       email: 'felix.bernard@example.com',
       phone_number: '0611223344',
+      address: null, // Added address as null
+      client_rating: null, // Added client_rating as null
       role: 'USER',
       is_partner: true,
       join_date: '2024-02-10T09:00:00Z',
@@ -91,6 +97,8 @@ export class ListingsService {
       lastname: 'Leroy',
       email: 'sophie.leroy@example.com',
       phone_number: '0712345678',
+      address: '78 Boulevard Mohammed V, Tétouan', // Added address
+      client_rating: 4.2, // Added client_rating
       role: 'USER',
       is_partner: true,
       join_date: '2023-05-25T11:00:00Z',

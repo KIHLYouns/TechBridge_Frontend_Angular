@@ -6,6 +6,7 @@ import { SignUpRequest, SignUpResponse } from '../models/sign-up.model';
 import { SignInRequest, SignInResponse } from '../models/sign-in.model';
 import { TokenService } from './token.service';
 import { Router } from '@angular/router';
+import { UserService } from '../../profile/services/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +18,31 @@ export class AuthService {
   // Observable that components can subscribe to
   public authState$: Observable<boolean>;
 
-  constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) {
+  constructor(private http: HttpClient, private tokenService: TokenService, private router: Router, private userService: UserService) {
 
     const initialAuthState = this.tokenService.hasValidToken();
     this.authStateSubject = new BehaviorSubject<boolean>(initialAuthState);
     this.authState$ = this.authStateSubject.asObservable();
+
+    if (initialAuthState) {
+      this.initializeUserData();
+    }
    }
+
+   // Add this new method
+private initializeUserData(): void {
+  const userId = this.tokenService.getUserIdFromToken();
+  if (userId) {
+    // Load user data based on the ID from token
+    this.userService.getUserById(userId).subscribe({
+      next: () => console.log('User data loaded on app initialization'),
+      error: (error) => {
+        console.error('Failed to load user data:', error);
+        this.authStateSubject.next(false);
+      }
+    });
+  }
+}
 
 
   private createMockJwt(claims: any): string {
@@ -55,10 +75,7 @@ export class AuthService {
     // Create mock token with claims
     const mockToken = this.createMockJwt({
       sub: 'user-' + Math.floor(Math.random() * 10000),
-      username: request.username,
-      email: request.username.includes('@') ? request.username : `${request.username}@example.com`,
-      firstName: 'Test',
-      lastName: 'User',
+      userId: 1,
       city: 'Paris',
       roles: ['USER']
     });
@@ -70,10 +87,21 @@ export class AuthService {
       tap(response => {
         if (response && response['access-token']) {
           this.tokenService.saveAccessToken(response['access-token']);
-          // Publish auth state change to subscribers
+           // Get user ID from token and load user data
+        const userId = this.tokenService.getUserIdFromToken();
+        if (userId) {
+          this.userService.getUserById(userId).subscribe({
+            next: () => {
+              this.authStateSubject.next(true);
+              this.router.navigate(['/listings']);
+            },
+            error: (error) => console.error('Error getting user data:', error)
+          });
+        } else {
           this.authStateSubject.next(true);
           this.router.navigate(['/listings']);
         }
+      }
       })
     );
   }
@@ -134,14 +162,13 @@ export class AuthService {
     return isAuthenticated;
   }
 
-  getUser(): any {
-    return this.tokenService.getUser();
-  }
 
 
   logout(): void {
     this.tokenService.clearStorage();
+    this.userService.reset();
     this.authStateSubject.next(false);
+    this.router.navigate(['/']);
   }
 
   isAuthenticated(): boolean {

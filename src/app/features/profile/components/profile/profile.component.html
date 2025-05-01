@@ -1,1 +1,198 @@
-<p>profile works!</p>
+<div class="profile-container">
+
+  <!-- Loading Indicator for User Profile -->
+  <div *ngIf="isLoadingUser" class="loading-indicator">Loading profile...</div>
+
+  <!-- Profile Header -->
+  <div class="profile-header" *ngIf="user && !isLoadingUser">
+    <div class="profile-avatar-container">
+      <!-- Use default avatar if user.avatar_url is null/empty -->
+      <img [src]="user.avatar_url || 'assets/images/default-avatar.png'"
+        alt="Profile Avatar" class="profile-avatar" />
+      <button class="edit-avatar-btn" (click)="editAvatar()"
+        title="Change Avatar">
+        <i class="fas fa-camera"></i>
+      </button>
+    </div>
+    <div class="profile-info">
+      <div class="profile-name-container">
+        <h1 class="profile-name">{{ user.firstname }} {{ user.lastname }}</h1>
+      </div>
+      <!-- Display city name if available -->
+      <p class="profile-location" *ngIf="user.city?.name">
+        <i class="fas fa-map-marker-alt"></i> {{ user.city?.name }}
+      </p>
+      <!-- Display address if city is not available but address is -->
+      <p class="profile-location" *ngIf="!user.city?.name && user.address">
+        <i class="fas fa-map-marker-alt"></i> {{ user.address | slice:0:30 }}{{
+        user.address && user.address.length > 30 ? '...' : '' }}
+        <!-- Show truncated address -->
+      </p>
+      <p class="profile-location" *ngIf="!user.city?.name && !user.address">
+        <i class="fas fa-map-marker-alt"></i> Location not set
+      </p>
+      <div class="profile-stats">
+        <div class="stat-item" *ngIf="user.client_rating !== null">
+          <span class="stat-label">Rating</span>
+          <span class="stat-value">{{ user.client_rating.toFixed(1) }}</span>
+          <!-- Add star rating display logic here -->
+          <div class="star-rating">
+            <i class="fas fa-star"></i> <!-- Example star -->
+          </div>
+        </div>
+        <!-- Divider if rating exists -->
+        <div class="stat-divider" *ngIf="user.client_rating !== null"></div>
+        <div class="stat-item">
+          <!-- Format join date using DatePipe -->
+          <span class="stat-label">Member</span>
+          <span class="stat-value">Since {{ user.join_date | date:'yyyy'
+            }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Tabs -->
+  <div class="profile-tabs" *ngIf="user && !isLoadingUser">
+    <div class="tab" [class.active]="activeTab === 'info'"
+      (click)="setActiveTab('info')">Personal Information</div>
+    <div class="tab" [class.active]="activeTab === 'reviews'"
+      (click)="setActiveTab('reviews')">Reviews</div>
+  </div>
+
+  <!-- Profile Content -->
+  <div class="profile-content" *ngIf="user && !isLoadingUser">
+
+    <!-- Personal Information Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'info'">
+      <h2>Edit Personal Information</h2>
+      <!-- Use Angular Reactive Forms -->
+      <form class="profile-form" [formGroup]="profileForm"
+        (ngSubmit)="saveProfileChanges()">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstname">First Name</label>
+            <input type="text" id="firstname" formControlName="firstname" />
+            <!-- Basic Validation Feedback -->
+            <div
+              *ngIf="f['firstname'].invalid && (f['firstname'].dirty || f['firstname'].touched)"
+              class="validation-error">
+              <small *ngIf="f['firstname'].errors?.['required']">First name is
+                required.</small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <input type="text" id="lastname" formControlName="lastname" />
+            <div
+              *ngIf="f['lastname'].invalid && (f['lastname'].dirty || f['lastname'].touched)"
+              class="validation-error">
+              <small *ngIf="f['lastname'].errors?.['required']">Last name is
+                required.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" formControlName="email" />
+          <div
+            *ngIf="f['email'].invalid && (f['email'].dirty || f['email'].touched)"
+            class="validation-error">
+            <small *ngIf="f['email'].errors?.['required']">Email is
+              required.</small>
+            <small *ngIf="f['email'].errors?.['email']">Please enter a valid
+              email address.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" formControlName="phone"
+            placeholder="e.g., 123-456-7890" />
+          <!-- Add validation if needed -->
+        </div>
+
+        <div class="form-group">
+          <label for="address">Address</label>
+          <textarea id="address" formControlName="address" rows="3"></textarea>
+          <!-- Add validation if needed -->
+        </div>
+
+        <div class="form-group partner-toggle-section">
+          <h3>Account Type</h3>
+          <div class="toggle-container">
+            <span class="toggle-label">Partner Mode</span>
+            <label class="toggle-switch">
+              <input
+                type="checkbox"
+                [checked]="isPartner$ | async"
+                (change)="togglePartnerStatus($event)"
+                [disabled]="isTogglingPartner">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-status">
+              <span *ngIf="isPartner$ | async">Partner account active</span>
+              <span *ngIf="!(isPartner$ | async)">Standard user account</span>
+            </span>
+          </div>
+          <div *ngIf="isTogglingPartner" class="loading-message">
+            <i class="fas fa-spinner fa-spin"></i> Updating account type...
+          </div>
+          <p class="toggle-description">
+            Toggle this switch to change between standard user and partner
+            account.
+            Partners can list items for rent and manage bookings.
+          </p>
+        </div>
+
+        <button type="submit" class="save-btn"
+          [disabled]="profileForm.invalid || isSaving || profileForm.pristine">
+          {{ isSaving ? 'Saving...' : 'Save Changes' }}
+        </button>
+        <!-- Show message if form is pristine (no changes) -->
+        <small *ngIf="profileForm.pristine && !isSaving"
+          class="pristine-message">No changes to save.</small>
+      </form>
+    </div>
+
+    <!-- Reviews Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'reviews'">
+      <h2>Reviews Received</h2>
+      <!-- Loading Indicator for Reviews -->
+      <div *ngIf="isLoadingReviews" class="loading-indicator">Loading
+        reviews...</div>
+
+      <div class="reviews-list"
+        *ngIf="!isLoadingReviews && reviews.length > 0; else noReviews">
+        <!-- Use *ngFor to loop through reviews -->
+        <div class="review-card" *ngFor="let review of reviews">
+          <div class="review-header">
+            <!-- Display reviewer info if available -->
+            <span class="review-author">{{ review.reviewer?.username ||
+              review.reviewer?.firstname || 'Anonymous' }}</span>
+            <div class="review-rating">
+              <!-- Add logic to display stars based on review.rating -->
+              <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+                <i class="fas fa-star" [class.filled]="i <= review.rating"></i>
+              </ng-container>
+              ({{ review.rating }}/5)
+            </div>
+            <!-- Format date using DatePipe -->
+            <span class="review-date">{{ review.created_at | date:'mediumDate'
+              }}</span>
+          </div>
+          <p class="review-text">{{ review.comment || 'No comment provided.'
+            }}</p>
+        </div>
+      </div>
+      <ng-template #noReviews>
+        <p *ngIf="!isLoadingReviews">No reviews received yet.</p>
+      </ng-template>
+    </div>
+
+  </div> <!-- End profile-content -->
+
+</div> <!-- End profile-container -->

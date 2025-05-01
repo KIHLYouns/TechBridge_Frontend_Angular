@@ -5,79 +5,67 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root'
 })
 export class TokenService {
-  private readonly ACCESS_TOKEN_KEY = 'access-token';
+  private readonly TOKEN_KEY = 'access_token';
 
-  constructor() { }
+  constructor() {}
 
-  public saveAccessToken(token: string): void {
-    localStorage.setItem(this.ACCESS_TOKEN_KEY, token);
+  saveAccessToken(token: string): void {
+    localStorage.setItem(this.TOKEN_KEY, token);
   }
 
-  public getAccessToken(): string | null {
-    return localStorage.getItem(this.ACCESS_TOKEN_KEY);
+  getAccessToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  public decodeToken(token: string): any {
+  clearStorage(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+  }
+
+  hasValidToken(): boolean {
+    const token = this.getAccessToken();
+    if (!token) return false;
+    
     try {
-      return jwtDecode(token);
-    } catch (error) {
-      console.error('Invalid token specified:', error);
+      // Parse the token
+      const payload = this.parseJwt(token);
+      
+      // Check if token is expired
+      const expiryTime = payload.exp * 1000; // Convert to milliseconds
+      return Date.now() < expiryTime;
+    } catch (e) {
+      console.error('Error validating token:', e);
+      return false;
+    }
+  }
+
+  parseJwt(token: string): any {
+    try {
+      // Get the payload part of the JWT (second part)
+      const base64Payload = token.split('.')[1];
+      // Replace characters and decode
+      const payload = JSON.parse(atob(base64Payload));
+      return payload;
+    } catch (e) {
+      console.error('Error parsing JWT:', e);
+      throw e;
+    }
+  }
+
+
+
+  getUserIdFromToken(): number | null {
+    try {
+      const token = this.getAccessToken();
+      if (!token) return null;
+      
+      const payload = this.parseJwt(token);
+      // The user ID could be in different claims depending on your JWT structure
+      // Check common places where it might be
+      return payload.userId || payload.sub || null;
+    } catch (e) {
+      console.error('Error getting user ID from token:', e);
       return null;
     }
-  }
-
-  public getExpiresAt(token: string): number | null {
-    try {
-      const decodedToken: any = this.decodeToken(token);
-      // JWT typically uses the 'exp' claim for expiration timestamp
-      return decodedToken ? decodedToken.exp * 1000 : null; // Convert to milliseconds
-    } catch (error) {
-      console.error('Error extracting expiration time:', error);
-      return null;
-    }
-  }
-
-  public isTokenExpired(token: string): boolean {
-    const expiresAt = this.getExpiresAt(token);
-    return expiresAt ? Date.now() > expiresAt : true;
-  }
-
-  public getTokenClaims(): any {
-    const token = this.getAccessToken();
-    if (token && !this.isTokenExpired(token)) {
-      return this.decodeToken(token);
-    }
-    return null;
-  }
-
-  public getUser(): any {
-    const claims = this.getTokenClaims();
-    if (claims) {
-      return {
-        id: claims.sub,
-        username: claims.username,
-        email: claims.email,
-        firstName: claims.firstName,
-        lastName: claims.lastName,
-        city: claims.city,
-        roles: claims.roles
-      };
-    }
-    return null;
-  }
-
-  public getCity(): string | null {
-    const claims = this.getTokenClaims();
-    return claims?.city || null;
-  }
-
-  public hasValidToken(): boolean {
-    const token = this.getAccessToken();
-    return token !== null && !this.isTokenExpired(token);
-  }
-
-  public clearStorage(): void {
-    localStorage.removeItem(this.ACCESS_TOKEN_KEY);
   }
 
 }

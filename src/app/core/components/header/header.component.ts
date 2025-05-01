@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../features/auth/services/auth.service';
-import { Observable } from 'rxjs';
+import { combineLatest, map, Observable } from 'rxjs';
+import { UserService } from '../../../features/profile/services/user.service';
+
+// Add interface
+interface NavState {
+  isAuthenticated: boolean;
+  isPartner: boolean;
+}
 
 @Component({
   selector: 'app-header',
@@ -10,12 +17,21 @@ import { Observable } from 'rxjs';
 })
 export class HeaderComponent implements OnInit {
   public isAuthenticated$!: Observable<boolean>;
-  constructor(private authService: AuthService) {}
+  public navState$!: Observable<NavState>;
+  constructor(private authService: AuthService,
+    private userService: UserService) {}
   ngOnInit(): void {
     this.isAuthenticated$ = this.authService.authState$;
     // Log initial authentication state for debugging
-    this.authService.authState$.subscribe(state => {
-      console.log('HeaderComponent received auth state update:', state);
-    });
+    this.navState$ = combineLatest([
+      this.authService.authState$,
+      this.userService.isPartner$
+    ]).pipe(
+      map(([isAuthenticated, isPartner]) => ({
+        isAuthenticated,
+        isPartner
+      }))
+    );
   }
+  
 }

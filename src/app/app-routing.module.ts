@@ -8,7 +8,10 @@ const routes: Routes = [
   { path: 'listings', loadChildren: () => import('./features/listings/listings.module').then(m => m.ListingsModule) }, // /listings loads the ListingsModule
   { path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) },
   { path: 'my-rentals', loadChildren: () => import('./features/my-rentals/my-rentals.module').then(m => m.MyRentalsModule) }, // /my-rentals loads the MyRentalsModule
-  { path: 'profile', loadChildren: () => import('./features/profile/profile.module').then(m => m.ProfileModule)}
+  { path: 'profile', loadChildren: () => import('./features/profile/profile.module').then(m => m.ProfileModule)},
+  { path: 'partner-bookings', loadChildren: () => import('./features/partner-bookings/partner-bookings.module').then(m => m.PartnerBookingsModule)},
+  { path: 'partner-dashboard', loadChildren: () => import('./features/partner-dashboard/partner-dashboard.module').then(m => m.PartnerDashboardModule)},
+  { path: 'add-listing', loadChildren: () => import('./features/add-listing/add-listing.module').then(m => m.AddListingModule)},
 ];
 
 @NgModule({
