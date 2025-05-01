@@ -36,7 +36,7 @@
   background-color: var(--color-bg-dark);
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-  padding: 2rem;
+  padding: 1rem 2rem;
   margin-top: 2rem;
   border: 2px solid var(--color-border-light);
   border-top: none;
@@ -86,7 +86,7 @@
 
 .profile-name-container {
   display: flex;
-  align-items: center;
+  align-items: baseline; // Align baselines of name and username
   margin-bottom: 0.5rem;
   flex-wrap: wrap; // Allow wrapping if name is long
 }
@@ -95,18 +95,26 @@
   font-size: var(--font-size-2xl);
   font-weight: var(--font-bold);
   color: var(--color-text-light);
-  margin-right: 0.5rem;
+  margin-right: 0.75rem; // Increased space
+}
+
+// Style for username display in header
+.profile-username {
+  font-size: var(--font-size-lg); // Slightly smaller than name
+  font-weight: var(--font-medium);
+  color: var(--color-text-medium);
 }
 
 .verification-badge {
   color: var(--color-primary);
   font-size: var(--font-size-lg);
+  margin-left: 0.5rem; // Add space if verification is present
 }
 
 .profile-location {
   color: var(--color-text-medium);
   font-size: var(--font-size-sm);
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.25rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -131,10 +139,10 @@
 
 .stat-item {
   display: flex;
-  flex-direction: row;
+  flex-direction: row; // Keep as row
   align-items: center; // Center content horizontally within the item
   text-align: center;
-  gap: 0.5rem;
+  gap: 0.5rem; // Keep gap between elements in the item
 }
 
 .stat-divider {
@@ -148,6 +156,7 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-semibold);
   color: var(--color-text-light); // Use light text color for value
+  order: 1; // Ensure value comes first visually if needed (adjust based on HTML structure)
 }
 
 .star-rating {
@@ -156,11 +165,11 @@
   gap: 2px;
   font-size: var(--font-size-xs); // Size of the stars
   color: var(--color-text-medium); // Color for empty/non-filled stars
-  margin-bottom: 0.25rem; // Add small space below the stars
+  order: 2; // Star rating after value
 
   i.fas.fa-star { // Target all stars within the rating
     &.filled { // Style for filled stars (class added in HTML)
-      color: var(--color-primary);
+      color: var(--color-primary); // Use primary color for filled stars
     }
   }
 }
@@ -168,12 +177,13 @@
 .stat-label {
   font-size: var(--font-size-xs);
   color: var(--color-primary);
+  order: 3; // Label comes last
 }
 
 /* Onglets du profil */
 .profile-tabs {
   display: flex;
-  margin-top: 2rem; // Increased margin
+  margin: 1rem 0rem; // Increased margin
   border-bottom: 2px solid var(--color-border-light);
 }
 
@@ -182,6 +192,7 @@
   cursor: pointer;
   color: var(--color-text-medium);
   font-weight: var(--font-medium);
+  font-size: var(--font-size-base);
   position: relative;
   border: none; // Remove default button border if it was a button
   background: none; // Remove default button background
@@ -207,20 +218,152 @@
   background-color: var(--color-primary);
 }
 
-/* Contenu des onglets */
-.profile-content {
-  margin-top: 1rem;
+.profile-content h2 {
+  margin: 1rem 0rem 1.5rem 0rem; // Added bottom margin to headings
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-dark); // Ensure heading color
 }
 
-.profile-content h2 {
-  margin-bottom: 1rem;
+/* Review Sub-Tabs */
+.review-sub-tabs {
+  display: flex;
+  gap: 0.5rem; // Space between buttons
+  margin-bottom: 1rem; // Space below sub-tabs before the list starts
+  border-bottom: 1px solid var(--color-border-light); // Line below tabs
+  padding-bottom: 0; // Remove padding if button border provides visual separation
+}
+
+.sub-tab-btn {
+  padding: 0.75rem 1rem; // Slightly more padding
+  cursor: pointer;
+  background: none;
+  border: none; // Remove default border
+  border-bottom: 2px solid transparent; // Indicator line, initially transparent
+  color: var(--color-text-medium);
+  font-size: var(--font-size-xs); // Ensure readable size
+  transition: color 0.2s ease, border-color 0.2s ease;
+  margin-bottom: -1px; // Overlap the container border-bottom for seamless look
+
+  &:hover {
+    color: var(--color-text-dark); // Darker hover color
+  }
+
+  &.active {
+    color: var(--color-border); // Active color
+    font-weight: var(--font-semibold); // Bolder font for active
+    border-bottom-color: var(--color-border); // Show indicator line
+  }
+}
+
+/* Avis */
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; // Space between review cards
+}
+
+.review-card {
+  background-color: var(--color-bg-light);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-sm); // Subtle shadow
+}
+
+.review-header {
+  display: flex;
+  align-items: flex-start; // Align items to the top for potentially multi-line names
+  flex-wrap: wrap; // Allow wrapping on small screens
+  gap: 0 1rem; // Add horizontal gap between elements, no vertical gap initially
+}
+
+.review-avatar {
+    width: 45px; // Slightly larger avatar
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover; // Ensure image covers the area
+    margin-right: 1rem; // Space between avatar and name/date block
+    flex-shrink: 0; // Prevent avatar from shrinking
+    background-color: var(--color-bg-medium); // Placeholder background
+    border: 1px solid var(--color-border-light); // Optional border
+}
+
+.review-author-details {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; // Allow this block to take up space
+    // Removed margin-right, gap on parent handles spacing
+}
+
+.review-author {
+  font-weight: var(--font-semibold);
+  color: var(--color-text-dark); // Darker text for name
+  line-height: 1.4; // Adjust line height
+  margin-bottom: 0.1rem; // Small space between name and date
+}
+
+.review-rating {
+  display: flex;
+  align-items: center;
+  color: var(--color-primary); // Star color defined below
+  margin-left: auto; // Push rating to the right on larger screens
+  flex-shrink: 0; // Prevent rating from shrinking
+  padding-top: 0.1rem; // Align baseline slightly better with author name
+
+  .fas.fa-star {
+     font-size: var(--font-size-base); // Slightly larger stars
+     color: var(--color-border-light); // Default empty star color
+
+     &.filled {
+        color: var(--color-warning); // Use warning/yellow color for filled stars
+     }
+  }
+
+  span { // Style for the (x/5) text
+    font-size: var(--font-size-sm); // Smaller text for rating number
+    color: var(--color-text-medium);
+    margin-left: 0.5rem; // Space between stars and text
+  }
+}
+
+.review-date {
+  font-size: var(--font-size-sm); // Smaller date text
+  color: var(--color-text-medium);
+  line-height: 1.3;
+}
+
+.review-text {
+  color: var(--color-text-light);
+  line-height: 1.6;
+  // Indent text to align roughly with author details (avatar width + margin)
+  padding-left: calc(45px + 1rem); // Adjust based on avatar size and margin
+}
+
+/* Loading Indicator */
+.loading-indicator {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-medium);
+}
+
+/* No Reviews Message */
+.reviews-list + ng-template p, // Style p inside the ng-template following .reviews-list
+.reviews-list + div > p { // Style p inside the div following .reviews-list (for *ngIf/else)
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-medium);
+  background-color: var(--color-bg-light);
+  border: 1px dashed var(--color-border-light);
+  border-radius: 8px;
+  margin-top: 1rem;
 }
 
 /* Formulaire */
 .profile-form {
   width: 100%;
   background-color: var(--color-bg-dark); // Add background to form area
-  padding: 2rem; // Add padding inside the form area
+  padding: 1rem 2rem; // Add padding inside the form area
   border-radius: 8px;
   border: 1px solid var(--color-border-light);
 }
@@ -228,7 +371,7 @@
 .form-row {
   display: flex;
   gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem; // Increased bottom margin for rows
 
   .form-group {
     flex: 1; // Make groups share space equally
@@ -237,7 +380,7 @@
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem; // Default bottom margin for standalone groups
 }
 
 .form-group label {
@@ -270,7 +413,6 @@
 }
 
 .form-group textarea {
-  min-height: 100px;
   resize: vertical;
 }
 
@@ -278,6 +420,100 @@
   margin-top: 0.5rem;
   color: var(--color-error);
   font-size: var(--font-size-xs);
+}
+
+// Location Update Section Styles
+.location-update-section {
+  margin-top: 1.5rem; // Add space above location section
+  padding-top: 1.5rem; // Add padding above
+  border-top: 1px solid var(--color-border-light); // Separator line
+
+  label {
+    display: block; // Keep label above if needed
+    margin-bottom: 0.5rem;
+  }
+}
+
+.location-status-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; // Space between status text and button
+  flex-wrap: wrap; // Allow wrapping on smaller screens
+}
+
+.location-status {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-medium);
+  display: inline-flex; // Align icon and text
+  align-items: center;
+  gap: 0.3rem;
+  flex-grow: 1; // Allow text to take available space
+
+  i {
+    font-size: var(--font-size-sm);
+    color: var(--color-primary); // Optional: color the icon
+  }
+}
+
+.update-location-btn {
+  background-color: var(--color-secondary); // Use a secondary color
+  color: var(--color-bg-dark);
+  border: none;
+  padding: 0.6rem 1.2rem; // Original padding for default button
+  border-radius: 4px;
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  display: inline-flex; // Align icon and text
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-secondary-dark); // Darken on hover
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  i {
+    font-size: var(--font-size-sm); // Adjust icon size if needed
+  }
+
+  &.update-location-btn-inline {
+    padding: 0.3rem 0.6rem; // Make padding smaller
+    font-size: var(--font-size-xs); // Make font smaller
+    i {
+      font-size: var(--font-size-xs); // Smaller icon too
+    }
+  }
+}
+
+.location-feedback-messages {
+  min-height: 1.2em; // Reserve space to prevent layout shifts
+}
+
+.location-feedback {
+  margin-top: 0.3rem; // Small space if multiple messages were possible
+  font-size: var(--font-size-sm); // Adjusted from xs for consistency
+  display: flex; // Ensure feedback takes its own line and align icon
+  align-items: center;
+  gap: 0.3rem;
+
+  &.pending {
+    color: var(--color-text-medium);
+  }
+  &.error {
+    color: var(--color-error);
+  }
+  &.success {
+    color: var(--color-success);
+  }
+
+  i {
+    font-size: var(--font-size-sm); // Ensure icon size matches text
+  }
 }
 
 .save-btn {
@@ -289,7 +525,6 @@
   font-weight: var(--font-semibold);
   cursor: pointer;
   transition: background-color 0.2s ease, opacity 0.2s ease;
-  margin-top: 1rem; // Add margin above the button
 
   &:hover:not(:disabled) {
     background-color: var(--color-primary-dark);
@@ -306,66 +541,6 @@
   margin-left: 1rem;
   font-size: var(--font-size-xs);
   color: var(--color-text-medium);
-}
-
-/* Avis */
-.reviews-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.review-card {
-  background-color: var(--color-bg-light);
-  padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-border-light);
-}
-
-.review-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-  flex-wrap: wrap; // Allow wrapping on small screens
-  gap: 0.5rem 1rem; // Add gap for wrapping
-}
-
-.review-author {
-  font-weight: var(--font-semibold);
-  margin-right: auto; // Pushes rating and date to the right
-  color: var(--color-text-light);
-}
-
-.review-rating {
-  display: flex;
-  align-items: center; // Align stars and text vertically
-  color: var(--color-primary);
-
-  .fas.fa-star { // Style individual stars within review rating
-     font-size: var(--font-size-sm); // Adjust star size if needed
-     color: var(--color-text-medium); // Default empty star color
-
-     &.filled {
-        color: var(--color-primary); // Filled star color
-     }
-  }
-
-  span { // Style for the (x/5) text
-    font-size: var(--font-size-xs);
-    color: var(--color-text-medium);
-    margin-left: 0.5rem;
-  }
-}
-
-.review-date {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-medium);
-  white-space: nowrap; // Prevent date from wrapping
-}
-
-.review-text {
-  color: var(--color-text-light);
-  line-height: 1.6;
 }
 
 /* Responsive */
@@ -389,7 +564,14 @@
   }
 
   .profile-name-container {
-    justify-content: center;
+    justify-content: center; // Center name and username
+    text-align: center; // Ensure text inside is centered if it wraps
+  }
+
+  .profile-username {
+    display: block; // Put username on new line if needed
+    margin-left: 0; // Remove left margin when stacked
+    margin-top: 0.25rem; // Add space above when stacked
   }
 
   .profile-location {
@@ -408,17 +590,59 @@
     white-space: nowrap;
   }
 
+  .profile-content h2 {
+    font-size: var(--font-size-lg); // Slightly smaller heading on mobile
+  }
+
   .profile-form {
     padding: 1.5rem; // Reduce form padding
   }
 
   .form-row {
     flex-direction: column; // Stack form fields vertically
-    gap: 1.5rem; // Keep gap between stacked fields
+    gap: 0; // Remove gap, margin handled by form-group
+    margin-bottom: 0; // Remove bottom margin, handled by form-group
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem; // Ensure consistent spacing for all groups when stacked
+  }
+
+  .update-location-btn {
+    width: 100%; // Make button full width on mobile
+    justify-content: center; // Center content in button
   }
 
   .review-header {
-     // Adjust review header for smaller screens if needed
+    gap: 0.5rem 0.75rem; // Adjust gaps for smaller screens
+  }
+
+  .review-avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 0.75rem;
+  }
+
+  .review-rating {
+    margin-left: 0; // Allow rating to wrap
+    width: 100%; // Take full width when wrapped
+    justify-content: flex-start; // Align left when wrapped
+    margin-top: 0.5rem; // Add space when wrapped below avatar/name
+  }
+
+  .review-text {
+    padding-left: calc(40px + 0.75rem); // Adjust indentation for smaller avatar
+    margin-top: 0.75rem;
+  }
+
+  .review-sub-tabs {
+    margin-bottom: 1.5rem;
+    gap: 0.25rem; // Reduce gap between sub-tab buttons
+  }
+
+  .sub-tab-btn {
+    padding: 0.6rem 0.5rem; // Adjust padding
+    font-size: var(--font-size-sm); // Smaller font on mobile
   }
 }
 
