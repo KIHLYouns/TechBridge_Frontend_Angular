@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs'; // Import 'of' for mock data
+import { Observable, of, throwError } from 'rxjs'; // Import throwError
 import { User } from '../../../shared/database.model'; // Adjust path as needed
 
 @Injectable({
@@ -25,7 +25,7 @@ export class UserService {
     const userId = this.getCurrentUserId();
     if (!userId) {
       // Handle case where user is not logged in or ID is unavailable
-      return of({} as User); // Or throw an error, or return an empty observable
+      return throwError(() => new Error('User ID not found')); // Return an error observable
     }
     // Replace with actual API call
     // Example: return this.http.get<User>(`${this.apiUrl}/${userId}`);
@@ -33,6 +33,7 @@ export class UserService {
     // --- Mock Data Example ---
     const mockUser: User = {
       id: userId,
+      username: 'younsk', // Added username
       firstname: 'Youns',
       lastname: 'Kihl',
       email: 'youns.dev@example.com',
@@ -44,7 +45,10 @@ export class UserService {
       join_date: new Date('2022-01-15'),
       city: { id: 1, name: 'Tétouan' },
       role: 'USER', // Added role
-      is_partner: false // Added is_partner
+      is_partner: false, // Added is_partner
+      latitude: 35.5785, // Added latitude
+      longitude: -5.3684, // Added longitude
+      client_reviews: 5 // Example value for review count
     };
     return of(mockUser);
     // --- End Mock Data ---
@@ -57,23 +61,37 @@ export class UserService {
 
     // --- Mock Update Example (returns updated mock data) ---
     console.log('Updating user profile:', userId, userData);
-    // In a real scenario, you'd merge userData with existing user data
-    // For mock, just return a slightly modified user object
-    const updatedMockUser: User = {
-      id: userId,
-      firstname: userData.firstname || 'Youns', // Example update logic
-      lastname: userData.lastname || 'Kihl',
-      email: userData.email || 'youns.dev@example.com',
-      phone_number: userData.phone_number || '123-456-7890',
-      address: userData.address || '123 Main St, Tétouan',
-      avatar_url: userData.avatar_url || `https://ui-avatars.com/api/?name=${userData.firstname}+${userData.lastname }`,
-      client_rating: 4.8,
-      partner_rating: null,
-      join_date: new Date('2022-01-15'),
-      city: { id: 1, name: 'Tétouan' },
-      role: 'USER', // Added role
-      is_partner: false // Added is_partner
+    // Simulate fetching the current user to merge updates
+    const currentMockUser: User = { // Re-create or fetch the current state
+        id: userId,
+        username: 'younsk',
+        firstname: 'Youns',
+        lastname: 'Kihl',
+        email: 'youns.dev@example.com',
+        phone_number: '123-456-7890',
+        address: '123 Main St, Tetouan',
+        avatar_url: `https://ui-avatars.com/api/?name=Kihl+Youns`,
+        client_rating: 4.8,
+        partner_rating: null,
+        join_date: new Date('2022-01-15'),
+        city: { id: 1, name: 'Tétouan' },
+        role: 'USER',
+        is_partner: false,
+        latitude: 35.5785,
+        longitude: -5.3684,
+        client_reviews: 5 // Keep existing review count unless updated
     };
+
+    // Merge existing data with updates
+    const updatedMockUser: User = {
+      ...currentMockUser, // Start with current data
+      ...userData, // Apply updates
+      // Ensure avatar updates if name changes (example logic)
+      avatar_url: userData.firstname || userData.lastname
+        ? `https://ui-avatars.com/api/?name=${userData.firstname || currentMockUser.firstname}+${userData.lastname || currentMockUser.lastname}`
+        : currentMockUser.avatar_url,
+    };
+    console.log('Returning updated mock user:', updatedMockUser);
     return of(updatedMockUser);
     // --- End Mock Update ---
   }
