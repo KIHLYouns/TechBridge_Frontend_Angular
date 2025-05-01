@@ -1,0 +1,423 @@
+/* Styles communs et hérités */
+:host {
+  display: block; // Ensure the component itself takes up space
+}
+
+.header-nav-item.active {
+  color: var(--color-primary);
+  font-weight: var(--font-semibold);
+}
+
+.profile-container {
+  padding-inline: 4rem;
+  min-height: calc(100vh - var(--core-header-height));
+  margin-top: var(--core-header-height);
+  position: relative;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 4rem; // Add padding at the bottom
+}
+
+/* Indicateur de chargement */
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  font-size: var(--font-size-lg);
+  color: var(--color-text-medium);
+}
+
+/* Header du profil */
+.profile-header {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-bg-dark);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 2rem;
+  margin-top: 2rem;
+  border: 2px solid var(--color-border-light);
+  border-top: none;
+  gap: 2rem;
+}
+
+.profile-avatar-container {
+  position: relative;
+  flex-shrink: 0; // Prevent shrinking on smaller screens
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--color-primary);
+  box-shadow: var(--shadow-medium);
+  background-color: var(--color-bg-light); // Lighter background for contrast
+}
+
+.edit-avatar-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background-color: var(--color-primary);
+  color: var(--color-bg-dark);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-medium);
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-primary-dark); // Darken on hover
+  }
+}
+
+.profile-info {
+  flex-grow: 1;
+}
+
+.profile-name-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap; // Allow wrapping if name is long
+}
+
+.profile-name {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-light);
+  margin-right: 0.5rem;
+}
+
+.verification-badge {
+  color: var(--color-primary);
+  font-size: var(--font-size-lg);
+}
+
+.profile-location {
+  color: var(--color-text-medium);
+  font-size: var(--font-size-sm);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i {
+    flex-shrink: 0; // Prevent icon shrinking
+  }
+}
+
+/* Styles mis à jour pour .profile-stats et ses enfants */
+.profile-stats {
+  display: flex;
+  align-items: center; // Vertically align items and divider
+  background-color: var(--color-bg-light);
+  border-radius: 8px;
+  padding: 0.75rem 1.25rem;
+  gap: 1.5rem; // Slightly increase gap for better separation
+  width: fit-content; // Adjust width based on content
+  flex-wrap: wrap; // Allow wrapping on smaller screens
+  margin-top: 1rem; // Add some space above the stats box
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center; // Center content horizontally within the item
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 35px; // Slightly taller divider
+  background-color: var(--color-border-light);
+  align-self: center; // Ensure it stays centered vertically if items wrap weirdly
+}
+
+.stat-value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-light); // Use light text color for value
+}
+
+.star-rating {
+  display: flex;
+  align-items: center; // Align stars vertically if needed
+  gap: 2px;
+  font-size: var(--font-size-xs); // Size of the stars
+  color: var(--color-text-medium); // Color for empty/non-filled stars
+  margin-bottom: 0.25rem; // Add small space below the stars
+
+  i.fas.fa-star { // Target all stars within the rating
+    &.filled { // Style for filled stars (class added in HTML)
+      color: var(--color-primary);
+    }
+  }
+}
+
+.stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary);
+}
+
+/* Onglets du profil */
+.profile-tabs {
+  display: flex;
+  margin-top: 2rem; // Increased margin
+  border-bottom: 2px solid var(--color-border-light);
+}
+
+.tab {
+  padding: 0.75rem 1.5rem; // Slightly more padding
+  cursor: pointer;
+  color: var(--color-text-medium);
+  font-weight: var(--font-medium);
+  position: relative;
+  border: none; // Remove default button border if it was a button
+  background: none; // Remove default button background
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--color-text-light);
+  }
+}
+
+.tab.active {
+  color: var(--color-primary);
+  font-weight: var(--font-semibold);
+}
+
+.tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px; // Align with the border-bottom
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+}
+
+/* Contenu des onglets */
+.profile-content {
+  margin-top: 1rem;
+}
+
+.profile-content h2 {
+  margin-bottom: 1rem;
+}
+
+/* Formulaire */
+.profile-form {
+  width: 100%;
+  background-color: var(--color-bg-dark); // Add background to form area
+  padding: 2rem; // Add padding inside the form area
+  border-radius: 8px;
+  border: 1px solid var(--color-border-light);
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  .form-group {
+    flex: 1; // Make groups share space equally
+    margin-bottom: 0; // Remove bottom margin as it's handled by form-row
+  }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-light);
+  font-weight: var(--font-medium);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem; // Adjust padding
+  background-color: var(--color-bg-light);
+  color: var(--color-text-light);
+  border: 1px solid var(--color-border); // Use 1px border
+  border-radius: 4px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.3); // Focus ring
+  }
+
+  // Style for invalid fields after interaction
+  &.ng-invalid.ng-touched {
+    border-color: var(--color-error);
+  }
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.validation-error {
+  margin-top: 0.5rem;
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
+}
+
+.save-btn {
+  background-color: var(--color-primary);
+  color: var(--color-bg-dark);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+  margin-top: 1rem; // Add margin above the button
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-primary-dark);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.pristine-message {
+  display: inline-block; // Make it inline-block to sit next to button if needed
+  margin-left: 1rem;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-medium);
+}
+
+/* Avis */
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.review-card {
+  background-color: var(--color-bg-light);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-light);
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap; // Allow wrapping on small screens
+  gap: 0.5rem 1rem; // Add gap for wrapping
+}
+
+.review-author {
+  font-weight: var(--font-semibold);
+  margin-right: auto; // Pushes rating and date to the right
+  color: var(--color-text-light);
+}
+
+.review-rating {
+  display: flex;
+  align-items: center; // Align stars and text vertically
+  color: var(--color-primary);
+
+  .fas.fa-star { // Style individual stars within review rating
+     font-size: var(--font-size-sm); // Adjust star size if needed
+     color: var(--color-text-medium); // Default empty star color
+
+     &.filled {
+        color: var(--color-primary); // Filled star color
+     }
+  }
+
+  span { // Style for the (x/5) text
+    font-size: var(--font-size-xs);
+    color: var(--color-text-medium);
+    margin-left: 0.5rem;
+  }
+}
+
+.review-date {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-medium);
+  white-space: nowrap; // Prevent date from wrapping
+}
+
+.review-text {
+  color: var(--color-text-light);
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profile-container {
+    padding-inline: 1rem; // Reduce padding on smaller screens
+    padding-bottom: 2rem;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-name-container {
+    justify-content: center;
+  }
+
+  .profile-location {
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .profile-stats {
+    width: 100%;
+    justify-content: center;
+    gap: 0.75rem 1.5rem; // Adjust gap for wrapped items
+  }
+
+  .profile-tabs {
+    overflow-x: auto; // Allow horizontal scrolling for tabs
+    white-space: nowrap;
+  }
+
+  .profile-form {
+    padding: 1.5rem; // Reduce form padding
+  }
+
+  .form-row {
+    flex-direction: column; // Stack form fields vertically
+    gap: 1.5rem; // Keep gap between stacked fields
+  }
+
+  .review-header {
+     // Adjust review header for smaller screens if needed
+  }
+}
