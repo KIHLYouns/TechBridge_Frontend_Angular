@@ -49,15 +49,15 @@
       </p>
       <div>
         <button
-        type="button"
-        class="update-location-btn update-location-btn-inline"
-        (click)="updateLocation()"
-        [disabled]="isUpdatingLocation"
-        title="Update your current location"
-      >
-        <i class="fas fa-sync-alt"></i>
-        {{ isUpdatingLocation ? "Updating..." : "Update Now" }}
-      </button>
+          type="button"
+          class="update-location-btn update-location-btn-inline"
+          (click)="updateLocation()"
+          [disabled]="isUpdatingLocation"
+          title="Update your current location"
+        >
+          <i class="fas fa-sync-alt"></i>
+          {{ isUpdatingLocation ? "Updating..." : "Update Now" }}
+        </button>
         <div class="location-feedback-messages">
           <div
             *ngIf="locationStatus === 'pending'"
@@ -95,14 +95,12 @@
             user.client_rating !== null && user.client_rating !== undefined
           "
         >
-          <span>Rating</span>
+          <span class="stat-label">Rating</span>
           <span class="stat-value">{{ user.client_rating.toFixed(1) }}</span>
           <div class="star-rating">
             <i class="fas fa-star"></i>
           </div>
-          <span class="stat-label"
-            >Rating ({{ user.client_reviews || reviews.length }} reviews)</span
-          >
+          <span>({{ user.client_reviews || reviews.length }} reviews)</span>
         </div>
         <div
           class="stat-divider"
@@ -111,39 +109,37 @@
           "
         ></div>
         <div class="stat-item">
+          <span class="stat-label">Member</span>
           <span class="stat-value"
             >Since {{ user.join_date | date : "yyyy" }}</span
           >
-          <span class="stat-label">Member</span>
         </div>
       </div>
     </div>
-
   </div>
 
   <div class="partner-toggle-section">
-    <h3>Account Type</h3>
+    <h3>Switch Interface</h3>
     <div class="toggle-container">
-      <span class="toggle-label">Partner Mode</span>
       <label class="toggle-switch">
         <input
           type="checkbox"
           [checked]="isPartner$ | async"
           (change)="togglePartnerStatus($event)"
-          [disabled]="isTogglingPartner">
+          [disabled]="isTogglingPartner"
+        />
         <span class="toggle-slider"></span>
       </label>
       <span class="toggle-status">
-        <span *ngIf="isPartner$ | async">Partner account active</span>
-        <span *ngIf="!(isPartner$ | async)">Standard user account</span>
+        <span *ngIf="isPartner$ | async">Partner Interface</span>
+        <span *ngIf="!(isPartner$ | async)">Client Interface</span>
       </span>
     </div>
     <div *ngIf="isTogglingPartner" class="loading-message">
-      <i class="fas fa-spinner fa-spin"></i> Updating account type...
+      <i class="fas fa-spinner fa-spin"></i> Changing Interface...
     </div>
     <p class="toggle-description">
-      Toggle this switch to change between standard user and partner
-      account.
+      Toggle this switch to change between client and partner interface.
       Partners can list items for rent and manage bookings.
     </p>
   </div>
@@ -165,7 +161,6 @@
       Reviews
     </div>
   </div>
-
 
   <!-- Profile Content -->
   <div class="profile-content" *ngIf="user && !isLoadingUser">

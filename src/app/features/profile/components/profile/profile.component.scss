@@ -156,7 +156,6 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-semibold);
   color: var(--color-text-light); // Use light text color for value
-  order: 1; // Ensure value comes first visually if needed (adjust based on HTML structure)
 }
 
 .star-rating {
@@ -165,7 +164,6 @@
   gap: 2px;
   font-size: var(--font-size-xs); // Size of the stars
   color: var(--color-text-medium); // Color for empty/non-filled stars
-  order: 2; // Star rating after value
 
   i.fas.fa-star { // Target all stars within the rating
     &.filled { // Style for filled stars (class added in HTML)
@@ -177,7 +175,6 @@
 .stat-label {
   font-size: var(--font-size-xs);
   color: var(--color-primary);
-  order: 3; // Label comes last
 }
 
 /* Onglets du profil */
