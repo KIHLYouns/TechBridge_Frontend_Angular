@@ -1,2 +1,6 @@
+npm install // pour installer les dependences
+
 npm install leaflet flatpickr
 npm install @types/leaflet --save-dev
+
+ng serve // pour compiler le code
