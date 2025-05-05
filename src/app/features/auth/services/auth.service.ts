@@ -119,12 +119,9 @@ export class AuthService {
 
     // Create mock token with all user data in claims
     const mockToken = this.createMockJwt({
-      sub: 'username',
-      email: request.email,
-      firstName: request.firstName,
-      lastName: request.lastName,
-      city: city,
-      roles: request.isPartner ? ['CLIENT', 'PARTNER'] : ['CLIENT'],
+      sub: 'user-' + Math.floor(Math.random() * 10000),
+      userId: 1,
+      roles: ['USER'],
     });
 
     return of({

@@ -3,10 +3,11 @@ import { AuthService } from '../../../features/auth/services/auth.service';
 import { combineLatest, map, Observable } from 'rxjs';
 import { UserService } from '../../../features/profile/services/user.service';
 
-// Add interface
+// Update the interface to include showPartnerNav
 interface NavState {
   isAuthenticated: boolean;
   isPartner: boolean;
+  showPartnerNav: boolean; // Add this property
 }
 
 @Component({
@@ -20,18 +21,21 @@ export class HeaderComponent implements OnInit {
   public navState$!: Observable<NavState>;
   constructor(private authService: AuthService,
     private userService: UserService) {}
-  ngOnInit(): void {
-    this.isAuthenticated$ = this.authService.authState$;
-    // Log initial authentication state for debugging
-    this.navState$ = combineLatest([
-      this.authService.authState$,
-      this.userService.isPartner$
-    ]).pipe(
-      map(([isAuthenticated, isPartner]) => ({
-        isAuthenticated,
-        isPartner
-      }))
-    );
-  }
+    ngOnInit(): void {
+      this.isAuthenticated$ = this.authService.authState$;
+      
+      this.navState$ = combineLatest([
+        this.authService.authState$,
+        this.userService.isPartner$,
+        this.userService.interfaceToggleState$
+      ]).pipe(
+        map(([isAuthenticated, isPartner, interfaceToggleState]) => ({
+          isAuthenticated,
+          isPartner,
+          // Only show partner nav when they're a partner AND using partner interface
+          showPartnerNav: isPartner && interfaceToggleState 
+        }))
+      );
+    }
   
 }

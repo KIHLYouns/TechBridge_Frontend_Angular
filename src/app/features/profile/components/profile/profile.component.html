@@ -119,30 +119,56 @@
   </div>
 
   <div class="partner-toggle-section">
+    
+  
+   <!-- Partner terms checkbox - only visible if user is NOT a partner -->
+  <div *ngIf="!(isPartner$ | async)" class="partner-terms-section">
+    <h3>Partner Status</h3>
+    <p class="partner-info-text">
+      Become a TechBridge Partner to list your equipment for rent and manage bookings.
+    </p>
+    <div class="toggle-container">
+      <div class="checkbox-group">
+        <input 
+          type="checkbox" 
+          id="accept-partner-terms" 
+          [disabled]="isTogglingPartner"
+          (change)="acceptPartnerTerms()"
+        />
+        <label for="accept-partner-terms" class="checkbox-label">
+          I accept the <a href="#" class="terms-link">Specific Terms for Partners</a>
+          of TechBridge and the applicable regulations for equipment rental
+        </label>
+      </div>
+    </div>
+    <div *ngIf="isTogglingPartner" class="loading-message">
+      <i class="fas fa-spinner fa-spin"></i> Processing your request...
+    </div>
+  </div>
+  
+  <!-- Interface toggle - only enabled if user IS a partner -->
+  <div class="interface-toggle-section">
     <h3>Switch Interface</h3>
     <div class="toggle-container">
       <label class="toggle-switch">
         <input
           type="checkbox"
-          [checked]="isPartner$ | async"
-          (change)="togglePartnerStatus($event)"
-          [disabled]="isTogglingPartner"
+          [checked]="interfaceToggleState"
+          (change)="toggleInterface($event)"
+          [disabled]="!(isPartner$ | async)"
         />
         <span class="toggle-slider"></span>
       </label>
       <span class="toggle-status">
-        <span *ngIf="isPartner$ | async">Partner Interface</span>
-        <span *ngIf="!(isPartner$ | async)">Client Interface</span>
+        <span *ngIf="interfaceToggleState">Partner Interface</span>
+        <span *ngIf="!interfaceToggleState">Client Interface</span>
       </span>
     </div>
-    <div *ngIf="isTogglingPartner" class="loading-message">
-      <i class="fas fa-spinner fa-spin"></i> Changing Interface...
-    </div>
     <p class="toggle-description">
-      Toggle this switch to change between client and partner interface.
-      Partners can list items for rent and manage bookings.
+      Toggle this switch to change between client and partner interfaces.
     </p>
-  </div>
+  </div>  
+</div>
 
   <!-- Profile Tabs -->
   <div class="profile-tabs" *ngIf="user && !isLoadingUser">

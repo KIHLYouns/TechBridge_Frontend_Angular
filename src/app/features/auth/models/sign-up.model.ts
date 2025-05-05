@@ -20,7 +20,4 @@ export interface SignUpRequest {
 // Sign-Up Response model
 export interface SignUpResponse {
   'access-token': string;
-  userId?: string;
-  email?: string;
-  username?: string;
 }

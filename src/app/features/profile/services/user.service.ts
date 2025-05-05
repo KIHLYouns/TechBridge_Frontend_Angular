@@ -37,6 +37,9 @@ export class UserService {
   // Observable that components can subscribe to
   public isPartner$ = this.isPartnerSubject.asObservable();
 
+  private interfaceToggleStateSubject = new BehaviorSubject<boolean>(false);
+public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
+
   private apiUrl = '/api/users'; // Example API endpoint
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
@@ -66,6 +69,9 @@ export class UserService {
     this.isPartnerSubject.next(false);
   }
 
+  public setInterfaceToggleState(state: boolean): void {
+    this.interfaceToggleStateSubject.next(state);
+  }
   // User management
 
   public getUserById(userId: number): Observable<User> {
@@ -116,28 +122,6 @@ export class UserService {
         this.saveUserToStorage(user);
         // Publish partner status change
         this.isPartnerSubject.next(true);
-      })
-    );
-  }
-
-  public switchToClient(): Observable<boolean> {
-    console.log('Switching user to client-only role');
-
-    return of(true).pipe(
-      delay(1000), // Simulate network delay
-      tap(() => {
-        this.mockUser.is_partner = false;
-        const user = this.getCurrentUserFromLocalStorage();
-        if (!user) {
-          console.error('No user found in storage');
-          return;
-        }
-        // Set is_partner flag to false
-        user.is_partner = false;
-        // Save updated user to storage
-        this.saveUserToStorage(user);
-        // Publish partner status change
-        this.isPartnerSubject.next(false);
       })
     );
   }

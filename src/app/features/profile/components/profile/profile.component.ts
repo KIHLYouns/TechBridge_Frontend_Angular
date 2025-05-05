@@ -16,6 +16,9 @@ export class ProfileComponent implements OnInit {
   // Inside the class, add these properties
   isPartner$!: Observable<boolean>;
   isTogglingPartner: boolean = false;
+  showPartnerTermsAcceptance: boolean = false;
+  interfaceToggleState: boolean = false;
+
 
   user: User | null = null;
   reviews: Review[] = [];
@@ -52,6 +55,9 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.isPartner$ = this.userService.isPartner$;
     this.loadUserProfile();
+    this.isPartner$.subscribe(isPartner => {
+      this.interfaceToggleState = isPartner;
+    });
   }
 
   loadUserProfile(): void {
@@ -252,25 +258,25 @@ export class ProfileComponent implements OnInit {
   get f() {
     return this.profileForm.controls;
   }
-
-  togglePartnerStatus(event: any): void {
-    const isChecked = event.target.checked;
+  // Add method to accept partner terms
+  acceptPartnerTerms(): void {
     this.isTogglingPartner = true;
     
-    if (isChecked) {
-      this.userService.switchToPartner().pipe(
-        finalize(() => this.isTogglingPartner = false)
-      ).subscribe({
-        next: () => console.log('Switched to partner'),
-        error: (err) => console.error('Error switching to partner:', err)
-      });
-    } else {
-      this.userService.switchToClient().pipe(
-        finalize(() => this.isTogglingPartner = false)
-      ).subscribe({
-        next: () => console.log('Switched to client'),
-        error: (err) => console.error('Error switching to client:', err)
-      });
-    }
+    this.userService.switchToPartner().pipe(
+      finalize(() => this.isTogglingPartner = false)
+    ).subscribe({
+      next: () => {
+        // After becoming a partner, enable the interface toggle
+        this.interfaceToggleState = true;
+        console.log('Partner terms accepted, user is now a partner');
+      },
+      error: (err) => console.error('Error accepting partner terms:', err)
+    });
   }
+
+  // Handle interface toggle - purely UI, NO backend changes
+toggleInterface(event: any): void {
+  this.interfaceToggleState = event.target.checked;
+  this.userService.setInterfaceToggleState(this.interfaceToggleState);
+}
 }
