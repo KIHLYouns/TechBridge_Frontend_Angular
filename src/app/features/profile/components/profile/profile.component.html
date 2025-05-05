@@ -147,7 +147,7 @@
   </div>
   
   <!-- Interface toggle - only enabled if user IS a partner -->
-  <div class="interface-toggle-section">
+  <div class="interface-toggle-section" *ngIf="(isPartner$ | async)">
     <h3>Switch Interface</h3>
     <div class="toggle-container">
       <label class="toggle-switch">
