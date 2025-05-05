@@ -1,0 +1,1146 @@
+openapi: 3.0.3
+info:
+  title: TechBridge API - Currently Mocked Endpoints
+  description: API specification for the TechBridge rental platform based on currently mocked services
+  version: 1.0.0
+servers:
+  - url: /api
+    description: Base API URL
+
+paths:
+  # Authentication APIs
+  /auth/login:
+    post:
+      description: Authenticate a user with username/email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignInResponse'
+        '401':
+          description: Invalid credentials
+          
+  /auth/signup:
+    post:
+      description: Register a new user account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpResponse'
+        '400':
+          description: Invalid input data
+
+  # Listings APIs
+  /listings:
+    get:
+      description: Retrieve all active listings with optional filtering
+      parameters:
+        - name: category
+          in: query
+          description: Filter listings by category ID
+          schema:
+            type: integer
+        - name: city
+          in: query
+          description: Filter listings by city ID
+          schema:
+            type: integer
+        - name: minPrice
+          in: query
+          description: Minimum price per day
+          schema:
+            type: number
+        - name: maxPrice
+          in: query
+          description: Maximum price per day
+          schema:
+            type: number
+      responses:
+        '200':
+          description: List of listings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListingSummaryDTO'
+    
+    post:
+      description: Create a new listing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListingCreateRequest'
+      responses:
+        '201':
+          description: Listing created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingDetailDTO'
+        '400':
+          description: Invalid input data
+
+  /listings/{id}:
+    get:
+      description: Retrieve a specific listing by its ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the listing to retrieve
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Listing details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingDetailDTO'
+              example:
+                id: 1
+                title: "PlayStation 5 Slim"
+                description: "Next-gen gaming console with ultra-fast SSD and immersive DualSense controller. Includes 2 controllers and popular game."
+                price_per_day: 35
+                status: "active"
+                is_premium: true
+                premium_start_date: "2025-03-20T00:00:00Z"
+                premium_end_date: "2025-06-20T00:00:00Z"
+                created_at: "2024-02-15T09:15:00Z"
+                delivery_option: false
+                category:
+                  id: 1
+                  name: "Gaming & eSports"
+                partner:
+                  id: 101
+                  username: "hmed_samaki"
+                  firstname: "Jean"
+                  lastname: "Dupont"
+                  avatar_url: "https://ui-avatars.com/api/?name=Jean+Dupont"
+                  partner_rating: 4.7
+                  partner_reviews: 22
+                  longitude: -5.364456
+                  latitude: 35.56219
+                  city:
+                    id: 1
+                    name: "Casablanca"
+                images:
+                  - id: 1
+                    url: "https://picsum.photos/600/400?random=1"
+                  - id: 2
+                    url: "https://picsum.photos/100/80?random=2"
+                availabilities: [
+                  {
+                    "listing_id": 1,
+                    "start_date": "2025-05-15T00:00:00Z",
+                    "end_date": "2025-05-25T00:00:00Z"
+                  },
+                  {
+                    "listing_id": 1,
+                    "start_date": "2025-06-10T00:00:00Z",
+                    "end_date": "2025-06-20T00:00:00Z"
+                  }
+                ]
+        '404':
+          description: Listing not found
+    
+    put:
+      description: Update an existing listing
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the listing to retrieve
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListingUpdateRequest'
+      responses:
+        '200':
+          description: Listing updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListingDetailDTO'
+        '400':
+          description: Invalid input data
+        '404':
+          description: Listing not found
+
+  # Categories
+  /categories:
+    get:
+      description: Retrieve all available categories
+      responses:
+        '200':
+          description: List of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+
+  # User data
+  /users/{id}:
+    get:
+      description: Retrieve user information by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '404':
+          description: User not found
+    
+  # User Profile APIs
+  /users/{id}/profile:
+    get:
+      description: Retrieve user information by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithReviewsDTO'
+        '404':
+          description: User not found
+    
+    patch:
+      description: Update the profile information for a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '404':
+          description: User not found
+
+  /users/{id}/partner/enable:
+    post:
+      description: Enable partner role for a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Partner status enabled
+          content:
+            application/json:
+              schema:
+                type: boolean
+  
+    post:
+      description: Disable partner role for a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Partner status disabled
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+
+  # Reservation APIs
+  
+  /reservations/client/{id}:
+    get:
+      description: Get all reservations made by a specific client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Client ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Client's reservations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+        '404':
+          description: Client not found
+
+  /reservations/partner/{id}:
+    get:
+      description: Get all reservations for a partner's listings
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Partner ID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Partner's reservations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+        '404':
+          description: Partner not found
+
+  /reservations:
+    post:
+      description: Create a new reservation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationCreateRequest'
+            examples:
+              basicReservation:
+                summary: Standard reservation request
+                value:
+                  client_id: 1
+                  listing_id: 1
+                  start_date: "2025-06-15T00:00:00Z"
+                  end_date: "2025-06-18T00:00:00Z"
+                  delivery_option: false
+              withDelivery:
+                summary: Reservation with delivery option
+                value:
+                  client_id: 1
+                  listing_id: 2
+                  start_date: "2025-07-10T00:00:00Z"
+                  end_date: "2025-07-12T00:00:00Z"
+                  delivery_option: true
+                  notes: "Please deliver to my address in the morning"
+      responses:
+        '201':
+          description: Reservation created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+              examples:
+                createdReservation:
+                  summary: Created reservation details
+                  value:
+                    id: 1007
+                    start_date: "2025-06-15T00:00:00Z"
+                    end_date: "2025-06-18T00:00:00Z"
+                    total_cost: 105
+                    status: "pending"
+                    created_at: "2025-05-03T10:15:00Z"
+                    delivery_option: false
+                    client:
+                      id: 1
+                      username: "younsk"
+                      phone_number: "123-456-7890"
+                      avatar_url: "https://ui-avatars.com/api/?name=Kihl+Youns"
+                      email: "youns.dev@example.com"
+                    partner:
+                      id: 101
+                      username: "hmed_samaki"
+                      phone_number: "0123456789"
+                      avatar_url: "https://ui-avatars.com/api/?name=Jean+Dupont"
+                      email: "jean.dupont@example.com"
+                    listing:
+                      id: 1
+                      title: "PlayStation 5 Slim"
+                      price_per_day: 35
+                      is_premium: true
+                      images:
+                        - id: 1
+                          url: "https://picsum.photos/600/400?random=1"
+        '400':
+          description: Invalid input data or reservation dates
+          content:
+            application/json:
+              examples:
+                invalidDates:
+                  summary: Invalid reservation dates
+                  value:
+                    status: 400
+                    message: "Invalid reservation dates"
+                    errors:
+                      - field: "dates"
+                        message: "The requested dates are not available for this listing"
+                invalidRequest:
+                  summary: Missing required fields
+                  value:
+                    status: 400
+                    message: "Invalid request data"
+                    errors:
+                      - field: "client_id" 
+                        message: "Client ID is required"
+                      - field: "listing_id"
+                        message: "Listing ID is required"
+        '404':
+          description: Client or listing not found
+          content:
+            application/json:
+              examples:
+                clientNotFound:
+                  summary: Client not found
+                  value:
+                    status: 404
+                    message: "Client with id 999 not found"
+                listingNotFound:
+                  summary: Listing not found
+                  value:
+                    status: 404
+                    message: "Listing with id 999 not found"
+        '409':
+          description: Listing not available for the requested dates
+          content:
+            application/json:
+              examples:
+                unavailableDates:
+                  summary: Listing unavailable for requested dates
+                  value:
+                    status: 409
+                    message: "Listing is not available for the requested date range"
+
+  # Reviews APIs
+  /reviews:
+    get:
+      description: Get reviews for or by a user
+      parameters:
+        - name: revieweeId
+          in: query
+          description: ID of the user who received the reviews
+          schema:
+            type: integer
+        - name: reviewerId
+          in: query
+          description: ID of the user who gave the reviews
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of reviews
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+
+
+components:
+  schemas:
+
+  # shared 
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Category ID
+        name:
+          type: string
+          description: Category name
+
+    City:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: City ID
+        name:
+          type: string
+          description: City name
+
+    Image:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Image ID
+        url:
+          type: string
+          description: Image URL  
+
+    UserCoordinates:
+      type: object
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          format: double
+          description: User's latitude
+        longitude:
+          type: number
+          format: double
+          description: User's longitude
+
+    PartnerInfoDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Partner ID
+        username:
+          type: string
+          description: Partner username
+        avatar_url:
+          type: string
+          description: URL to partner avatar
+        partner_rating:
+          type: number
+          format: float
+          description: Partner rating
+        partner_reviews:
+          type: integer
+          description: Number of reviews received as partner
+        coordinates:
+          $ref: '#/components/schemas/UserCoordinates'
+        city:
+          $ref: '#/components/schemas/City'
+   
+    Availability:
+      type: object
+      properties:
+        listing_id:
+          type: integer
+          description: Listing ID
+        start_date:
+          type: string
+          format: date-time
+          description: Start date of availability
+        end_date:
+          type: string
+          format: date-time
+          description: End date of availability
+
+  # authentication
+    SignInRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          description: Username or email
+        password:
+          type: string
+          format: password
+          description: User's password
+
+    SignInResponse:
+      type: object
+      properties:
+        access-token:
+          type: string
+          description: JWT access token
+
+    SignUpRequest:
+      type: object
+      required:
+        - email
+        - username
+        - password
+        - firstName
+        - lastName
+        - phone
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email
+        username:
+          type: string
+          description: Desired username
+        password:
+          type: string
+          format: password
+          description: User's password
+        firstName:
+          type: string
+          description: User's first name
+        lastName:
+          type: string
+          description: User's last name
+        phone:
+          type: string
+          description: User's phone number
+        isPartner:
+          type: boolean
+          description: Whether the user wants to be a partner
+          default: false
+        coordinates:
+          $ref: '#/components/schemas/UserCoordinates'
+
+    SignUpResponse:
+      type: object
+      properties:
+        access-token:
+          type: string
+          description: JWT access token
+  
+  # listings 
+    ListingSummaryDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the listing
+        title:
+          type: string
+          description: Title of the listing shown in the card
+        price_per_day:
+          type: number
+          description: Daily rental price shown with currency symbol
+        is_premium:
+          type: boolean
+          description: Whether the listing is premium (shows premium tag when true)
+        main_image: 
+          type: string
+          description: the main image for the listing (index 0)
+        partner:
+          $ref: '#/components/schemas/PartnerInfoDTO'
+    
+    ListingDetailDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Listing ID
+        title:
+          type: string
+          description: Listing title
+        description:
+          type: string
+          description: Listing description
+        price_per_day:
+          type: number
+          description: Price per day
+        is_premium:
+          type: boolean
+          description: Whether listing has premium status
+        delivery_option:
+          type: boolean
+          description: Whether delivery is available
+        category:
+          $ref: '#/components/schemas/Category'
+        partner:
+          $ref: '#/components/schemas/PartnerInfoDTO'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+        availabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Availability'  
+        reviews: 
+           type: array         
+           items:
+            $ref: '#/components/schemas/Review' # not clear yet how the review will look like            
+
+  # profile & user Reviews
+
+    UserDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+        username:
+          type: string
+          description: Username
+        firstname:
+          type: string
+          description: First name
+        lastname:
+          type: string
+          description: Last name
+        email:
+          type: string
+          format: email
+          description: Email address
+        phone_number:
+          type: string
+          description: Phone number
+        address:
+          type: string
+          description: Physical address
+        avatar_url:
+          type: string
+          description: URL to user avatar
+        client_rating:
+          type: number
+          format: float
+          description: User rating as a client
+        partner_rating:
+          type: number
+          format: float
+          description: User rating as a partner
+        join_date:
+          type: string
+          format: date-time
+          description: Date when user joined
+        city:
+          $ref: '#/components/schemas/City'
+        role:
+          type: string
+          enum: [USER, ADMIN]
+          description: User role
+        is_partner:
+          type: boolean
+          description: Whether user is a partner
+        client_reviews:
+          type: integer
+          description: Number of reviews received as client
+        partner_reviews:
+          type: integer
+          description: Number of reviews received as partner
+        longitude:
+          type: number
+          format: double
+          description: Location longitude
+        latitude:
+          type: number
+          format: double
+          description: Location latitude
+
+    UserWithReviewsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+        username:
+          type: string
+          description: Username
+        firstname:
+          type: string
+          description: First name
+        lastname:
+          type: string
+          description: Last name
+        email:
+          type: string
+          format: email
+          description: Email address
+        phone_number:
+          type: string
+          description: Phone number
+        address:
+          type: string
+          description: Physical address
+        avatar_url:
+          type: string
+          description: URL to user avatar
+        client_rating:
+          type: number
+          format: float
+          description: User rating as a client
+        partner_rating:
+          type: number
+          format: float
+          description: User rating as a partner
+        join_date:
+          type: string
+          format: date-time
+          description: Date when user joined
+        city:
+          $ref: '#/components/schemas/City'
+        role:
+          type: string
+          enum: [USER, ADMIN]
+          description: User role
+        is_partner:
+          type: boolean
+          description: Whether user is a partner
+        client_reviews:
+          type: integer
+          description: Number of reviews received as client
+        partner_reviews:
+          type: integer
+          description: Number of reviews received as partner
+        longitude:
+          type: number
+          format: double
+          description: Location longitude
+        latitude:
+          type: number
+          format: double
+          description: Location latitude
+        received_reviews:
+          type: array
+          description: Reviews received by this user
+          items:
+            $ref: '#/components/schemas/Review'
+        given_reviews:
+          type: array
+          description: Reviews given by this user
+          items:
+            $ref: '#/components/schemas/Review'
+
+    ReviewerInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Reviewer/Reviewee ID
+        username:
+          type: string
+          description: Username
+        avatar_url:
+          type: string
+          description: URL to avatar
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Review ID
+        reviewer:
+          $ref: '#/components/schemas/ReviewerInfo'
+        reviewee:
+          $ref: '#/components/schemas/ReviewerInfo'
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Rating (1-5)
+        comment:
+          type: string
+          description: Review comment
+        is_visible:
+          type: boolean
+          description: Whether review is visible
+        created_at:
+          type: string
+          format: date-time
+          description: Creation date
+        type:
+          type: string
+          enum: [forObject, forClient, forPartner]
+          description: Type of review
+
+    UserUpdateRequest:
+      type: object
+      properties:
+        firstname:
+          type: string
+          description: User's first name
+        lastname:
+          type: string
+          description: User's last name
+        username:
+          type: string
+          description: Username
+        email:
+          type: string
+          format: email
+          description: Email address
+        phone_number:
+          type: string
+          description: Phone number
+        address:
+          type: string
+          description: Physical address
+        latitude:
+          type: number
+          format: double
+          description: Location latitude
+        longitude:
+          type: number
+          format: double
+          description: Location longitude
+
+
+    # reservations & contact
+    Reservation:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Reservation ID
+        start_date:
+          type: string
+          format: date-time
+          description: Start date of rental
+        end_date:
+          type: string
+          format: date-time
+          description: End date of rental
+        total_cost:
+          type: number
+          description: Total cost of rental
+        status:
+          type: string
+          enum: [pending, confirmed, ongoing, canceled, completed]
+          description: Reservation status
+        created_at:
+          type: string
+          format: date-time
+          description: Creation date
+        delivery_option:
+          type: boolean
+          description: Whether delivery was chosen
+        client:
+          $ref: '#/components/schemas/ClientContactDTO'
+        partner:
+          $ref: '#/components/schemas/PartnerContactDTO'
+        listing:
+          $ref: '#/components/schemas/ListingSummaryDTO'
+
+    ClientContactDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Reservation ID
+        username: 
+          type: string
+          description: username
+        phone_number:
+          type: string
+        avatar_url:
+          type: string
+        email:
+          type: string
+          format: email
+
+    PartnerContactDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Reservation ID
+        username: 
+          type: string
+          description: username
+        phone_number:
+          type: string
+        avatar_url:
+          type: string
+        email:
+          type: string
+          format: email
+
+    ReservationCreateRequest:
+      type: object
+      required:
+        - client_id
+        - listing_id
+        - start_date
+        - end_date
+      properties:
+        client_id:
+          type: integer
+          description: ID of the client making the reservation
+          example: 1
+        listing_id:
+          type: integer
+          description: ID of the listing being reserved
+          example: 3
+        start_date:
+          type: string
+          format: date-time
+          description: Start date and time of the reservation
+          example: "2025-06-15T00:00:00Z"
+        end_date:
+          type: string
+          format: date-time
+          description: End date and time of the reservation
+          example: "2025-06-18T00:00:00Z"
+        delivery_option:
+          type: boolean
+          description: Whether delivery is requested (must be available on the listing)
+          default: false
+          example: false
+        notes:
+          type: string
+          description: Optional notes for the partner (pickup arrangements, etc.)
+          example: "I'll pick it up at 10am on the start date."
+
+
+
+    AvailabilityInput:
+      type: object
+      required:
+        - start_date
+        - end_date
+      properties:
+        start_date:
+          type: string
+          format: date-time
+          description: Start date of availability
+        end_date:
+          type: string
+          format: date-time
+          description: End date of availability
+
+
+
+
+    ListingCreateRequest:
+      type: object
+      required:
+        - title
+        - description
+        - price_per_day
+        - category_id
+        - city_id
+      properties:
+        title:
+          type: string
+          description: Listing title
+        description:
+          type: string
+          description: Listing description
+        price_per_day:
+          type: number
+          description: Price per day
+        category_id:
+          type: integer
+          description: Category ID
+        city_id:
+          type: integer
+          description: City ID
+        is_premium:
+          type: boolean
+        premium_end_date: 
+          type: string
+        premium_start_date:
+          type: string
+        delivery_option:
+          type: boolean
+          description: Whether delivery is available
+          default: false
+        images:
+          type: array
+          description: Listing images
+          items:
+            $ref: '#/components/schemas/Image'
+        availabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailabilityInput'
+
+
+
+    ListingUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Listing title
+        description:
+          type: string
+          description: Listing description
+        price_per_day:
+          type: number
+          description: Price per day
+        category_id:
+          type: integer
+          description: Category ID
+        city_id:
+          type: integer
+          description: City ID
+        delivery_option:
+          type: boolean
+          description: Whether delivery is available
+        status:
+          type: string
+          enum: [active, archived, inactive]
+          description: Listing status
+        availabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailabilityInput'
+
+    ListingReservation:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Reservation ID
+        start_date:
+          type: string
+          format: date-time
+          description: Start date of rental
+        end_date:
+          type: string
+          format: date-time
+          description: End date of rental
+        status:
+          type: string
+          enum: [pending, confirmed, ongoing, canceled, completed]
+          description: Reservation status
