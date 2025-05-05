@@ -6,7 +6,7 @@ import { UserService } from '../../../features/profile/services/user.service';
 // Add interface
 interface NavState {
   isAuthenticated: boolean;
-  isPartner: boolean;
+  isPartnerInterface: boolean;
 }
 
 @Component({
@@ -25,11 +25,11 @@ export class HeaderComponent implements OnInit {
     // Log initial authentication state for debugging
     this.navState$ = combineLatest([
       this.authService.authState$,
-      this.userService.isPartner$
+      this.userService.isPartnerInterface$
     ]).pipe(
-      map(([isAuthenticated, isPartner]) => ({
+      map(([isAuthenticated, isPartnerInterface]) => ({
         isAuthenticated,
-        isPartner
+        isPartnerInterface
       }))
     );
   }

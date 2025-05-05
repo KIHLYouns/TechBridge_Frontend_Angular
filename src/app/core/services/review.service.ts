@@ -12,7 +12,7 @@ export class ReviewService {
   constructor(private http: HttpClient) {}
 
   // Method to get reviews *about* a specific user (Incoming)
-  getReviewsForUser(userId: number): Observable<Review[]> {
+  getReviewsReceivedForUser(userId: number): Observable<Review[]> {
     // Replace with actual API call
     // Example: return this.http.get<Review[]>(`${this.apiUrl}?revieweeId=${userId}`);
 

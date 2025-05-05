@@ -31,42 +31,16 @@ export class UserService {
 
   private readonly CURRENT_USER_KEY = 'currentUser';
 
-  // BehaviorSubject to track partner status
-  private isPartnerSubject = new BehaviorSubject<boolean>(false);
-
-  // Observable that components can subscribe to
-  public isPartner$ = this.isPartnerSubject.asObservable();
+  private isPartnerInterfaceSubject = new BehaviorSubject<boolean>(false);
+  public isPartnerInterface$ = this.isPartnerInterfaceSubject.asObservable();
 
   private apiUrl = '/api/users'; // Example API endpoint
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  // state management
-
-  public initializePartnerStatus(): void {
-    const userJson = localStorage.getItem(this.CURRENT_USER_KEY);
-    if (userJson) {
-      try {
-        const user: User = JSON.parse(userJson);
-        if (user) {
-          this.isPartnerSubject.next(user.is_partner);
-        }
-      } catch (e) {
-        console.error('Error parsing user from localStorage:', e);
-      }
-    }
-  }
-
-  public isPartner(): boolean {
-    return this.isPartnerSubject.value;
-  }
-
   public reset(): void {
     localStorage.removeItem(this.CURRENT_USER_KEY);
-    this.isPartnerSubject.next(false);
   }
-
-  // User management
 
   public getUserById(userId: number): Observable<User> {
     console.log(`Getting user by ID: ${userId}`);
@@ -76,8 +50,6 @@ export class UserService {
       tap((user) => {
         // Save to localStorage
         this.saveUserToStorage(user);
-        // Update partner status
-        this.isPartnerSubject.next(user.is_partner);
       })
     );
   }
@@ -98,7 +70,7 @@ export class UserService {
     localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
   }
 
-  public switchToPartner(): Observable<boolean> {
+  public becomePartner(): Observable<boolean> {
     console.log('Switching user to partner role');
     return of(true).pipe(
       delay(1000),
@@ -114,32 +86,14 @@ export class UserService {
         user.is_partner = true;
         // Save updated user to storage
         this.saveUserToStorage(user);
-        // Publish partner status change
-        this.isPartnerSubject.next(true);
+        this.isPartnerInterfaceSubject.next(user.is_partner);
       })
     );
   }
 
-  public switchToClient(): Observable<boolean> {
-    console.log('Switching user to client-only role');
-
-    return of(true).pipe(
-      delay(1000), // Simulate network delay
-      tap(() => {
-        this.mockUser.is_partner = false;
-        const user = this.getCurrentUserFromLocalStorage();
-        if (!user) {
-          console.error('No user found in storage');
-          return;
-        }
-        // Set is_partner flag to false
-        user.is_partner = false;
-        // Save updated user to storage
-        this.saveUserToStorage(user);
-        // Publish partner status change
-        this.isPartnerSubject.next(false);
-      })
-    );
+  public switchInterface(isPartnerInterface: boolean): void {
+    console.log(`UserService: Setting interface mode to ${isPartnerInterface ? 'Partner' : 'Client'}`);
+    this.isPartnerInterfaceSubject.next(isPartnerInterface);
   }
 
   getCurrentUserId(): number | null {
