@@ -1,0 +1,180 @@
+openapi: 3.0.3
+info:
+  title: TechBridge Profile Reviews API
+  description: API endpoint for fetching a user's reviews in the profile
+  version: 1.0.0
+servers:
+  - url: /api
+    description: Base API URL
+
+paths:
+  /users/{id}/reviews:
+    get:
+      summary: Get user reviews
+      description: Get both reviews received as a partner and reviews given as a client for a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: integer
+          example: 101
+      responses:
+        '200':
+          description: User's reviews
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  received_reviews:
+                    description: Reviews received by this user as a partner
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+                  given_reviews:
+                    description: Reviews given by this user as a client
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+              example:
+                received_reviews:
+                  - id: 245
+                    reviewer:
+                      id: 83
+                      username: "sarah_tech"
+                      firstname: "Sarah"
+                      lastname: "Johnson"
+                      avatar_url: "https://ui-avatars.com/api/?name=Sarah+Johnson"
+                    reviewee:
+                      id: 101
+                      username: "hmed_samaki"
+                      firstname: "Jean"
+                      lastname: "Dupont"
+                      avatar_url: "https://ui-avatars.com/api/?name=Jean+Dupont"
+                    rating: 5
+                    comment: "Jean was very professional and the equipment was in perfect condition. Delivery was on time and he provided great instructions on how to use the camera."
+                    created_at: "2025-04-15T14:30:00Z"
+                    type: "forPartner"
+                  - id: 198
+                    reviewer:
+                      id: 42
+                      username: "alex_photo"
+                      firstname: "Alex"
+                      lastname: "Smith"
+                      avatar_url: "https://ui-avatars.com/api/?name=Alex+Smith"
+                    reviewee:
+                      id: 101
+                      username: "hmed_samaki"
+                      firstname: "Jean"
+                      lastname: "Dupont"
+                      avatar_url: "https://ui-avatars.com/api/?name=Jean+Dupont"
+                    rating: 4
+                    comment: "Good experience overall. The camera was clean and worked perfectly. Jean was helpful with setup instructions."
+                    created_at: "2025-03-22T09:15:00Z"
+                    type: "forPartner"
+                given_reviews:
+                  - id: 156
+                    reviewer:
+                      id: 101
+                      username: "hmed_samaki"
+                      firstname: "Jean"
+                      lastname: "Dupont"
+                      avatar_url: "https://ui-avatars.com/api/?name=Jean+Dupont"
+                    reviewee:
+                      id: 54
+                      username: "camera_pro"
+                      firstname: "Michael"
+                      lastname: "Wong"
+                      avatar_url: "https://ui-avatars.com/api/?name=Michael+Wong"
+                    rating: 5
+                    comment: "Great camera equipment, would rent again! Michael was extremely professional and offered excellent advice on the best settings for my shoot."
+                    created_at: "2025-01-20T10:15:00Z"
+                    type: "forPartner"
+                  - id: 203
+                    reviewer:
+                      id: 101
+                      username: "hmed_samaki"
+                      firstname: "Jean"
+                      lastname: "Dupont"
+                      avatar_url: "https://ui-avatars.com/api/?name=Jean+Dupont"
+                    reviewee:
+                      id: 67
+                      username: "drone_master"
+                      firstname: "Emma"
+                      lastname: "Rodriguez"
+                      avatar_url: "https://ui-avatars.com/api/?name=Emma+Rodriguez"
+                    rating: 3
+                    comment: "The drone was in good condition, but battery life was less than advertised. Emma was responsive to messages though."
+                    created_at: "2025-03-05T16:30:00Z"
+                    type: "forPartner"
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                    format: date-time
+                  status:
+                    type: integer
+                  error:
+                    type: string
+                  message:
+                    type: string
+              example:
+                timestamp: "2025-05-06T10:15:30Z"
+                status: 404
+                error: "Not Found"
+                message: "User with ID 999 not found"
+
+components:
+  schemas:
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Review ID
+        reviewer:
+          $ref: '#/components/schemas/UserInfo'
+        reviewee:
+          $ref: '#/components/schemas/UserInfo'
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Rating (1-5)
+        comment:
+          type: string
+          description: Review comment
+        created_at:
+          type: string
+          format: date-time
+          description: Creation date
+        type:
+          type: string
+          enum: [forPartner, forClient, forObject]
+          description: Type of review
+
+    UserInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+        username:
+          type: string
+          description: Username
+        firstname:
+          type: string
+          description: First name
+        lastname:
+          type: string
+          description: Last name
+        avatar_url:
+          type: string
+          description: URL to avatar image

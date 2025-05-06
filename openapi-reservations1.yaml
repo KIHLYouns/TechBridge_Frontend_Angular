@@ -1,0 +1,161 @@
+openapi: 3.0.3
+info:
+  title: TechBridge Reservations API
+  description: API for retrieving current user reservations
+  version: 1.0.0
+servers:
+  - url: /api
+    description: Base API URL
+
+paths:
+  /reservations/client/{id}:
+    get:
+      summary: Get reservations for a specific client
+      description: Retrieves all reservations for a specific client user ID, regardless of status.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the client user
+          schema:
+            type: integer
+          example: 103
+      responses:
+        '200':
+          description: List of reservations for the client
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+              example:
+                - id: 1001
+                  start_date: "2025-05-10T00:00:00Z"
+                  end_date: "2025-05-12T00:00:00Z"
+                  total_cost: 105
+                  status: "pending"
+                  created_at: "2025-04-28T10:00:00Z"
+                  delivery_option: false
+                  contract_url: null
+                  listing:
+                    id: 1
+                    title: "PlayStation 5 Slim"
+                    main_image: "https://picsum.photos/600/400?random=1"
+                  partner:
+                    id: 101
+                    username: "partner_username"
+                    email: "mouad@gmail.com"
+                    phone_number: "0676767698"
+                    avatar_url: "https://ui-avatars.com/api/?name=Partner+User"
+                  client:
+                    id: 103
+                    username: "client_username"
+                    email: "mouad@gmail.com"
+                    phone_number: "0676767698"                    
+                    avatar_url: "https://ui-avatars.com/api/?name=Client+User"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Reservation:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique reservation identifier
+          example: 1001
+        start_date:
+          type: string
+          format: date-time
+          description: Start date of rental period
+          example: "2025-05-10T00:00:00Z"
+        end_date:
+          type: string
+          format: date-time
+          description: End date of rental period
+          example: "2025-05-12T00:00:00Z"
+        total_cost:
+          type: number
+          description: Total cost of the reservation
+          example: 105
+        status:
+          type: string
+          enum: [pending, confirmed, ongoing, canceled, completed]
+          description: Current status of the reservation
+          example: "pending"
+        created_at:
+          type: string
+          format: date-time
+          description: Date when reservation was created
+          example: "2025-04-28T10:00:00Z"
+        delivery_option:
+          type: boolean
+          description: Whether delivery was chosen
+          example: false
+        contract_url:
+          type: string
+          description: URL to the rental contract document
+          example: "https://example.com/contracts/1001.pdf"
+          nullable: true
+        listing:
+          $ref: '#/components/schemas/Listing'
+        partner:
+          $ref: '#/components/schemas/User'
+        client:
+          $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+          example: 101
+        username:
+          type: string
+          description: Username
+          example: "hmed_samaki"
+        avatar_url:
+          type: string
+          description: URL to user's avatar image
+          example: "https://ui-avatars.com/api/?name=Jean+Dupont"
+        phone_number:
+          type: string
+        email:
+          type: string
+          format: email
+
+    Listing:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Listing ID
+          example: 1
+        title:
+          type: string
+          description: Listing title
+          example: "PlayStation 5 Slim"
+        main_image:
+          type: string
+          description: image URL of index 0 from the listings images
+          example: "https://picsum.photos/600/400?random=1"
+    

@@ -75,6 +75,7 @@ export interface Reservation {
   listing?: Listing;
   payment?: Payment;
   reviews?: Review[];
+  isReviewedByCurrentUser?: boolean;
 }
 
 export interface Availability {
