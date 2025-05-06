@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
-import { ReviewService } from '../../../../core/services/review.service';
-import { Review, User } from '../../../../shared/database.model';
+import {
+  Review,
+  ReviewService,
+  UserReviewsResponse,
+} from '../../../../core/services/review.service';
+import { User } from '../../../../shared/database.model';
 import { UserService } from '../../services/user.service';
 import { Observable } from 'rxjs';
 
@@ -18,7 +22,6 @@ export class ProfileComponent implements OnInit {
   isTogglingPartner: boolean = false;
   showPartnerTermsAcceptance: boolean = false;
   interfaceToggleState: boolean = false;
-
 
   user: User | null = null;
   reviews: Review[] = [];
@@ -55,7 +58,7 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.isPartner$ = this.userService.isPartner$;
     this.loadUserProfile();
-    this.isPartner$.subscribe(isPartner => {
+    this.isPartner$.subscribe((isPartner) => {
       this.interfaceToggleState = isPartner;
     });
   }
@@ -69,6 +72,7 @@ export class ProfileComponent implements OnInit {
         next: (userData) => {
           this.user = userData;
           if (this.user) {
+            // Update form with user data
             this.profileForm.patchValue({
               firstname: this.user.firstname,
               lastname: this.user.lastname,
@@ -77,8 +81,9 @@ export class ProfileComponent implements OnInit {
               phone: this.user.phone_number,
               address: this.user.address,
             });
-            this.loadUserReviews();
-            this.loadOutgoingReviews();
+
+            // Replace the two separate review loading methods with the new combined method
+            this.loadAllUserReviews();
           } else {
             console.error('Received null or undefined user data.');
           }
@@ -89,33 +94,35 @@ export class ProfileComponent implements OnInit {
       });
   }
 
-  loadUserReviews(): void {
+  loadAllUserReviews(): void {
     const userId = this.user?.id;
     if (!userId) {
-      console.warn('User ID not available for loading incoming reviews.');
+      console.warn('User ID not available for loading reviews.');
       return;
     }
-    this.isLoadingReviews = true;
-    this.reviewService
-      .getReviewsForUser(userId)
-      .pipe(finalize(() => (this.isLoadingReviews = false)))
-      .subscribe((reviewData) => {
-        this.reviews = reviewData;
-      });
-  }
 
-  loadOutgoingReviews(): void {
-    const userId = this.user?.id;
-    if (!userId) {
-      console.warn('User ID not available for loading outgoing reviews.');
-      return;
-    }
+    // Set loading state for both types of reviews
+    this.isLoadingReviews = true;
     this.isLoadingOutgoingReviews = true;
+
     this.reviewService
-      .getReviewsGivenByUser(userId)
-      .pipe(finalize(() => (this.isLoadingOutgoingReviews = false)))
-      .subscribe((reviewData) => {
-        this.outgoingReviews = reviewData;
+      .getUserReviews(userId)
+      .pipe(
+        finalize(() => {
+          // Clear loading state when finished (success or error)
+          this.isLoadingReviews = false;
+          this.isLoadingOutgoingReviews = false;
+        })
+      )
+      .subscribe({
+        next: (reviewData: UserReviewsResponse) => {
+          // Store the received reviews in their respective arrays
+          this.reviews = reviewData.received_reviews;
+          this.outgoingReviews = reviewData.given_reviews;
+        },
+        error: (err) => {
+          console.error('Failed to load user reviews:', err);
+        },
       });
   }
 
@@ -258,25 +265,44 @@ export class ProfileComponent implements OnInit {
   get f() {
     return this.profileForm.controls;
   }
+
+
+
   // Add method to accept partner terms
   acceptPartnerTerms(): void {
     this.isTogglingPartner = true;
-    
-    this.userService.switchToPartner().pipe(
-      finalize(() => this.isTogglingPartner = false)
-    ).subscribe({
-      next: () => {
-        // After becoming a partner, enable the interface toggle
-        this.interfaceToggleState = true;
-        console.log('Partner terms accepted, user is now a partner');
-      },
-      error: (err) => console.error('Error accepting partner terms:', err)
-    });
+
+    this.userService
+      .switchToPartner()
+      .pipe(finalize(() => (this.isTogglingPartner = false)))
+      .subscribe({
+        next: () => {
+          // After becoming a partner, enable the interface toggle
+          this.interfaceToggleState = true;
+          console.log('Partner terms accepted, user is now a partner');
+        },
+        error: (err) => console.error('Error accepting partner terms:', err),
+      });
   }
 
   // Handle interface toggle - purely UI, NO backend changes
-toggleInterface(event: any): void {
-  this.interfaceToggleState = event.target.checked;
-  this.userService.setInterfaceToggleState(this.interfaceToggleState);
+  toggleInterface(event: any): void {
+    this.interfaceToggleState = event.target.checked;
+    this.userService.setInterfaceToggleState(this.interfaceToggleState);
+  }
 }
-}
+
+/*  loadOutgoingReviews(): void {
+    const userId = this.user?.id;
+    if (!userId) {
+      console.warn('User ID not available for loading outgoing reviews.');
+      return;
+    }
+    this.isLoadingOutgoingReviews = true;
+    this.reviewService
+      .getReviewsGivenByUser(userId)
+      .pipe(finalize(() => (this.isLoadingOutgoingReviews = false)))
+      .subscribe((reviewData) => {
+        this.outgoingReviews = reviewData;
+      });
+  } */

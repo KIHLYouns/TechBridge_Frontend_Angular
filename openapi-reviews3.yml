@@ -1,0 +1,71 @@
+openapi: 3.0.3
+info:
+  title: TechBridge Review Check API
+  description: API endpoint for checking if a user has already reviewed a reservation
+  version: 1.0.0
+servers:
+  - url: /api
+    description: Base API URL
+
+paths:
+  /reviews/check:
+    get:
+      summary: Check if user has reviewed a reservation
+      description: Determine if a specific user has already submitted a review for a given reservation
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          description: ID of the user
+          schema:
+            type: integer
+          example: 101
+        - name: reservationId
+          in: query
+          required: true
+          description: ID of the reservation
+          schema:
+            type: integer
+          example: 1004
+      responses:
+        '200':
+          description: Check result
+          content:
+            application/json:
+              schema:
+                type: boolean
+              examples:
+                hasReviewed:
+                  value: true
+                  summary: User has reviewed the reservation
+                hasNotReviewed:
+                  value: false
+                  summary: User has not reviewed the reservation
+        '400':
+          description: Invalid input parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  message:
+                    type: string
+              example:
+                status: 400
+                message: "Missing required parameters"
+        '404':
+          description: User or reservation not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  message:
+                    type: string
+              example:
+                status: 404
+                message: "Reservation with ID 9999 not found"

@@ -1,0 +1,106 @@
+openapi: 3.0.3
+info:
+  title: TechBridge Review Submission API
+  description: API endpoint for submitting a new review
+  version: 1.0.0
+servers:
+  - url: /api
+    description: Base API URL
+
+paths:
+  /reviews:
+    post:
+      summary: Submit a new review
+      description: Submit a review for a partner, client, or listing after a completed rental
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewSubmitRequest'
+            example:
+              reviewerId: 101
+              revieweeId: 54
+              rating: 5
+              comment: "Excellent service, equipment was in perfect condition!"
+              reservationId: 1004
+              type: "forPartner"
+      responses:
+        '201':
+          description: Review created successfully
+
+        '400':
+          description: Invalid input data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                  message:
+                    type: string
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                        message:
+                          type: string
+              example:
+                status: 400
+                message: "Invalid review data"
+                errors: [
+                  {
+                    "field": "rating",
+                    "message": "Rating must be between 1 and 5"
+                  }
+                ]
+        '404':
+          description: Referenced entity not found
+          content:
+            application/json:
+              example:
+                status: 404
+                message: "Reservation with ID 9999 not found"
+
+components:
+  schemas:
+    ReviewSubmitRequest:
+      type: object
+      required:
+        - reviewerId
+        - revieweeId
+        - rating
+        - comment
+        - type
+        - reservationId
+      properties:
+        reviewerId:
+          type: integer
+          description: ID of the user submitting the review
+        revieweeId:
+          type: integer
+          description: ID of the user being reviewed
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Rating (1-5 stars)
+        comment:
+          type: string
+          minLength: 5
+          maxLength: 500
+          description: Review comment
+        reservationId:
+          type: integer
+          description: ID of the reservation being reviewed
+        listingId:
+          type: integer
+          description: ID of the listing (optional, for forObject reviews)
+        type:
+          type: string
+          enum: [forPartner, forClient, forObject]
+          description: Type of review

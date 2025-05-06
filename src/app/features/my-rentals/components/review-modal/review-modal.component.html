@@ -1,0 +1,96 @@
+<!-- src/app/features/my-rentals/components/review-modal/review-modal.component.html -->
+
+<div class="modal-overlay" (click)="closeModal()">
+    <div class="review-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2 class="modal-title">Leave a Review</h2>
+            <button type="button" class="close-btn" (click)="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <!-- Rental details summary -->
+            <div class="rental-summary"
+                *ngIf="reservation && reservation.listing">
+                <img
+                    [src]="reservation.listing.images?.[0]?.url || 'assets/images/item-placeholder.jpg'"
+                    alt="Rental item"
+                    class="rental-image">
+                <div class="rental-info">
+                    <h3 class="rental-title">{{ reservation.listing.title
+                        }}</h3>
+                    <p class="rental-period">
+                        <i class="fas fa-calendar"></i>
+                        {{ reservation.start_date | date:'MMM d' }} - {{
+                        reservation.end_date | date:'MMM d, y' }}
+                    </p>
+                    <p class="rental-partner" *ngIf="reservation.partner">
+                        <i class="fas fa-user"></i>
+                        Provided by: {{ reservation.partner.username }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Review form -->
+            <form [formGroup]="reviewForm">
+                <div class="form-group rating-group">
+                    <label>Your Rating:</label>
+                    <div class="star-rating">
+                        <button
+                            type="button"
+                            *ngFor="let star of stars"
+                            class="star-btn"
+                            [class.active]="star <= selectedRating"
+                            (click)="selectRating(star)">
+                            <i class="fas fa-star"></i>
+                        </button>
+                    </div>
+                    <div class="error-message"
+                        *ngIf="reviewForm.get('rating')?.invalid && reviewForm.get('rating')?.touched">
+                        Please select a rating
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="comment">Your Review:</label>
+                    <textarea
+                        id="comment"
+                        formControlName="comment"
+                        class="review-comment"
+                        placeholder="Share your experience with this rental..."></textarea>
+                    <div class="error-message"
+                        *ngIf="reviewForm.get('comment')?.invalid && reviewForm.get('comment')?.touched">
+                        <span
+                            *ngIf="reviewForm.get('comment')?.errors?.['required']">Please
+                            provide a comment</span>
+                        <span
+                            *ngIf="reviewForm.get('comment')?.errors?.['minlength']">Comment
+                            must be at least 5 characters</span>
+                        <span
+                            *ngIf="reviewForm.get('comment')?.errors?.['maxlength']">Comment
+                            cannot exceed 500 characters</span>
+                    </div>
+                </div>
+
+                <div class="error-message" *ngIf="submitError">
+                    {{ submitError }}
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn"
+                        (click)="closeModal()">Cancel</button>
+                    <button
+                        class="submit-btn"
+                        [disabled]="reviewForm.invalid || isSubmitting"
+                        (click)="submitReview()">
+                        <span *ngIf="!isSubmitting">Submit Review</span>
+                        <span *ngIf="isSubmitting">
+                            <i class="fas fa-spinner fa-spin"></i> Submitting...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

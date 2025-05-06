@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { delay, map, mergeMap } from 'rxjs/operators';
 import {
   Reservation,
   ReservationStatus,
   Review,
 } from '../../../shared/database.model'; // Import Review
 import { ListingsService } from '../../listings/services/listings.service'; // Pour réutiliser les mocks
+import { ReviewService } from '../../../core/services/review.service';
+import { TokenService } from '../../auth/services/token.service';
+
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +21,7 @@ export class ReservationsService {
   private mockReservations: Reservation[];
 
   // Inject ListingsService pour accéder aux mocks existants (listings, users)
-  constructor(private listingsService: ListingsService) {
+  constructor(private listingsService: ListingsService, private reviewService: ReviewService, private tokenService: TokenService) {
     // Initialiser mockReservations DANS le constructeur
     this.mockReservations = [
       // --- Réservations Actuelles (Exemples) ---
@@ -142,12 +147,53 @@ export class ReservationsService {
     const pastStatuses: ReservationStatus[] = ['completed', 'canceled'];
     // Simule la récupération des réservations pour un utilisateur spécifique (ici, on retourne tout pour le mock)
     // Dans une vraie appli, vous filtreriez par ID utilisateur
-    const past = this.mockReservations.filter((r) =>
-      pastStatuses.includes(r.status)
-    );
-    // Simule un appel API avec un délai
-    return of(past).pipe(delay(600));
+    
+  // Filter reservations by status
+  const past = this.mockReservations.filter((r) =>
+    pastStatuses.includes(r.status)
+  );
+  
+  // Return past reservations with review status
+  return of(past).pipe(
+    // First, delay to simulate API call
+    delay(600),
+    
+    // Then, check which reservations have been reviewed by current user
+    mergeMap(reservations => {
+      // Only process completed reservations that need review status
+      const completedReservations = reservations.filter(r => r.status === 'completed');
+      
+      if (completedReservations.length === 0) {
+        // If no completed reservations, just return the original list
+        return of(reservations);
+      }
+      
+      // Create an array of observables that check review status
+      const reviewChecks: Observable<{id: number, reviewed: boolean}>[] = 
+        completedReservations.map(reservation => 
+          this.reviewService.hasUserReviewedReservation(this.tokenService.getUserIdFromToken(), reservation.id)
+            .pipe(map(reviewed => ({ id: reservation.id, reviewed })))
+        );
+      
+      // Use forkJoin to wait for all checks to complete
+      return forkJoin(reviewChecks).pipe(
+        map(results => {
+          // Create a map of reservation IDs to review status
+          const reviewStatusMap = new Map<number, boolean>();
+          results.forEach(result => {
+            reviewStatusMap.set(result.id, result.reviewed);
+          });
+          
+          // Update each reservation with its review status
+          return reservations.map(reservation => ({
+            ...reservation,
+            isReviewedByCurrentUser: reviewStatusMap.get(reservation.id) || false
+          }));
+        })
+      );
+    })
+  );
   }
 
-  // Ajoutez ici d'autres méthodes si nécessaire (ex: cancelReservation(id), addReview(reviewData))
+  // Ajoutez ici d'autres méthodes si nécessaire (ex: cancelReservation(id))
 }

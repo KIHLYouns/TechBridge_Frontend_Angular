@@ -2,28 +2,41 @@ import { Component, OnInit } from '@angular/core'; // Importer OnInit
 import { Router } from '@angular/router'; // Importer Router
 import { Reservation } from '../../../../shared/database.model'; // Importer le modèle Reservation
 import { ReservationsService } from '../../services/reservations.service'; // Importer le service
+import { TokenService } from '../../../auth/services/token.service';
+import { forkJoin, map, Observable } from 'rxjs';
+import { ReviewService } from '../../../../core/services/review.service';
 
 @Component({
   selector: 'app-my-rentals',
   standalone: false,
   templateUrl: './my-rentals.component.html',
-  styleUrls: ['./my-rentals.component.scss']
+  styleUrls: ['./my-rentals.component.scss'],
 })
-export class MyRentalsComponent implements OnInit { // Implémenter OnInit
+export class MyRentalsComponent implements OnInit {
+  // Implémenter OnInit
   activeTab: 'current' | 'history' = 'current';
   currentRentals: Reservation[] = [];
   pastRentals: Reservation[] = [];
+
   isLoadingCurrent = false;
   isLoadingPast = false;
   errorMessage = '';
 
+  // Add these properties
+  showReviewModal = false;
+  selectedReservation: Reservation | null = null;
+  currentUserId!: number | null; // Replace with your actual logic to get current user ID
+
   // Injecter le service de réservations et Router
   constructor(
     private reservationsService: ReservationsService,
-    private router: Router // Injecter Router
+    private router: Router, // Injecter Router
+    private tokenService: TokenService,
+    private reviewService: ReviewService
   ) {}
 
   ngOnInit(): void {
+    this.currentUserId = this.tokenService.getUserIdFromToken();
     this.loadRentals(); // Charger les données à l'initialisation
   }
 
@@ -50,17 +63,16 @@ export class MyRentalsComponent implements OnInit { // Implémenter OnInit
       },
       error: (err) => {
         console.error('Error loading current rentals:', err);
-        this.errorMessage = 'Could not load current rentals. Please try again later.';
+        this.errorMessage =
+          'Could not load current rentals. Please try again later.';
         this.isLoadingCurrent = false;
-      }
+      },
     });
   }
 
+  // this loads 
   loadPastRentals(): void {
     this.isLoadingPast = true;
-    // Ne pas écraser un message d'erreur potentiel de l'autre appel
-    // this.errorMessage = '';
-
     this.reservationsService.getPastUserReservations().subscribe({
       next: (data) => {
         this.pastRentals = data;
@@ -68,12 +80,12 @@ export class MyRentalsComponent implements OnInit { // Implémenter OnInit
       },
       error: (err) => {
         console.error('Error loading past rentals:', err);
-        // Afficher une seule erreur si les deux échouent ou si l'autre a réussi
         if (!this.errorMessage || this.currentRentals.length > 0) {
-          this.errorMessage = 'Could not load rental history. Please try again later.';
+          this.errorMessage =
+            'Could not load rental history. Please try again later.';
         }
         this.isLoadingPast = false;
-      }
+      },
     });
   }
 
@@ -83,7 +95,10 @@ export class MyRentalsComponent implements OnInit { // Implémenter OnInit
    * Calcule la différence en jours entre deux dates.
    * Ajoute 1 pour inclure le jour de début et de fin.
    */
-  calculateDays(startDateStr: string | undefined, endDateStr: string | undefined): number | null {
+  calculateDays(
+    startDateStr: string | undefined,
+    endDateStr: string | undefined
+  ): number | null {
     if (!startDateStr || !endDateStr) {
       return null;
     }
@@ -92,17 +107,22 @@ export class MyRentalsComponent implements OnInit { // Implémenter OnInit
       const end = new Date(endDateStr);
       // Vérifier si les dates sont valides
       if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-        console.error("Invalid date format provided:", startDateStr, endDateStr);
+        console.error(
+          'Invalid date format provided:',
+          startDateStr,
+          endDateStr
+        );
         return null;
       }
       // Calculer la différence en millisecondes
       const diffTime = end.getTime() - start.getTime();
       // Convertir en jours et ajouter 1
       // Utiliser Math.max pour s'assurer qu'une location le même jour compte pour 1 jour
-      const diffDays = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24))) + 1;
+      const diffDays =
+        Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24))) + 1;
       return diffDays;
     } catch (e) {
-      console.error("Error calculating days:", e);
+      console.error('Error calculating days:', e);
       return null; // Retourne null en cas d'erreur
     }
   }
@@ -135,10 +155,32 @@ export class MyRentalsComponent implements OnInit { // Implémenter OnInit
   }
 
   leaveReview(rentalId: number): void {
-    console.log(`Leaving review for rental ${rentalId}`);
-    // TODO: Ouvrir un modal/formulaire de review
-    // Appeler le service pour soumettre la review
-    alert(`Action: Leave review for rental ${rentalId}`); // Placeholder
+    console.log(`Opening review modal for rental ${rentalId}`);
+    
+    // Find the rental in pastRentals
+    const rental = this.pastRentals.find(r => r.id === rentalId);
+    
+    if (rental && rental.status === 'completed') {
+      this.selectedReservation = rental;
+      this.showReviewModal = true;
+    } else {
+      console.error('Cannot leave review: rental not found or not completed');
+    }
+  }
+
+  closeReviewModal(success: boolean): void {
+    if (success && this.selectedReservation) {
+      // If review was successful, reload past rentals to update status
+      this.loadPastRentals();
+    }
+    
+    this.showReviewModal = false;
+    this.selectedReservation = null;
+  }
+
+  hasBeenReviewed(rental: Reservation): boolean {
+    // Just check the property that was added by the service
+    return rental.isReviewedByCurrentUser === true;
   }
 
   rentAgain(listingId: number | undefined): void {
@@ -148,9 +190,9 @@ export class MyRentalsComponent implements OnInit { // Implémenter OnInit
   }
 
   contactPartner(partnerId: number | undefined): void {
-     if (!partnerId) return;
-     console.log(`Contacting partner ${partnerId}`);
-     // TODO: Implémenter la logique de contact (ex: ouvrir chat, afficher infos)
-     alert(`Action: Contact partner ${partnerId}`); // Placeholder
+    if (!partnerId) return;
+    console.log(`Contacting partner ${partnerId}`);
+    // TODO: Implémenter la logique de contact (ex: ouvrir chat, afficher infos)
+    alert(`Action: Contact partner ${partnerId}`); // Placeholder
   }
 }

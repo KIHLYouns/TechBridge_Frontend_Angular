@@ -498,7 +498,6 @@ components:
   schemas:
 
   # shared 
-
     Category:
       type: object
       properties:

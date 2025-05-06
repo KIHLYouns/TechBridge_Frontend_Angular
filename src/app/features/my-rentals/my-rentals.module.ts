@@ -3,18 +3,22 @@ import { NgModule } from '@angular/core';
 
 import { MyRentalsComponent } from './components/my-rentals/my-rentals.component';
 import { MyRentalsRoutingModule } from './my-rentals-routing.module';
+import { ReviewModalComponent } from './components/review-modal/review-modal.component';
+import { ReactiveFormsModule } from '@angular/forms';
 // Le service est 'providedIn: root', donc pas besoin de l'importer ou de le fournir ici.
 // import { ReservationsService } from '../reservations/services/reservations.service';
 
 
 @NgModule({
   declarations: [
-    MyRentalsComponent
+    MyRentalsComponent,
+    ReviewModalComponent
     // ... autres composants de ce module
   ],
   imports: [
     CommonModule, // Nécessaire pour *ngFor, *ngIf, pipes (date, currency, titlecase), [ngClass], etc.
-    MyRentalsRoutingModule
+    MyRentalsRoutingModule,
+    ReactiveFormsModule
     // ... autres modules importés
   ],
   // providers: [ReservationsService] // Décommentez UNIQUEMENT si ReservationsService n'est PAS 'providedIn: root'
