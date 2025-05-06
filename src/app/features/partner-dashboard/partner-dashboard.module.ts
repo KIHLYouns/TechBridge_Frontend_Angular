@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
-import { PartnerDashboardRoutingModule } from './partner-dashboard-routing.module';
 import { PartnerDashboardComponent } from './components/partner-dashboard/partner-dashboard.component';
-
+import { PartnerDashboardRoutingModule } from './partner-dashboard-routing.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +11,8 @@ import { PartnerDashboardComponent } from './components/partner-dashboard/partne
   ],
   imports: [
     CommonModule,
-    PartnerDashboardRoutingModule
+    PartnerDashboardRoutingModule,
+    FormsModule
   ]
 })
 export class PartnerDashboardModule { }

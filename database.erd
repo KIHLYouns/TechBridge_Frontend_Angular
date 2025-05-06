@@ -1,0 +1,134 @@
+title TechBridge
+
+// define tables
+City [icon: map-pin, color: blue]{
+  id int pk
+  name string
+}
+
+Category [icon: tag, color: orange]{
+  id int pk
+  name string
+}
+
+User [icon: user, color: yellow]{
+  id int pk
+  username string
+  firstname string
+  lastname string
+  password string
+  email string
+  phone_number string
+  address string
+  role enum('USER', 'ADMIN')
+  is_partner boolean
+  avatar_url string
+  join_date datetime
+  client_rating decimal
+  client_reviews int
+  partner_rating decimal
+  partner_reviews int
+  longitude double
+  latitude double
+  city_id int
+}
+
+Listing [icon: box, color: green]{
+  id int pk
+  title string
+  description string
+  price_per_day decimal
+  status enum('active', 'archived', 'inactive')
+  is_premium boolean
+  premium_start_date datetime
+  premium_end_date datetime
+  created_at datetime
+  delivery_option boolean
+  equipment_rating decimal
+  category_id int
+  city_id int
+  partner_id int
+}
+
+Reservation [icon: calendar, color: teal]{
+  id int pk
+  start_date datetime
+  end_date datetime
+  total_cost decimal
+  status enum('pending', 'confirmed', 'ongoing', 'canceled', 'completed')
+  contract_url string
+  created_at datetime
+  delivery_option boolean
+  client_id int
+  partner_id int
+  listing_id int
+}
+
+Availability [icon: clock, color:black] {
+  listing_id int
+  start_date string
+  end_date string
+}
+
+Image [icon: image, color: purple]{
+  id int pk
+  url string
+  listing_id int
+}
+
+Review [icon: star, color: gold]{
+  id int pk
+  rating int
+  comment string
+  is_visible boolean
+  created_at datetime
+  type enum('forEquipment', 'forClient', 'forPartner')
+  reviewer_id int
+  reviewee_id int
+  reservation_id int
+  listing_id int
+}
+
+Notification [icon: bell, color: red]{
+  id int pk
+  user_id int
+  type enum('reservation', 'review', 'reminder', 'system')
+  message string
+  is_read boolean
+  created_at datetime
+}
+
+Payment {
+  id int pk
+  amount decimal
+  commission_fee decimal
+  partner_payout decimal
+  payment_date datetime
+  status enum('pending', 'completed','refunded')
+  payment_method enum('credit_card', 'paypal')
+  transaction_id string
+  client_id int
+  partner_id int
+  reservation_id int
+}
+
+// define relationships
+Listing.city_id > City.id
+Listing.partner_id > User.id
+Listing.category_id > Category.id
+Image.listing_id > Listing.id
+Reservation.client_id > User.id
+Reservation.partner_id > User.id
+Reservation.listing_id > Listing.id
+Review.reservation_id > Reservation.id
+Review.reviewer_id > User.id
+Review.reviewee_id > User.id
+Notification.user_id > User.id
+User.city_id > City.id
+Availability.listing_id > Listing.id
+Review.listing_id > Listing.id
+Payment.partner_id > User.id
+Payment.reservation_id > Reservation.id
+Payment.client_id > User.id
+
+

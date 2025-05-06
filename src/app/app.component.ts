@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from './features/auth/services/auth.service';
 import { Router } from '@angular/router';
+import { AuthService } from './features/auth/services/auth.service';
 import { UserService } from './features/profile/services/user.service';
 
 @Component({
@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
       '/my-rentals',
       '/partner-dashboard',
       '/partner-bookings',
-      '/add-listing',
+      '/listing',
     ];
     
     return protectedPaths.some(path => url.startsWith(path));

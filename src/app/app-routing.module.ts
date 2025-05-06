@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: 'profile', loadChildren: () => import('./features/profile/profile.module').then(m => m.ProfileModule)},
   { path: 'partner-bookings', loadChildren: () => import('./features/partner-bookings/partner-bookings.module').then(m => m.PartnerBookingsModule)},
   { path: 'partner-dashboard', loadChildren: () => import('./features/partner-dashboard/partner-dashboard.module').then(m => m.PartnerDashboardModule)},
-  { path: 'add-listing', loadChildren: () => import('./features/add-listing/add-listing.module').then(m => m.AddListingModule)},
+  { path: 'listing', loadChildren: () => import('./features/add-listing/add-listing.module').then(m => m.AddListingModule)},
 ];
 
 @NgModule({

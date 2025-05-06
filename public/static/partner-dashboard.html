@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Partner Dashboard - TechBridge</title>
+    <title>Dashboard - TechBridge</title>
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/partner-dashboard.css" />
     <link
@@ -30,7 +30,7 @@
     <!-- Main Content -->
     <main class="dashboard-container">
       <div class="page-header">
-        <h1>Partner Dashboard</h1>
+        <h1>Dashboard</h1>
         <button class="primary-button">
           <i class="fas fa-plus"></i> Add Listing
         </button>
@@ -75,19 +75,6 @@
           </div>
           <button class="view-all-btn">View All</button>
         </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">
-            <i class="fas fa-money-bill-wave"></i>
-          </div>
-          <div class="stat-content">
-            <div class="stat-value">€1,250</div>
-            <div class="stat-label">Revenue This Month</div>
-          </div>
-          <div class="stat-trend positive">
-            <i class="fas fa-arrow-up"></i> 15%
-          </div>
-        </div>
       </div>
 
       <!-- My Listings Section -->
@@ -98,6 +85,7 @@
             <option>All Listings</option>
             <option>Active</option>
             <option>Paused</option>
+            <option>Archived</option>
             <option>Premium</option>
           </select>
         </div>
@@ -105,18 +93,22 @@
 
       <div class="listings-grid">
         <div class="listing-card">
-          <div class="premium-badge">Premium</div>
+          <div class="listing-header">
+            <span class="listing-status available">Active</span>
+            <div class="listing-header-right-items">
+              <div class="listing-stats">
+                <div class="listing-stat">
+                  <i class="fas fa-eye"></i> 126 views
+                </div>
+              </div>
+              <div class="premium-badge">Premium</div>
+            </div>
+          </div>
           <img src="assets/images/item-placeholder.jpg" alt="Equipment" class="listing-image" />
           <div class="listing-details">
-            <h3 class="listing-title">Portable PA System</h3>
-            <div class="listing-price">€150 / day</div>
-            <div class="listing-stats">
-              <div class="listing-stat">
-                <i class="fas fa-eye"></i> 126 views
-              </div>
-              <div class="listing-stat">
-                <i class="fas fa-calendar-check"></i> 8 rentals
-              </div>
+            <div class="listing-header-row">
+              <h3 class="listing-title">Portable PA System</h3>
+              <div class="listing-price">€150/day</div>
             </div>
             <div class="listing-actions">
               <button class="listing-action-btn edit">
@@ -125,53 +117,64 @@
               <button class="listing-action-btn pause">
                 <i class="fas fa-pause"></i> Pause
               </button>
-              <button class="listing-action-btn boost">
-                <i class="fas fa-rocket"></i> Boost
+              <button class="listing-action-btn archive">
+                <i class="fas fa-archive"></i> Archive
               </button>
             </div>
           </div>
         </div>
 
         <div class="listing-card">
+          <div class="listing-header">
+            <span class="listing-status paused">Paused</span>
+          </div>
           <img src="assets/images/item-placeholder.jpg" alt="Equipment" class="listing-image" />
           <div class="listing-details">
-            <h3 class="listing-title">LED Lighting Pack (x8)</h3>
-            <div class="listing-price">€100 / day</div>
-            <div class="listing-stats">
-              <div class="listing-stat">
-                <i class="fas fa-eye"></i> 84 views
-              </div>
-              <div class="listing-stat">
-                <i class="fas fa-calendar-check"></i> 5 rentals
-              </div>
+            <div class="listing-header-row">
+              <h3 class="listing-title">LED Lighting Pack (x8)</h3>
+              <div class="listing-price">€100/day</div>
             </div>
-            <div class="listing-status booked">Booked</div>
             <div class="listing-actions">
               <button class="listing-action-btn edit">
                 <i class="fas fa-edit"></i> Edit
               </button>
-              <button class="listing-action-btn pause">
-                <i class="fas fa-pause"></i> Pause
+              <button class="listing-action-btn activate">
+                <i class="fas fa-play"></i> Activate
               </button>
-              <button class="listing-action-btn boost">
-                <i class="fas fa-rocket"></i> Boost
+              <button class="listing-action-btn archive">
+                <i class="fas fa-archive"></i> Archive
               </button>
             </div>
           </div>
         </div>
 
         <div class="listing-card">
+          <div class="listing-header">
+            <span class="listing-status archived">Archived</span>
+          </div>
           <img src="assets/images/item-placeholder.jpg" alt="Equipment" class="listing-image" />
           <div class="listing-details">
-            <h3 class="listing-title">Wireless Microphone Set</h3>
-            <div class="listing-price">€80 / day</div>
-            <div class="listing-stats">
-              <div class="listing-stat">
-                <i class="fas fa-eye"></i> 62 views
-              </div>
-              <div class="listing-stat">
-                <i class="fas fa-calendar-check"></i> 3 rentals
-              </div>
+            <div class="listing-header-row">
+              <h3 class="listing-title">Wireless Microphone Set (Archived)</h3>
+              <div class="listing-price">€80/day</div>
+            </div>
+            <div class="listing-actions">
+              <button class="listing-action-btn activate">
+                <i class="fas fa-undo"></i> Restore
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="listing-card">
+          <div class="listing-header">
+            <span class="listing-status available">Active</span>
+          </div>
+          <img src="assets/images/item-placeholder.jpg" alt="Equipment" class="listing-image" />
+          <div class="listing-details">
+            <div class="listing-header-row">
+              <h3 class="listing-title">DJI Ronin-S Gimbal</h3>
+              <div class="listing-price">€120/day</div>
             </div>
             <div class="listing-actions">
               <button class="listing-action-btn edit">
@@ -183,62 +186,13 @@
               <button class="listing-action-btn boost">
                 <i class="fas fa-rocket"></i> Boost
               </button>
+              <button class="listing-action-btn archive">
+                <i class="fas fa-archive"></i> Archive
+              </button>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Recent Bookings Section -->
-      <div class="section-header">
-        <h2>Recent Bookings</h2>
-        <a href="partner-bookings.html" class="view-all-link">View All <i class="fas fa-arrow-right"></i></a>
-      </div>
-
-      <div class="recent-bookings">
-        <div class="booking-card">
-          <img src="assets/images/default-avatar.jpeg" alt="Client" class="booking-client-avatar" />
-          <div class="booking-details">
-            <div class="booking-header">
-              <h3 class="booking-title">Portable PA System</h3>
-              <div class="booking-status pending">Pending</div>
-            </div>
-            <div class="booking-info">
-              <div class="booking-client">Sophie Laurent</div>
-              <div class="booking-date"><i class="fas fa-calendar"></i> April 20 - April 22, 2025</div>
-              <div class="booking-price">€300 (2 days)</div>
-            </div>
-          </div>
-          <div class="booking-actions">
-            <button class="booking-action-btn approve">
-              <i class="fas fa-check"></i> Approve
-            </button>
-            <button class="booking-action-btn deny">
-              <i class="fas fa-times"></i> Deny
-            </button>
-          </div>
-        </div>
-
-        <div class="booking-card">
-          <img src="assets/images/default-avatar.jpeg" alt="Client" class="booking-client-avatar" />
-          <div class="booking-details">
-            <div class="booking-header">
-              <h3 class="booking-title">LED Lighting Pack (x8)</h3>
-              <div class="booking-status confirmed">Confirmed</div>
-            </div>
-            <div class="booking-info">
-              <div class="booking-client">Thomas Dupont</div>
-              <div class="booking-date"><i class="fas fa-calendar"></i> April 25 - April 26, 2025</div>
-              <div class="booking-price">€200 (2 days)</div>
-            </div>
-          </div>
-          <div class="booking-actions">
-            <button class="booking-action-btn contact">
-              <i class="fas fa-comment"></i> Contact
-            </button>
-          </div>
-        </div>
-      </div>
-    </main>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {

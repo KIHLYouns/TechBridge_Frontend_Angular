@@ -34,7 +34,7 @@ export interface User {
   // Add other relevant user properties
 }
 
-export type ListingStatus = 'active' | 'archived' | 'inactive';
+export type ListingStatus = 'active' | 'archived' | 'paused';
 
 export interface Listing {
   id: number;

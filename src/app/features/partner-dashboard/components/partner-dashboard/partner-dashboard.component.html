@@ -1,1 +1,116 @@
-<p>partner-dashboard works!</p>
+<main class="dashboard-container">
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <button class="primary-button" (click)="goToAddListing()"> <i class="fas fa-plus"></i> Add Listing </button>
+  </div>
+
+  <div class="stats-overview">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-list"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.activeListings.value }}</div>
+        <div class="stat-label">Active Listings</div>
+      </div>
+      <div class="stat-limit">
+        <div class="limit-bar">
+          <div class="limit-fill" [style.width.%]="(stats.activeListings.current / stats.activeListings.limit) * 100"></div>
+        </div>
+        <span class="limit-text">{{ stats.activeListings.current }}/{{ stats.activeListings.limit }} maximum</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.upcomingBookings }}</div>
+        <div class="stat-label">Upcoming Bookings</div>
+      </div>
+      <button class="view-all-btn" (click)="goToPartnerBookings()">View All</button>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <i class="fas fa-star"></i>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ stats.pendingReviews }}</div>
+        <div class="stat-label">Pending Reviews</div>
+      </div>
+      <button class="view-all-btn" (click)="goToPartnerProfileReviews()">View All</button>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <h2>My Listings</h2>
+    <div class="section-actions">
+      <select class="filter-select" (change)="applyFilter($event)" [(ngModel)]="selectedStatusFilter">
+        <option>All Listings</option>
+        <option>Active</option>
+        <option>Paused</option>
+        <option>Archived</option>
+        <option>Premium</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="listings-grid" *ngIf="filteredPartnerListings.length > 0; else noListings">
+    <div class="listing-card" *ngFor="let listing of filteredPartnerListings">
+      <div class="listing-header">
+        <span class="listing-status" [ngClass]="getListingStatusClass(listing)">
+          {{ getListingStatusText(listing) }}
+        </span>
+        <div class="listing-header-right-items">
+          <!-- Les statistiques de vues sont statiques pour l'instant -->
+          <!-- <div class="listing-stats">
+            <div class="listing-stat">
+              <i class="fas fa-eye"></i> {{ listing.views || 0 }} views
+            </div>
+          </div> -->
+          <div *ngIf="listing.is_premium" class="premium-badge">Premium</div>
+        </div>
+      </div>
+      <img [src]="listing.images?.[0]?.url || 'assets/images/item-placeholder.jpg'" [alt]="listing.title" class="listing-image" />
+      <div class="listing-details">
+        <div class="listing-header-row">
+          <h3 class="listing-title">{{ listing.title }}</h3>
+          <div class="listing-price">€{{ listing.price_per_day }}/day</div>
+        </div>
+        <div class="listing-actions">
+          <button class="listing-action-btn edit" (click)="editListing(listing.id)">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+
+          <ng-container [ngSwitch]="listing.status">
+            <button *ngSwitchCase="'active'" class="listing-action-btn pause" (click)="pauseListing(listing)">
+              <i class="fas fa-pause"></i> Pause
+            </button>
+            <button *ngSwitchCase="'paused'" class="listing-action-btn activate" (click)="activateListing(listing)">
+              <i class="fas fa-play"></i> Activate
+            </button>
+          </ng-container>
+
+          <button *ngIf="listing.status !== 'archived'" class="listing-action-btn archive" (click)="archiveListing(listing)">
+            <i class="fas fa-archive"></i> Archive
+          </button>
+          <button *ngIf="listing.status === 'archived'" class="listing-action-btn activate" (click)="restoreListing(listing)">
+            <i class="fas fa-undo"></i> Restore
+          </button>
+
+          <button *ngIf="!listing.is_premium && listing.status === 'active'" class="listing-action-btn boost" (click)="boostListing(listing)">
+            <i class="fas fa-rocket"></i> Boost
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noListings>
+    <div class="no-listings-message" style="padding: 20px; text-align: center; color: var(--color-text-medium);">
+      You have no listings matching the current filter.
+    </div>
+  </ng-template>
+</main>

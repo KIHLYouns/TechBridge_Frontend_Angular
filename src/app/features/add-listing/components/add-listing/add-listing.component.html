@@ -1,1 +1,349 @@
-<p>add-listing works!</p>
+<main class="container">
+  <section class="add-listing-section">
+    <h1>{{ isEditMode ? "Edit Listing" : "Add a New Listing" }}</h1>
+
+    <!-- Utiliser ngSubmit pour la soumission -->
+    <form
+      id="add-listing-form"
+      [formGroup]="listingForm"
+      (ngSubmit)="onSubmit()"
+    >
+      <!-- Images -->
+      <div class="form-group">
+        <h2>Images</h2>
+        <div class="image-upload-container">
+          <div class="image-preview-container" id="image-preview">
+            <!-- Afficher les images prévisualisées -->
+            <div
+              *ngFor="let preview of imagePreviews; let i = index"
+              class="image-preview-box"
+            >
+              <img [src]="preview" alt="Image preview {{ i + 1 }}" />
+              <!-- Bouton pour supprimer l'image -->
+              <button
+                type="button"
+                class="remove-image-btn"
+                (click)="removeImage(i)"
+                [attr.aria-label]="'Remove image ' + (i + 1)"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            <!-- Boîte d'upload si moins de 5 images -->
+            <label
+              class="image-upload-box"
+              *ngIf="imagePreviews.length < 5"
+              for="images-input"
+            >
+              <i class="fas fa-camera"></i>
+              <p>Click or drop an image</p>
+              <!-- Input fichier caché, lié au label ci-dessus -->
+              <input
+                type="file"
+                id="images-input"
+                name="images"
+                multiple
+                accept="image/png, image/jpeg, image/webp"
+                class="image-input"
+                (change)="onFileSelected($event)"
+              />
+            </label>
+          </div>
+          <div class="image-notes">
+            <p>• Accepted formats: JPG, PNG, WEBP</p>
+            <p>• Max size: 5 MB per image</p>
+            <p>• Maximum 5 images</p>
+            <p>• The first image will be the main image</p>
+          </div>
+          <!-- Message d'erreur si aucune image en mode création et formulaire soumis ou touché -->
+          <div
+            *ngIf="
+              !isEditMode && selectedFiles.length === 0 && listingForm.touched
+            "
+            class="text-danger"
+          >
+            Please add at least one image.
+          </div>
+        </div>
+      </div>
+
+      <!-- General Information -->
+      <div class="form-group">
+        <h2>Equipment Information</h2>
+        <div class="form-field">
+          <label for="title">Listing Title*</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="E.g., Canon EOS R5 with 24-70mm lens"
+            required
+            formControlName="title"
+          />
+          <!-- Messages d'erreur -->
+          <div
+            *ngIf="
+              listingForm.controls['title'].invalid &&
+              (listingForm.controls['title'].dirty ||
+                listingForm.controls['title'].touched)
+            "
+            class="text-danger"
+          >
+            <span *ngIf="listingForm.controls['title'].errors?.['required']"
+              >Title is required.</span
+            >
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="category">Category*</label>
+          <select
+            id="category"
+            name="category_id"
+            required
+            formControlName="category_id"
+          >
+            <option [ngValue]="null" disabled>Select a category</option>
+            <!-- Charger les catégories dynamiquement -->
+            <option
+              *ngFor="let category of categories$ | async"
+              [value]="category.id"
+            >
+              {{ category.name }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              listingForm.controls['category_id'].invalid &&
+              (listingForm.controls['category_id'].dirty ||
+                listingForm.controls['category_id'].touched)
+            "
+            class="text-danger"
+          >
+            <span
+              *ngIf="listingForm.controls['category_id'].errors?.['required']"
+              >Category is required.</span
+            >
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="price">Price per Day ($)*</label>
+          <input
+            type="number"
+            id="price"
+            name="price_per_day"
+            step="0.01"
+            min="1"
+            placeholder="E.g., 25.50"
+            required
+            formControlName="price_per_day"
+          />
+          <div
+            *ngIf="
+              listingForm.controls['price_per_day'].invalid &&
+              (listingForm.controls['price_per_day'].dirty ||
+                listingForm.controls['price_per_day'].touched)
+            "
+            class="text-danger"
+          >
+            <span
+              *ngIf="listingForm.controls['price_per_day'].errors?.['required']"
+              >Price is required.</span
+            >
+            <span *ngIf="listingForm.controls['price_per_day'].errors?.['min']"
+              >Price must be at least $1.</span
+            >
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="description">Detailed Description*</label>
+          <textarea
+            id="description"
+            name="description"
+            rows="5"
+            placeholder="Describe your item in detail (features, condition, included accessories...)"
+            required
+            formControlName="description"
+          ></textarea>
+          <div
+            *ngIf="
+              listingForm.controls['description'].invalid &&
+              (listingForm.controls['description'].dirty ||
+                listingForm.controls['description'].touched)
+            "
+            class="text-danger"
+          >
+            <span
+              *ngIf="listingForm.controls['description'].errors?.['required']"
+              >Description is required.</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Availability -->
+      <div class="form-group">
+        <h2>Availability</h2>
+        <div class="form-field">
+          <label>Availability Periods*</label>
+          <!-- Utiliser formArrayName -->
+          <div
+            id="availability-container"
+            class=".availabilities-container"
+            formArrayName="availabilities"
+          >
+            <!-- Itérer sur les FormGroups dans le FormArray -->
+            <div
+              *ngFor="
+                let availability of availabilitiesFormArray.controls;
+                let i = index
+              "
+              [formGroupName]="i"
+              class="availability-row"
+              [class.ng-invalid]="
+                availability.invalid &&
+                (availability.dirty || availability.touched)
+              "
+              [class.ng-touched]="availability.touched"
+            >
+              <input
+                type="date"
+                name="start_dates[]"
+                required
+                formControlName="start_date"
+                [attr.aria-label]="'Start date ' + (i + 1)"
+              />
+              <span>to</span>
+              <input
+                type="date"
+                name="end_dates[]"
+                required
+                formControlName="end_date"
+                [attr.aria-label]="'End date ' + (i + 1)"
+              />
+              <!-- Bouton pour supprimer la période -->
+              <button
+                type="button"
+                class="btn-icon remove-date-btn"
+                (click)="removeAvailabilityPeriod(i)"
+                [disabled]="availabilitiesFormArray.length <= 1"
+                [attr.aria-label]="'Remove period ' + (i + 1)"
+              >
+                <i class="fas fa-trash-alt"></i>
+              </button>
+              <!-- Afficher les erreurs pour chaque groupe de dates -->
+              <div
+                *ngIf="
+                  availability.invalid &&
+                  (availability.dirty || availability.touched)
+                "
+                class="text-danger date-error"
+              >
+                <span *ngIf="availability.errors?.['required']"
+                  >Both start and end dates are required.</span
+                >
+                <span
+                  *ngIf="
+                    availability.errors?.['dateMismatch']
+                  "
+                  >Start date must be before end date.</span
+                >
+                <!-- Ajouter ici d'autres validations si nécessaire (ex: end date after start date) -->
+              </div>
+            </div>
+          </div>
+          <!-- Bouton pour ajouter une période -->
+          <button
+            type="button"
+            id="add-date-btn"
+            class="btn btn-secondary"
+            (click)="addAvailabilityPeriod()"
+          >
+            <i class="fas fa-plus"></i> Add a Period
+          </button>
+          <div
+            *ngIf="availabilitiesFormArray.invalid && availabilitiesFormArray.touched && availabilitiesFormArray.errors?.['required']"
+            class="text-danger"
+          >
+            At least one availability period is required.
+          </div>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="form-group">
+        <h2>Options</h2>
+        <div class="form-field checkbox-field">
+          <input
+            type="checkbox"
+            id="delivery"
+            name="delivery_option"
+            formControlName="delivery_option"
+          />
+          <label for="delivery">Offer Delivery</label>
+        </div>
+        <div class="premium-option">
+          <h3>Premium Option</h3>
+          <p>Highlight your listing on the platform</p>
+          <!-- Utiliser formControlName sur le conteneur des radios -->
+          <div class="premium-choices" formControlName="premium_duration">
+            <div class="premium-choice">
+              <input
+                type="radio"
+                id="premium-none"
+                name="premium_duration"
+                [value]="0"
+              />
+              <label for="premium-none">No premium option</label>
+            </div>
+            <div class="premium-choice">
+              <input
+                type="radio"
+                id="premium-week"
+                name="premium_duration"
+                [value]="7"
+              />
+              <label for="premium-week">1 week ($5)</label>
+              <!-- Prix indicatifs -->
+            </div>
+            <div class="premium-choice">
+              <input
+                type="radio"
+                id="premium-2weeks"
+                name="premium_duration"
+                [value]="15"
+              />
+              <label for="premium-2weeks">15 days ($9)</label>
+              <!-- Prix indicatifs -->
+            </div>
+            <div class="premium-choice">
+              <input
+                type="radio"
+                id="premium-month"
+                name="premium_duration"
+                [value]="30"
+              />
+              <label for="premium-month">1 month ($15)</label>
+              <!-- Prix indicatifs -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" (click)="onCancel()">
+          Cancel
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="
+            listingForm.invalid || (!isEditMode && selectedFiles.length === 0)
+          "
+        >
+          {{ isEditMode ? "Update Listing" : "Publish Listing" }}
+        </button>
+      </div>
+    </form>
+  </section>
+</main>
