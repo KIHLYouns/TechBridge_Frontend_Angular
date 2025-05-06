@@ -14,7 +14,7 @@
             <div class="rental-summary"
                 *ngIf="reservation && reservation.listing">
                 <img
-                    [src]="reservation.listing.images?.[0]?.url || 'assets/images/item-placeholder.jpg'"
+                    [src]="reservation.listing.main_image || 'assets/images/item-placeholder.jpg'"
                     alt="Rental item"
                     class="rental-image">
                 <div class="rental-info">

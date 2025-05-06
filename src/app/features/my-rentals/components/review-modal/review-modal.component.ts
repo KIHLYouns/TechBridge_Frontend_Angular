@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Reservation } from '../../../../shared/database.model';
-import { Review, ReviewService, ReviewSubmitRequest } from '../../../../core/services/review.service';
+import { ReviewService, ReviewSubmitRequest } from '../../../../core/services/review.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Reservation } from '../../services/reservations.service';
 
 @Component({
   selector: 'app-review-modal',

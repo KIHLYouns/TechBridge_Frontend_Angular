@@ -29,15 +29,15 @@
         class="rentals-list">
         <div *ngFor="let rental of currentRentals" class="rental-card">
           <img
-            [src]="rental.listing?.images?.[0]?.url || 'assets/images/item-placeholder.jpg'"
-            [alt]="rental.listing?.title || 'Rental item'"
+            [src]="rental.listing.main_image || 'assets/images/item-placeholder.jpg'"
+            [alt]="rental.listing.title || 'Rental item'"
             class="rental-image"
-            (click)="goToListing(rental.listing?.id)"
+            (click)="goToListing(rental.listing.id)"
             style="cursor: pointer;" />
           <div class="rental-details">
-            <h3 class="rental-title" (click)="goToListing(rental.listing?.id)"
+            <h3 class="rental-title" (click)="goToListing(rental.listing.id)"
               style="cursor: pointer; text-decoration: underline;">
-              {{ rental.listing?.title || 'N/A' }}
+              {{ rental.listing.title || 'N/A' }}
             </h3>
             <div class="rental-info">
               <div class="rental-date">
@@ -57,7 +57,7 @@
             <div class="rental-partner">
               <i class="fas fa-user-tie"></i>
               <span>Provided by:</span>
-              {{ rental.partner?.username }}
+              {{ rental.partner.username }}
             </div>
             <div class="rental-status" [ngClass]="rental.status">
               <i
@@ -81,7 +81,7 @@
             <button
               *ngIf="rental.status === 'confirmed' || rental.status === 'ongoing'"
               class="rental-action-btn contact"
-              (click)="contactPartner(rental.partner?.id)">
+              (click)="contactPartner(rental.partner.id)">
               <i class="fas fa-comments"></i> Contact Partner
             </button>
           </div>
@@ -107,15 +107,15 @@
         class="rentals-list">
         <div *ngFor="let rental of pastRentals" class="rental-card past">
           <img
-            [src]="rental.listing?.images?.[0]?.url || 'assets/images/item-placeholder.jpg'"
-            [alt]="rental.listing?.title || 'Rental item'"
+            [src]="rental.listing.main_image || 'assets/images/item-placeholder.jpg'"
+            [alt]="rental.listing.title || 'Rental item'"
             class="rental-image"
-            (click)="goToListing(rental.listing?.id)"
+            (click)="goToListing(rental.listing.id)"
             style="cursor: pointer;" />
           <div class="rental-details">
-            <h3 class="rental-title" (click)="goToListing(rental.listing?.id)"
+            <h3 class="rental-title" (click)="goToListing(rental.listing.id)"
               style="cursor: pointer; text-decoration: underline;">
-              {{ rental.listing?.title || 'N/A' }}
+              {{ rental.listing.title || 'N/A' }}
             </h3>
             <div class="rental-info">
               <div class="rental-date">
@@ -135,7 +135,7 @@
             <div class="rental-partner">
               <i class="fas fa-user-tie"></i>
               <span>Provided by:</span>
-              {{ rental.partner?.username }}
+              {{ rental.partner.username }}
             </div>
             <div class="rental-status" [ngClass]="rental.status">
               <i
@@ -160,7 +160,7 @@
             <button
               *ngIf="rental.status === 'completed' || rental.status === 'canceled'"
               class="rental-action-btn rent-again"
-              (click)="rentAgain(rental.listing?.id)">
+              (click)="rentAgain(rental.listing.id)">
               <i class="fas fa-redo"></i> Rent Again
             </button>
           </div>

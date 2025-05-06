@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core'; // Importer OnInit
 import { Router } from '@angular/router'; // Importer Router
-import { Reservation } from '../../../../shared/database.model'; // Importer le modèle Reservation
-import { ReservationsService } from '../../services/reservations.service'; // Importer le service
+import { Reservation, ReservationsService } from '../../services/reservations.service'; // Importer le service
 import { TokenService } from '../../../auth/services/token.service';
-import { forkJoin, map, Observable } from 'rxjs';
 import { ReviewService } from '../../../../core/services/review.service';
 
 @Component({
