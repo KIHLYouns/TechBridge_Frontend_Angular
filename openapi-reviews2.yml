@@ -24,6 +24,7 @@ paths:
               rating: 5
               comment: "Excellent service, equipment was in perfect condition!"
               reservationId: 1004
+              listingId: 104  # Added listing ID to example
               type: "forPartner"
       responses:
         '201':

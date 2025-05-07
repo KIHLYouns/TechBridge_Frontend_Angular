@@ -66,12 +66,6 @@
             </div>
           </div>
           <div class="rental-actions">
-            <!--
-             <button *ngIf="rental.status === 'pending'"
-                     class="rental-action-btn approve"
-                     (click)="acceptRental(rental.id)">
-               <i class="fas fa-check"></i> Accept
-             </button>  -->
             <button
               *ngIf="rental.status === 'pending' || rental.status === 'confirmed'"
               class="rental-action-btn cancel"
