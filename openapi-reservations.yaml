@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 servers:
   - url: /api
-    description: Base API URL
+    description: Reservations
 
 paths:
   /reservations/client/{id}:
@@ -23,6 +23,71 @@ paths:
       responses:
         '200':
           description: List of reservations for the client
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+              example:
+                - id: 1001
+                  start_date: "2025-05-10T00:00:00Z"
+                  end_date: "2025-05-12T00:00:00Z"
+                  total_cost: 105
+                  status: "pending"
+                  created_at: "2025-04-28T10:00:00Z"
+                  delivery_option: false
+                  contract_url: null
+                  listing:
+                    id: 1
+                    title: "PlayStation 5 Slim"
+                    main_image: "https://picsum.photos/600/400?random=1"
+                  partner:
+                    id: 101
+                    username: "partner_username"
+                    email: "mouad@gmail.com"
+                    phone_number: "0676767698"
+                    avatar_url: "https://ui-avatars.com/api/?name=Partner+User"
+                  client:
+                    id: 103
+                    username: "client_username"
+                    email: "mouad@gmail.com"
+                    phone_number: "0676767698"                    
+                    avatar_url: "https://ui-avatars.com/api/?name=Client+User"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Client not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /reservations/partner/{id}:
+    get:
+      summary: Get reservations made for listings submitted by a partner
+      description: Retrieves all reservations for listings made by partner with the ID passed in path.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the partner user
+          schema:
+            type: integer
+          example: 103
+      responses:
+        '200':
+          description: List of reservations
           content:
             application/json:
               schema:

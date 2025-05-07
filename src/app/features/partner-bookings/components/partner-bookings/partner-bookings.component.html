@@ -1,1 +1,204 @@
-<p>partner-bookings works!</p>
+<main class="rentals-container">
+    <div class="page-header">
+      <h1>Partner Bookings</h1>
+    </div>
+  
+    <!-- Error message display -->
+    <div *ngIf="errorMessage" class="error-message alert alert-danger">
+      <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
+    </div>
+  
+    <!-- Tab navigation -->
+    <div class="rentals-tabs">
+      <div class="tab" [class.active]="activeTab === 'current'"
+        (click)="setActiveTab('current')">Current</div>
+      <div class="tab" [class.active]="activeTab === 'history'"
+        (click)="setActiveTab('history')">History</div>
+    </div>
+  
+    <div class="rentals-content">
+      <!-- Current Bookings Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'current'" id="current-content">
+        <!-- Loading indicator -->
+        <div *ngIf="isLoadingCurrent" class="loading-indicator">
+          <i class="fas fa-spinner fa-spin"></i> Loading current bookings...
+        </div>
+  
+        <!-- Current bookings list -->
+        <div *ngIf="!isLoadingCurrent && currentBookings.length > 0" class="rentals-list">
+          <div *ngFor="let booking of currentBookings" class="rental-card">
+            <img 
+              [src]="booking.listing.main_image || 'assets/images/item-placeholder.jpg'"
+              [alt]="booking.listing.title || 'Booking item'"
+              class="rental-image"
+              (click)="goToListing(booking.listing.id)"
+              style="cursor: pointer;" />
+            <div class="rental-details">
+              <h3 class="rental-title" (click)="goToListing(booking.listing.id)"
+                style="cursor: pointer; text-decoration: underline;">
+                {{ booking.listing.title || 'N/A' }}
+              </h3>
+              <div class="rental-info">
+                <div class="rental-date">
+                  <i class="fas fa-calendar-alt"></i>
+                  {{ booking.start_date | date:'MMM d' }} - {{ booking.end_date | date:'MMM d, y' }}
+                </div>
+                <div class="rental-price">
+                  {{ booking.total_cost | currency:'EUR':'symbol':'1.0-0' }}
+                  <span *ngIf="calculateDays(booking.start_date, booking.end_date) as days" class="rental-days">
+                    ({{ days }} {{ days === 1 ? 'day' : 'days' }})
+                  </span>
+                </div>
+              </div>
+              <div class="rental-partner">
+                <i class="fas fa-user"></i>
+                <span>Client:</span>
+                {{ booking.client.username }}
+                <button 
+                  class="client-reviews-btn"
+                  (click)="viewClientReviews(booking.client.id); $event.stopPropagation()">
+                  <i class="fas fa-star"></i> Reviews
+                </button>
+              </div>
+              <div class="rental-status" [ngClass]="booking.status">
+                <i [class]="'fas ' + (booking.status === 'pending' ? 'fa-hourglass-half' : 
+                                    booking.status === 'confirmed' ? 'fa-check-circle' : 
+                                    booking.status === 'ongoing' ? 'fa-sync-alt' : 'fa-info-circle')"></i>
+                {{ booking.status | titlecase }}
+              </div>
+            </div>
+            <div class="rental-actions">
+              <!-- Partner can accept pending bookings -->
+              <button *ngIf="booking.status === 'pending'"
+                      class="rental-action-btn approve"
+                      (click)="acceptBooking(booking.id)">
+                <i class="fas fa-check"></i> Accept
+              </button>
+              
+              <!-- Partner can decline pending bookings -->
+              <button *ngIf="booking.status === 'pending'"
+                      class="rental-action-btn cancel"
+                      (click)="declineBooking(booking.id)">
+                <i class="fas fa-times"></i> Decline
+              </button>
+              
+              <!-- Partner can cancel confirmed bookings (before they become ongoing) -->
+              <button *ngIf="booking.status === 'confirmed'"
+                      class="rental-action-btn cancel"
+                      (click)="cancelBooking(booking.id)">
+                <i class="fas fa-times"></i> Cancel
+              </button>
+              
+              <!-- Partner can contact client for confirmed/ongoing bookings -->
+              <button *ngIf="booking.status === 'confirmed' || booking.status === 'ongoing'"
+                      class="rental-action-btn contact"
+                      (click)="contactClient(booking.client.id)">
+                <i class="fas fa-comments"></i> Contact Client
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- No bookings message -->
+        <div *ngIf="!isLoadingCurrent && currentBookings.length === 0 && !errorMessage" class="no-data-message">
+          <i class="fas fa-calendar-times"></i> You have no current bookings.
+        </div>
+      </div>
+      
+      <!-- Booking History Tab -->
+      <div class="tab-content" [class.active]="activeTab === 'history'" id="history-content">
+        <!-- Loading indicator -->
+        <div *ngIf="isLoadingPast" class="loading-indicator">
+          <i class="fas fa-spinner fa-spin"></i> Loading booking history...
+        </div>
+        
+        <!-- Past bookings list -->
+        <div *ngIf="!isLoadingPast && pastBookings.length > 0" class="rentals-list">
+          <div *ngFor="let booking of pastBookings" class="rental-card past">
+            <img 
+              [src]="booking.listing.main_image || 'assets/images/item-placeholder.jpg'"
+              [alt]="booking.listing.title || 'Booking item'"
+              class="rental-image"
+              (click)="goToListing(booking.listing.id)"
+              style="cursor: pointer;" />
+            <div class="rental-details">
+              <h3 class="rental-title" (click)="goToListing(booking.listing.id)"
+                style="cursor: pointer; text-decoration: underline;">
+                {{ booking.listing.title || 'N/A' }}
+              </h3>
+              <div class="rental-info">
+                <div class="rental-date">
+                  <i class="fas fa-calendar-check"></i>
+                  {{ booking.start_date | date:'MMM d' }} - {{ booking.end_date | date:'MMM d, y' }}
+                </div>
+                <div class="rental-price">
+                  {{ booking.total_cost | currency:'EUR':'symbol':'1.0-0' }}
+                  <span *ngIf="calculateDays(booking.start_date, booking.end_date) as days" class="rental-days">
+                    ({{ days }} {{ days === 1 ? 'day' : 'days' }})
+                  </span>
+                </div>
+              </div>
+              <div class="rental-partner">
+                <i class="fas fa-user"></i>
+                <span>Client:</span>
+                {{ booking.client.username }}
+                <button 
+                  class="client-reviews-btn"
+                  (click)="viewClientReviews(booking.client.id); $event.stopPropagation()">
+                  <i class="fas fa-star"></i> Reviews
+                </button>
+              </div>
+              <div class="rental-status" [ngClass]="booking.status">
+                <i [class]="'fas ' + (booking.status === 'completed' ? 'fa-check-double' : 
+                                   booking.status === 'canceled' ? 'fa-ban' : 'fa-info-circle')"></i>
+                {{ booking.status | titlecase }}
+              </div>
+            </div>
+            <div class="rental-actions">
+              <!-- Partner can leave review for clients on completed bookings -->
+              <button 
+                *ngIf="booking.status === 'completed'"
+                class="rental-action-btn review"
+                (click)="leaveReview(booking.id)">
+                <i class="fas fa-star"></i> Leave Review
+              </button>
+              
+              
+              <!-- Review status if already reviewed 
+              <button 
+                *ngIf="booking.status === 'completed'"
+                class="rental-action-btn review completed" disabled>
+                <i class="fas fa-check"></i> Review Submitted
+              </button> -->
+              
+              <!-- Contact client for completed bookings -->
+              <button 
+                *ngIf="booking.status === 'completed'"
+                class="rental-action-btn contact"
+                (click)="contactClient(booking.client.id)">
+                <i class="fas fa-comments"></i> Contact Client
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- No history message -->
+        <div *ngIf="!isLoadingPast && pastBookings.length === 0 && !errorMessage" class="no-data-message">
+          <i class="fas fa-history"></i> You have no booking history.
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Client Review Modal 
+  <app-client-review-modal
+    *ngIf="showReviewModal"
+    [reservation]="selectedReservation"
+    [userId]="currentUserId"
+    (close)="closeReviewModal($event)"></app-client-review-modal>-->
+  
+  <!-- Client Reviews Modal 
+  <app-client-reviews-modal
+    *ngIf="showClientReviewsModal"
+    [clientId]="selectedClientId"
+    (close)="closeClientReviewsModal()"></app-client-reviews-modal>-->

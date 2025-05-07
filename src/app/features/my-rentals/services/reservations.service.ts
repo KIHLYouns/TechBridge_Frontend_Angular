@@ -335,6 +335,190 @@ export const mockClientReservations: Reservation[] = [
   },
 ];
 
+// Mock data for partner bookings
+const mockPartnerBookings: Reservation[] = [
+  // PENDING - waiting for partner approval
+  {
+    id: 2001,
+    start_date: '2025-05-15T00:00:00Z',
+    end_date: '2025-05-17T00:00:00Z',
+    total_cost: 120,
+    status: 'pending',
+    created_at: '2025-05-01T14:20:00Z',
+    delivery_option: true,
+    contract_url: null,
+    listing: {
+      id: 101,
+      title: 'Canon EOS R5 Camera',
+      main_image: 'https://picsum.photos/600/400?random=101',
+    },
+    partner: {
+      id: 101, // Current user (partner)
+      username: 'hmed_samaki',
+      avatar_url: 'https://ui-avatars.com/api/?name=Jean+Dupont',
+      email: 'jean.dupont@example.com',
+      phone_number: '0123456789',
+    },
+    client: {
+      id: 201,
+      username: 'marcus_photo',
+      avatar_url: 'https://ui-avatars.com/api/?name=Marcus+Photo',
+      email: 'marcus@example.com',
+      phone_number: '0612345678',
+    },
+  },
+  // CONFIRMED - partner has accepted, not yet started
+  {
+    id: 2002,
+    start_date: '2025-06-05T00:00:00Z',
+    end_date: '2025-06-08T00:00:00Z',
+    total_cost: 240,
+    status: 'confirmed',
+    created_at: '2025-05-10T09:15:00Z',
+    delivery_option: false,
+    contract_url: 'https://example.com/contracts/2002.pdf',
+    listing: {
+      id: 102,
+      title: 'DJI Mavic 3 Pro Drone',
+      main_image: 'https://picsum.photos/600/400?random=102',
+    },
+    partner: {
+      id: 101, // Current user (partner)
+      username: 'hmed_samaki',
+      avatar_url: 'https://ui-avatars.com/api/?name=Jean+Dupont',
+      email: 'jean.dupont@example.com',
+      phone_number: '0123456789',
+    },
+    client: {
+      id: 202,
+      username: 'sarah_filmmaker',
+      avatar_url: 'https://ui-avatars.com/api/?name=Sarah+Filmmaker',
+      email: 'sarah@example.com',
+      phone_number: '0698765432',
+    },
+  },
+  // ONGOING - currently being used by client
+  {
+    id: 2003,
+    start_date: '2025-05-05T00:00:00Z',
+    end_date: '2025-05-10T00:00:00Z',
+    total_cost: 300,
+    status: 'ongoing',
+    created_at: '2025-04-20T16:45:00Z',
+    delivery_option: true,
+    contract_url: 'https://example.com/contracts/2003.pdf',
+    listing: {
+      id: 103,
+      title: 'Professional Lighting Kit',
+      main_image: 'https://picsum.photos/600/400?random=103',
+    },
+    partner: {
+      id: 101, // Current user (partner)
+      username: 'hmed_samaki',
+      avatar_url: 'https://ui-avatars.com/api/?name=Jean+Dupont',
+      email: 'jean.dupont@example.com',
+      phone_number: '0123456789',
+    },
+    client: {
+      id: 203,
+      username: 'michael_studio',
+      avatar_url: 'https://ui-avatars.com/api/?name=Michael+Studio',
+      email: 'michael@example.com',
+      phone_number: '0633445566',
+    },
+  },
+  // COMPLETED - successful past booking
+  {
+    id: 2004,
+    start_date: '2025-04-01T00:00:00Z',
+    end_date: '2025-04-05T00:00:00Z',
+    total_cost: 200,
+    status: 'completed',
+    created_at: '2025-03-15T10:20:00Z',
+    delivery_option: false,
+    contract_url: 'https://example.com/contracts/2004.pdf',
+    listing: {
+      id: 104,
+      title: 'Sony FX3 Cinema Camera',
+      main_image: 'https://picsum.photos/600/400?random=104',
+    },
+    partner: {
+      id: 101, // Current user (partner)
+      username: 'hmed_samaki',
+      avatar_url: 'https://ui-avatars.com/api/?name=Jean+Dupont',
+      email: 'jean.dupont@example.com',
+      phone_number: '0123456789',
+    },
+    client: {
+      id: 204,
+      username: 'david_productions',
+      avatar_url: 'https://ui-avatars.com/api/?name=David+Productions',
+      email: 'david@example.com',
+      phone_number: '0677889900',
+    },
+  },
+  // Another COMPLETED booking (not yet reviewed)
+  {
+    id: 2005,
+    start_date: '2025-03-10T00:00:00Z',
+    end_date: '2025-03-12T00:00:00Z',
+    total_cost: 120,
+    status: 'completed',
+    created_at: '2025-02-28T08:30:00Z',
+    delivery_option: true,
+    contract_url: 'https://example.com/contracts/2005.pdf',
+    listing: {
+      id: 105,
+      title: 'RØDE Wireless GO II Microphone',
+      main_image: 'https://picsum.photos/600/400?random=105',
+    },
+    partner: {
+      id: 101, // Current user (partner)
+      username: 'hmed_samaki',
+      avatar_url: 'https://ui-avatars.com/api/?name=Jean+Dupont',
+      email: 'jean.dupont@example.com',
+      phone_number: '0123456789',
+    },
+    client: {
+      id: 205,
+      username: 'emma_vlogger',
+      avatar_url: 'https://ui-avatars.com/api/?name=Emma+Vlogger',
+      email: 'emma@example.com',
+      phone_number: '0611223344',
+    },
+  },
+  // CANCELED - client canceled or partner declined
+  {
+    id: 2006,
+    start_date: '2025-03-20T00:00:00Z',
+    end_date: '2025-03-21T00:00:00Z',
+    total_cost: 60,
+    status: 'canceled',
+    created_at: '2025-03-15T12:10:00Z',
+    delivery_option: false,
+    contract_url: null,
+    listing: {
+      id: 106,
+      title: 'GoPro HERO 12 Black',
+      main_image: 'https://picsum.photos/600/400?random=106',
+    },
+    partner: {
+      id: 101, // Current user (partner)
+      username: 'hmed_samaki',
+      avatar_url: 'https://ui-avatars.com/api/?name=Jean+Dupont',
+      email: 'jean.dupont@example.com',
+      phone_number: '0123456789',
+    },
+    client: {
+      id: 206,
+      username: 'alex_adventures',
+      avatar_url: 'https://ui-avatars.com/api/?name=Alex+Adventures',
+      email: 'alex@example.com',
+      phone_number: '0655667788',
+    },
+  },
+];
+
 @Injectable({
   providedIn: 'root',
 })
@@ -346,46 +530,35 @@ export class ReservationsService {
     private tokenService: TokenService
   ) {}
 
+  getClientReservations(): Observable<Reservation[]> {
+    const clientReservations: Reservation[] = mockClientReservations;
+    return of(clientReservations).pipe(delay(400));
+  }
   // Méthode pour obtenir les réservations "actuelles" (pending, confirmed, ongoing)
   getCurrentUserReservations(): Observable<Reservation[]> {
-    const currentStatuses: ReservationStatus[] = [
-      'pending',
-      'confirmed',
-      'ongoing',
-    ];
-
-    const current = mockClientReservations.filter((r) =>
-      currentStatuses.includes(r.status)
+    const currentStatuses: ReservationStatus[] = ['pending', 'confirmed', 'ongoing'];
+    return this.getClientReservations().pipe(
+      map((reservations) => {
+        return reservations.filter((r) => currentStatuses.includes(r.status));
+      })
     );
-    // Simule un appel API avec un délai
-    return of(current).pipe(delay(400));
   }
 
   // Méthode pour obtenir l'historique des réservations (completed, canceled)
   getPastUserReservations(): Observable<Reservation[]> {
     const pastStatuses: ReservationStatus[] = ['completed', 'canceled'];
 
-    // Filter reservations by status
-    const past = mockClientReservations.filter((r) =>
-      pastStatuses.includes(r.status)
-    );
-
-    // Return past reservations with review status
-    return of(past).pipe(
-      delay(600),
-      // Then, check which reservations have been reviewed by current user
+    return this.getClientReservations().pipe(
+      map((reservations) => {
+        return reservations.filter((r) => pastStatuses.includes(r.status));
+      }),
       mergeMap((reservations) => {
-        // Only process completed reservations that need review status
         const completedReservations = reservations.filter(
           (r) => r.status === 'completed'
         );
-
         if (completedReservations.length === 0) {
-          // If no completed reservations, just return the original list
           return of(reservations);
         }
-
-        // Create an array of observables that check review status
         const reviewChecks: Observable<{ id: number; reviewed: boolean }>[] =
           completedReservations.map((reservation) =>
             this.reviewService
@@ -395,17 +568,57 @@ export class ReservationsService {
               )
               .pipe(map((reviewed) => ({ id: reservation.id, reviewed })))
           );
-
-        // Use forkJoin to wait for all checks to complete
         return forkJoin(reviewChecks).pipe(
           map((results) => {
-            // Create a map of reservation IDs to review status
             const reviewStatusMap = new Map<number, boolean>();
             results.forEach((result) => {
               reviewStatusMap.set(result.id, result.reviewed);
             });
+            return reservations.map((reservation) => ({
+              ...reservation,
+              isReviewedByCurrentUser:
+                reviewStatusMap.get(reservation.id) || false,
+            }));
+          })
+        );
+      })
+    );
 
-            // Update each reservation with its review status
+  }
+
+  getPartnerReservations(): Observable<Reservation[]> {
+    const partnerReservations: Reservation[] = mockPartnerBookings;
+    return of(partnerReservations).pipe(delay(400));
+  }
+
+  getCurrentPartnerReservations(): Observable<Reservation[]> {
+    const currentStatuses: ReservationStatus[] = ['pending', 'confirmed', 'ongoing'];
+    return this.getPartnerReservations().pipe(
+      map((reservations) => {
+        return reservations.filter((r) => currentStatuses.includes(r.status));
+      }),
+      mergeMap((reservations) => {
+        const completedReservations = reservations.filter(
+          (r) => r.status === 'completed'
+        );
+        if (completedReservations.length === 0) {
+          return of(reservations);
+        }
+        const reviewChecks: Observable<{ id: number; reviewed: boolean }>[] =
+          completedReservations.map((reservation) =>
+            this.reviewService
+              .hasUserReviewedReservation(
+                this.tokenService.getUserIdFromToken(),
+                reservation.id
+              )
+              .pipe(map((reviewed) => ({ id: reservation.id, reviewed })))
+          );
+        return forkJoin(reviewChecks).pipe(
+          map((results) => {
+            const reviewStatusMap = new Map<number, boolean>();
+            results.forEach((result) => {
+              reviewStatusMap.set(result.id, result.reviewed);
+            });
             return reservations.map((reservation) => ({
               ...reservation,
               isReviewedByCurrentUser:
@@ -417,108 +630,13 @@ export class ReservationsService {
     );
   }
 
-  // Ajoutez ici d'autres méthodes si nécessaire (ex: cancelReservation(id))
-}
+  getPastPartnerReservations(): Observable<Reservation[]> {
+    const pastStatuses: ReservationStatus[] = ['completed', 'canceled'];
+    return this.getPartnerReservations().pipe(
+      map((reservations) => {
+        return reservations.filter((r) => pastStatuses.includes(r.status));
+      })
+    );
+  }
 
-/* this.mockReservations = [
-      // --- Réservations Actuelles (Exemples) ---
-      {
-        id: 1001,
-        start_date: '2025-05-10T00:00:00Z', // Future date
-        end_date: '2025-05-12T00:00:00Z',
-        total_cost: 105, // 35 * 3 days (adjust logic if needed)
-        status: 'pending',
-        created_at: '2025-04-28T10:00:00Z',
-        delivery_option: false,
-        client: this.listingsService.mockPartners[3], // Example client
-        partner: this.listingsService.mockPartners[0], // Partner from listing
-        listing: this.listingsService.mockListings[0], // PS5
-        payment: undefined,
-        reviews: [],
-      },
-      {
-        id: 1002,
-        start_date: '2025-05-20T00:00:00Z', // Future date
-        end_date: '2025-05-21T00:00:00Z',
-        total_cost: 100, // 50 * 2 days
-        status: 'confirmed',
-        created_at: '2025-04-25T15:30:00Z',
-        delivery_option: true,
-        client: this.listingsService.mockPartners[2], // Example client
-        partner: this.listingsService.mockPartners[1], // Partner from listing
-        listing: this.listingsService.mockListings[1], // DJI Drone
-        payment: undefined,
-        reviews: [],
-      },
-      {
-        id: 1003,
-        start_date: '2025-06-01T00:00:00Z', // Future date
-        end_date: '2025-06-03T00:00:00Z',
-        total_cost: 180, // 60 * 3 days
-        status: 'ongoing',
-        created_at: '2025-04-29T11:00:00Z',
-        delivery_option: true,
-        client: this.listingsService.mockPartners[1], // Example client
-        partner: this.listingsService.mockPartners[2], // Partner from listing
-        listing: this.listingsService.mockListings[2], // Sony Camera
-        payment: undefined,
-        reviews: [],
-      },
-      // --- Historique des Réservations (Exemples) ---
-      {
-        id: 1004,
-        start_date: '2025-03-01T00:00:00Z', // Past date
-        end_date: '2025-03-03T00:00:00Z',
-        total_cost: 40, // 20 * 2 days
-        status: 'completed',
-        created_at: '2025-02-20T09:00:00Z',
-        delivery_option: false,
-        client: this.listingsService.mockPartners[0], // Example client
-        partner: this.listingsService.mockPartners[3], // Partner from listing
-        listing: this.listingsService.mockListings[3], // Shure Mic
-        payment: undefined,
-        reviews: [], // On pourrait ajouter un mock de review ici
-      },
-      {
-        id: 1005,
-        start_date: '2025-04-05T00:00:00Z', // Past date
-        end_date: '2025-04-07T00:00:00Z',
-        total_cost: 120, // 40 * 3 days
-        status: 'completed',
-        created_at: '2025-03-25T14:15:00Z',
-        delivery_option: true,
-        client: this.listingsService.mockPartners[3], // Example client
-        partner: this.listingsService.mockPartners[0], // Partner from listing
-        listing: this.listingsService.mockListings[4], // Meta Quest
-        payment: undefined,
-        // Correction: Assurez-vous que l'objet Review correspond à l'interface
-        reviews: [
-          {
-            id: 1,
-            rating: 5,
-            comment: 'Great experience!',
-            is_visible: true,
-            created_at: '2025-04-08T10:00:00Z',
-            type: 'forObject', // ou 'forClient'/'forPartner' selon le contexte
-            reviewer: this.listingsService.mockPartners[3], // Le client qui a laissé l'avis
-            // reviewee: this.listingsService.mockPartners[0], // Le partenaire évalué (si type='forPartner')
-            listing: this.listingsService.mockListings[4], // Le listing évalué (si type='forObject')
-          } as Review,
-        ], // Cast en Review pour plus de clarté
-      },
-      {
-        id: 1006,
-        start_date: '2025-04-15T00:00:00Z', // Past date but canceled
-        end_date: '2025-04-16T00:00:00Z',
-        total_cost: 55, // 55 * 1 day
-        status: 'canceled',
-        created_at: '2025-04-10T10:00:00Z',
-        delivery_option: false,
-        client: this.listingsService.mockPartners[2], // Example client
-        partner: this.listingsService.mockPartners[1], // Partner from listing
-        listing: this.listingsService.mockListings[5], // BenQ Projector
-        payment: undefined,
-        reviews: [],
-      },
-    ];
-  } */
+}
