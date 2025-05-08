@@ -190,15 +190,15 @@
     </div>
   </main>
   
-  <!-- Client Review Modal 
-  <app-client-review-modal
+  <!-- Client Review Modal -->
+  <app-client-review
     *ngIf="showReviewModal"
     [reservation]="selectedReservation"
     [userId]="currentUserId"
-    (close)="closeReviewModal($event)"></app-client-review-modal>-->
+    (close)="closeReviewModal($event)"></app-client-review>
   
-  <!-- Client Reviews Modal 
-  <app-client-reviews-modal
+
+  <app-client-reviews
     *ngIf="showClientReviewsModal"
     [clientId]="selectedClientId"
-    (close)="closeClientReviewsModal()"></app-client-reviews-modal>-->
+    (close)="closeClientReviewsModal()"></app-client-reviews>

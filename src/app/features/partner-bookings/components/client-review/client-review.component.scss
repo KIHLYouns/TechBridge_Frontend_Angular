@@ -1,0 +1,257 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+  
+  .review-modal {
+    background-color: var(--color-bg-dark);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--color-border-light);
+    animation: modal-appear 0.3s ease-out;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  @keyframes modal-appear {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-border-light);
+    position: sticky;
+    top: 0;
+    background-color: var(--color-bg-dark);
+    z-index: 1;
+  }
+  
+  .modal-title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-light);
+    margin: 0;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-medium);
+    font-size: var(--font-size-lg);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .close-btn:hover {
+    color: var(--color-primary);
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .reservation-summary {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border-light);
+  }
+  
+  .client-avatar {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--color-primary);
+  }
+  
+  .reservation-info {
+    flex: 1;
+  }
+  
+  .client-name {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-light);
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .reservation-details, 
+  .item-name {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-medium);
+    margin: 0.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form-group {
+    margin-bottom: 0;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: var(--font-medium);
+    color: var(--color-text-light);
+  }
+  
+  .rating-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .star-rating {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .star-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-dark);
+    font-size: var(--font-size-xl);
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .star-btn:hover {
+    transform: scale(1.2);
+  }
+  
+  .star-btn.active {
+    color: var(--color-warning);
+  }
+  
+  .review-comment {
+    width: 100%;
+    height: 150px;
+    padding: 0.75rem;
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    background-color: var(--color-bg-medium);
+    color: var(--color-text-light);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    resize: vertical;
+  }
+  
+  .review-comment:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+  
+  .error-message {
+    color: var(--color-error);
+    font-size: var(--font-size-sm);
+    margin-top: 0.5rem;
+  }
+  
+  .submit-error {
+    padding: 0.5rem;
+    background-color: rgba(244, 67, 54, 0.1);
+    border-radius: 4px;
+    border: 1px solid var(--color-error);
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .cancel-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-bg-light);
+    color: var(--color-text-light);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .cancel-btn:hover {
+    background-color: var(--color-bg-medium);
+  }
+  
+  .submit-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-primary);
+    color: var(--color-bg-dark);
+    border: none;
+    border-radius: 4px;
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .submit-btn:hover:not(:disabled) {
+    background-color: var(--color-primary-dark);
+  }
+  
+  .submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .review-modal {
+      max-width: 100%;
+      margin: 0 1rem;
+    }
+    
+    .modal-body {
+      padding: 1rem;
+    }
+    
+    .reservation-summary {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .form-actions {
+      flex-direction: column;
+    }
+    
+    .cancel-btn, 
+    .submit-btn {
+      width: 100%;
+    }
+  }

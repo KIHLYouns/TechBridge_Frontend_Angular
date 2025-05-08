@@ -38,6 +38,7 @@ export class ReviewModalComponent implements OnInit {
         comment: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(500)]]
       })
     });
+    
   }
 
   get partnerReviewForm(): FormGroup {

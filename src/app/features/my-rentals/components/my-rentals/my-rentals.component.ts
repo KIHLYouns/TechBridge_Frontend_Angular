@@ -167,6 +167,7 @@ export class MyRentalsComponent implements OnInit {
   }
 
   closeReviewModal(success: boolean): void {
+    console.log("closing modal")
     if (success && this.selectedReservation) {
       // If review was successful, reload past rentals to update status
       this.loadPastRentals();

@@ -1,0 +1,142 @@
+openapi: 3.0.3
+info:
+  title: TechBridge Client Reviews API
+  description: API endpoint for retrieving reviews about clients
+  version: 1.0.0
+servers:
+  - url: /api
+    description: Base API URL
+
+paths:
+  /reviews/clients/{clientId}:
+    get:
+      summary: Get reviews for a client
+      description: Retrieve all reviews left for a specific client by equipment partners
+      parameters:
+        - name: clientId
+          in: path
+          required: true
+          description: ID of the client whose reviews are being requested
+          schema:
+            type: integer
+          example: 201
+      responses:
+        '200':
+          description: Successfully retrieved client reviews
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    description: Total number of reviews available for this client
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ClientReview'
+              example:
+                total: 3
+                data:
+                  - id: 401
+                    rating: 5
+                    comment: "Marcus is the ideal client - professional, knowledgeable about camera equipment, and returned everything spotless. Highly recommended!"
+                    created_at: "2025-04-10T09:30:00Z"
+                    reviewer:
+                      id: 101
+                      username: "hmed_samaki"
+                      avatar_url: "https://ui-avatars.com/api/?name=Jean+Dupont"
+                  - id: 402
+                    rating: 5
+                    comment: "Marcus showed great respect for my Canon equipment. Communication was excellent and return was on time. Would rent to again without hesitation."
+                    created_at: "2025-03-05T14:15:00Z"
+                    reviewer:
+                      id: 102
+                      username: "samir_mofakir"
+                      avatar_url: "https://ui-avatars.com/api/?name=Alice+Martin"
+                  - id: 403
+                    rating: 4
+                    comment: "Very good experience. Responsible with the equipment and good communication throughout."
+                    created_at: "2025-02-15T11:45:00Z"
+                    reviewer:
+                      id: 103
+                      username: "ilyas_lmatag"
+                      avatar_url: "https://ui-avatars.com/api/?name=Felix+Bernard"
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              example:
+                status: 400
+                message: "Invalid query parameters"
+                errors: [
+                  {
+                    "field": "limit",
+                    "message": "Limit must be between 1 and 50"
+                  }
+                ]
+        '401':
+          description: Unauthorized - user is not authenticated
+          content:
+            application/json:
+              example:
+                status: 401
+                message: "Authentication required"
+        '403':
+          description: Forbidden - user is not authorized to view these reviews
+          content:
+            application/json:
+              example:
+                status: 403
+                message: "You are not authorized to view these reviews"
+        '404':
+          description: Client not found
+          content:
+            application/json:
+              example:
+                status: 404
+                message: "Client with ID 9999 not found"
+
+components:
+  schemas:
+    ClientReview:
+      type: object
+      required:
+        - id
+        - rating
+        - comment
+        - created_at
+        - reviewer
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the review
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Rating given to the client (1-5 stars)
+        comment:
+          type: string
+          description: Detailed feedback about the client
+        created_at:
+          type: string
+          format: date-time
+          description: When the review was submitted
+        reviewer:
+          type: object
+          required:
+            - id
+            - username
+            - avatar_url
+          properties:
+            id:
+              type: integer
+              description: Unique identifier for the reviewer (partner)
+            username:
+              type: string
+              description: Username of the reviewer
+            avatar_url:
+              type: string
+              description: URL to the reviewer's avatar image
+  
