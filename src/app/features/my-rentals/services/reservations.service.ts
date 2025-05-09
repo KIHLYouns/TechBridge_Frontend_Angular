@@ -37,6 +37,14 @@ export interface Listing {
   main_image: string;
 }
 
+export interface CreateReservationRequest {
+  start_date: string; // Format: YYYY-MM-DD
+  end_date: string; // Format: YYYY-MM-DD
+  listing_id: number;
+  client_id: number;
+  delivery_option: boolean;
+}
+
 // Mock data for client with ID 103
 
 export const mockClientReservations: Reservation[] = [
@@ -536,7 +544,11 @@ export class ReservationsService {
   }
   // Méthode pour obtenir les réservations "actuelles" (pending, confirmed, ongoing)
   getCurrentUserReservations(): Observable<Reservation[]> {
-    const currentStatuses: ReservationStatus[] = ['pending', 'confirmed', 'ongoing'];
+    const currentStatuses: ReservationStatus[] = [
+      'pending',
+      'confirmed',
+      'ongoing',
+    ];
     return this.getClientReservations().pipe(
       map((reservations) => {
         return reservations.filter((r) => currentStatuses.includes(r.status));
@@ -583,7 +595,6 @@ export class ReservationsService {
         );
       })
     );
-
   }
 
   getPartnerReservations(): Observable<Reservation[]> {
@@ -592,7 +603,11 @@ export class ReservationsService {
   }
 
   getCurrentPartnerReservations(): Observable<Reservation[]> {
-    const currentStatuses: ReservationStatus[] = ['pending', 'confirmed', 'ongoing'];
+    const currentStatuses: ReservationStatus[] = [
+      'pending',
+      'confirmed',
+      'ongoing',
+    ];
     return this.getPartnerReservations().pipe(
       map((reservations) => {
         return reservations.filter((r) => currentStatuses.includes(r.status));
@@ -639,4 +654,80 @@ export class ReservationsService {
     );
   }
 
+  // this method sends a request to submit a new reservation
+  createReservation(request: CreateReservationRequest): Observable<void> {
+    // const url = '/api/reservations/';
+    /* return this.http.post<any>(url, request).pipe(
+    catchError(error => {
+      console.error('Error creating reservation:', error);
+      return throwError(() => new Error('Failed to create reservation. Please try again.'));
+    })
+  ); */
+    return of(undefined).pipe(
+      delay(3000),
+      map(() => void 0) // Explicitly return void to match Observable<void>
+    );
+  }
+
+  // this method sends a request to concel a reservation (by a client), this sends an email to the partner 
+  cancelReservation(reservationId: number): Observable<void> {
+    /*const url = `/api/reservations/${reservationId}/cancel`;
+  return this.http.patch<any>(url, {}).pipe(
+    catchError(error => {
+      console.error('Error canceling reservation:', error);
+      return throwError(() => new Error('Failed to cancel reservation. Please try again.'));
+    })
+  ); */
+
+    return of(undefined).pipe(
+      delay(3000),
+      map(() => void 0) // Explicitly return void to match Observable<void>
+    );
+  }
+
+  // Accept a pending reservation (partner action)
+  acceptReservation(reservationId: number): Observable<void> {
+    // const url = `/api/reservations/${reservationId}/accept`;
+    /*return this.http.patch<any>(url, {}).pipe(
+    catchError(error => {
+      console.error('Error accepting reservation:', error);
+      return throwError(() => new Error('Failed to accept reservation. Please try again.'));
+    })
+  );*/
+    return of(undefined).pipe(
+      delay(3000),
+      map(() => void 0) // Explicitly return void to match Observable<void>
+    );
+  }
+
+  // Decline a pending reservation (partner action)
+  declineReservation(reservationId: number): Observable<any> {
+    /*const url = `/api/reservations/${reservationId}/decline`;
+  return this.http.delete<any>(url).pipe(
+    catchError(error => {
+      console.error('Error declining reservation:', error);
+      return throwError(() => new Error('Failed to decline reservation. Please try again.'));
+    })
+  ); */
+
+    return of(undefined).pipe(
+      delay(3000),
+      map(() => void 0) // Explicitly return void to match Observable<void>
+    );
+  }
+
+  // this method sends a request to concel a reservation (canceled by partner), this sends an email to the client 
+  cancelReservationByPartner(reservationId: number): Observable<any> {
+    /*const url = `/api/reservations/${reservationId}/cancel-by-partner`;
+  return this.http.patch<any>(url, {}).pipe(
+    catchError(error => {
+      console.error('Error canceling reservation by partner:', error);
+      return throwError(() => new Error('Failed to cancel reservation. Please try again.'));
+    })
+  ); */
+    return of(undefined).pipe(
+      delay(3000),
+      map(() => void 0) // Explicitly return void to match Observable<void>
+    );
+  }
 }

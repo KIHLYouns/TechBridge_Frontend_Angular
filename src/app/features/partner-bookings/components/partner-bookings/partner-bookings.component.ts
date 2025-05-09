@@ -1,13 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from '../../../auth/services/token.service';
-import { ReservationsService, Reservation } from '../../../my-rentals/services/reservations.service';
+import {
+  ReservationsService,
+  Reservation,
+} from '../../../my-rentals/services/reservations.service';
 
 @Component({
   selector: 'app-partner-bookings',
   standalone: false,
   templateUrl: './partner-bookings.component.html',
-  styleUrls: ['./partner-bookings.component.scss']
+  styleUrls: ['./partner-bookings.component.scss'],
 })
 export class PartnerBookingsComponent implements OnInit {
   activeTab: 'current' | 'history' = 'current';
@@ -25,10 +28,19 @@ export class PartnerBookingsComponent implements OnInit {
   selectedClientId: number | null = null;
   currentUserId!: number | null;
 
+  // Action states
+  processingAction: {
+    bookingId: number;
+    action: 'accept' | 'decline' | 'cancel';
+  } | null = null;
+  actionError: string | null = null;
+  actionSuccess: string | null = null;
+
   constructor(
     private partnerBookingsService: ReservationsService,
     private router: Router,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private cdRef: ChangeDetectorRef // Add this
   ) {}
 
   ngOnInit(): void {
@@ -56,7 +68,8 @@ export class PartnerBookingsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading current bookings:', err);
-        this.errorMessage = 'Could not load current bookings. Please try again later.';
+        this.errorMessage =
+          'Could not load current bookings. Please try again later.';
         this.isLoadingCurrent = false;
       },
     });
@@ -72,7 +85,8 @@ export class PartnerBookingsComponent implements OnInit {
       error: (err) => {
         console.error('Error loading past bookings:', err);
         if (!this.errorMessage || this.currentBookings.length > 0) {
-          this.errorMessage = 'Could not load booking history. Please try again later.';
+          this.errorMessage =
+            'Could not load booking history. Please try again later.';
         }
         this.isLoadingPast = false;
       },
@@ -80,7 +94,10 @@ export class PartnerBookingsComponent implements OnInit {
   }
 
   // Calculate days between dates (same as in MyRentalsComponent)
-  calculateDays(startDateStr: string | undefined, endDateStr: string | undefined): number | null {
+  calculateDays(
+    startDateStr: string | undefined,
+    endDateStr: string | undefined
+  ): number | null {
     if (!startDateStr || !endDateStr) {
       return null;
     }
@@ -88,11 +105,16 @@ export class PartnerBookingsComponent implements OnInit {
       const start = new Date(startDateStr);
       const end = new Date(endDateStr);
       if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-        console.error('Invalid date format provided:', startDateStr, endDateStr);
+        console.error(
+          'Invalid date format provided:',
+          startDateStr,
+          endDateStr
+        );
         return null;
       }
       const diffTime = end.getTime() - start.getTime();
-      const diffDays = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24))) + 1;
+      const diffDays =
+        Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24))) + 1;
       return diffDays;
     } catch (e) {
       console.error('Error calculating days:', e);
@@ -100,56 +122,112 @@ export class PartnerBookingsComponent implements OnInit {
     }
   }
 
-  // Partner-specific actions
   acceptBooking(bookingId: number): void {
-   /* this.partnerBookingsService.updateBookingStatus(bookingId, 'confirmed').subscribe({
+    // Confirm before accepting
+    /*if (
+      !confirm(
+        'Are you sure you want to accept this booking? This will confirm the reservation.'
+      )
+    ) {
+      return;
+    } */
+
+    this.processingAction = { bookingId, action: 'accept' };
+    this.actionError = null;
+
+    this.partnerBookingsService.acceptReservation(bookingId).subscribe({
       next: () => {
-        // Update local data to reflect the change
-        const booking = this.currentBookings.find(b => b.id === bookingId);
-        if (booking) {
-          booking.status = 'confirmed';
-          // Optionally show success message
-          console.log('Booking accepted successfully');
-        }
+        this.actionSuccess =
+          'Booking accepted successfully. Client has been notified.';
+        setTimeout(() => {
+          this.actionSuccess = null;
+          this.cdRef.markForCheck();
+        }, 3000);
+
+        this.loadBookings(); // Reload all bookings
+        this.processingAction = null;
       },
-      error: (err) => {
-        console.error('Error accepting booking:', err);
-        // Show error message
-      }
-    }); */
+      error: (error) => {
+        this.actionError =
+          error.message || 'Failed to accept booking. Please try again.';
+        this.processingAction = null;
+        this.cdRef.markForCheck();
+      },
+    });
   }
 
   declineBooking(bookingId: number): void {
-   /* this.partnerBookingsService.updateBookingStatus(bookingId, 'canceled').subscribe({
+    // Confirm before declining
+    // if (
+    //   !confirm(
+    //     'Are you sure you want to decline this booking? This cannot be undone.'
+    //   )
+    // ) {
+    //   return;
+    // }
+
+    this.processingAction = { bookingId, action: 'decline' };
+    this.actionError = null;
+
+    this.partnerBookingsService.declineReservation(bookingId).subscribe({
       next: () => {
-        // Update or remove the booking from the current list
-        this.currentBookings = this.currentBookings.filter(b => b.id !== bookingId);
-        this.loadPastBookings(); // Refresh past bookings to include the canceled one
-        console.log('Booking declined successfully');
+        this.actionSuccess =
+          'Booking declined successfully. Client has been notified.';
+        setTimeout(() => {
+          this.actionSuccess = null;
+          this.cdRef.markForCheck();
+        }, 3000);
+
+        this.loadBookings(); // Reload all bookings
+        this.processingAction = null;
       },
-      error: (err) => {
-        console.error('Error declining booking:', err);
-        // Show error message
-      }
-    }); */
+      error: (error) => {
+        this.actionError =
+          error.message || 'Failed to decline booking. Please try again.';
+        this.processingAction = null;
+        this.cdRef.markForCheck();
+      },
+    });
   }
 
   cancelBooking(bookingId: number): void {
-    // Same implementation as decline, but semantically different for the user
-  /*  this.partnerBookingsService.updateBookingStatus(bookingId, 'canceled').subscribe({
-      next: () => {
-        this.currentBookings = this.currentBookings.filter(b => b.id !== bookingId);
-        this.loadPastBookings();
-        console.log('Booking canceled successfully');
-      },
-      error: (err) => {
-        console.error('Error canceling booking:', err);
-      }
-    }); */
+    // Confirm before canceling
+    // if (
+    //   !confirm(
+    //     'Are you sure you want to cancel this confirmed booking? Client will be notified.'
+    //   )
+    // ) {
+    //   return;
+    // }
+
+    this.processingAction = { bookingId, action: 'cancel' };
+    this.actionError = null;
+
+    this.partnerBookingsService
+      .cancelReservationByPartner(bookingId)
+      .subscribe({
+        next: () => {
+          this.actionSuccess =
+            'Booking canceled successfully. Client has been notified.';
+          setTimeout(() => {
+            this.actionSuccess = null;
+            this.cdRef.markForCheck();
+          }, 3000);
+
+          this.loadBookings(); // Reload all bookings
+          this.processingAction = null;
+        },
+        error: (error) => {
+          this.actionError =
+            error.message || 'Failed to cancel booking. Please try again.';
+          this.processingAction = null;
+          this.cdRef.markForCheck();
+        },
+      });
   }
 
   contactClient(clientId: number | undefined): void {
-  /*  if (!clientId) return;
+    /*  if (!clientId) return;
     console.log(`Contacting client ${clientId}`);
     // Implement contact functionality or navigation
     alert(`Action: Contact client ${clientId}`); // Placeholder */
@@ -161,8 +239,8 @@ export class PartnerBookingsComponent implements OnInit {
   }
 
   // Client review functionality
-  leaveReview(bookingId: number): void {    
-    const booking = this.pastBookings.find(b => b.id === bookingId);
+  leaveReview(bookingId: number): void {
+    const booking = this.pastBookings.find((b) => b.id === bookingId);
     if (booking && booking.status === 'completed') {
       this.selectedReservation = booking;
       this.showReviewModal = true;
@@ -173,7 +251,7 @@ export class PartnerBookingsComponent implements OnInit {
 
   viewClientReviews(clientId: number | undefined): void {
     if (!clientId) return;
-    
+
     this.selectedClientId = clientId;
     this.showClientReviewsModal = true;
     console.log(`Viewing reviews for client ${clientId}`);
@@ -184,7 +262,7 @@ export class PartnerBookingsComponent implements OnInit {
       // If review was successful, reload past bookings to update status
       this.loadPastBookings();
     }
-    
+
     this.showReviewModal = false;
     this.selectedReservation = null;
   }
@@ -193,5 +271,4 @@ export class PartnerBookingsComponent implements OnInit {
     this.showClientReviewsModal = false;
     this.selectedClientId = null;
   }
-
 }

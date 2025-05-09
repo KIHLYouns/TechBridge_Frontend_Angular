@@ -170,10 +170,7 @@ export class ReviewService {
   }
 
   // Lina
-  hasUserReviewedReservation(
-    userId: number | null,
-    reservationId: number
-  ): Observable<boolean> {
+  hasUserReviewedReservation(userId: number | null, reservationId: number): Observable<boolean> {
     // return this.http.get<boolean>(`${this.apiUrl}/reviews/check?userId=${userId}&reservationId=${reservationId}`);
     const hasReviewed = Math.random() >= 0.5;
     return of(hasReviewed).pipe(delay(300));
@@ -186,6 +183,7 @@ export class ReviewService {
     const randomDelay = 300 + Math.floor(Math.random() * 500);
     return of(mockReviews).pipe(delay(randomDelay));
   }
+
 }
 
 // Mock data function for client reviews

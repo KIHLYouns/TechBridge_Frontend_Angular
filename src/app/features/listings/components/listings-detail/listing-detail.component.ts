@@ -15,6 +15,8 @@ import { Observable, Subscription } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { Listing } from '../../../../shared/database.model';
 import { ListingsService } from '../../services/listings.service';
+import { TokenService } from '../../../auth/services/token.service';
+import { ReservationsService, CreateReservationRequest } from '../../../my-rentals/services/reservations.service';
 
 const defaultIcon = L.icon({
   iconUrl: 'assets/images/marker-icon.png',
@@ -38,7 +40,6 @@ L.Marker.prototype.options.icon = defaultIcon;
 export class ListingDetailComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-
   listing$: Observable<Listing | null>;
   listingData: Listing | null = null;
   selectedImageUrl: string | null = null;
@@ -53,6 +54,10 @@ export class ListingDetailComponent
   rentalCost: number | null = null;
   totalPrice: number | null = null;
 
+  isSubmittingReservation: boolean = false;
+  reservationSubmittedSuccess: boolean = false;
+  reservationError: string | null = null;
+
   private routeSub!: Subscription;
   private listingSub!: Subscription;
 
@@ -60,7 +65,9 @@ export class ListingDetailComponent
     private route: ActivatedRoute,
     private listingsService: ListingsService,
     private router: Router,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private tokenService: TokenService,
+    private reservationsService: ReservationsService
   ) {
     this.listing$ = this.route.paramMap.pipe(
       switchMap((params) => {
@@ -235,7 +242,66 @@ export class ListingDetailComponent
     return rating ? Array(Math.floor(rating)).fill(0) : [];
   }
 
-  rentObject() {
-    throw new Error('Method not implemented.');
+  rentObject(): void {
+    if (!this.selectedStartDate || !this.selectedEndDate || !this.listingData) {
+      this.reservationError = 'Please select reservation dates.';
+      return;
+    }
+
+    // Reset states
+    this.isSubmittingReservation = true;
+    this.reservationError = null;
+    this.reservationSubmittedSuccess = false;
+
+    // Get client ID from the token service
+    const clientId = this.tokenService.getUserIdFromToken();
+    if (!clientId) {
+      this.isSubmittingReservation = false;
+      this.reservationError =
+        'You must be logged in to make a reservation. Please sign in first.';
+      this.cdRef.markForCheck(); 
+      return;
+    }
+
+    // Format dates to YYYY-MM-DD as required by API
+    const formatDateForApi = (dateStr: string): string => {
+      const parts = dateStr.split(' '); // "Mar 15" -> ["Mar", "15"]
+      const month = new Date(Date.parse(parts[0] + ' 1, 2025')).getMonth() + 1;
+      const day = parseInt(parts[1]);
+      const year = new Date().getFullYear(); // Current year or use hard-coded 2025
+      return `${year}-${month.toString().padStart(2, '0')}-${day
+        .toString()
+        .padStart(2, '0')}`;
+    };
+
+    // Create the request object
+    const request: CreateReservationRequest = {
+      listing_id: this.listingData.id,
+      start_date: formatDateForApi(this.selectedStartDate),
+      end_date: formatDateForApi(this.selectedEndDate),
+      client_id: clientId,
+      delivery_option: !!this.listingData.delivery_option,
+    };
+
+    console.log('the suubmitted reservation :');
+    console.log(request);
+
+    this.reservationsService.createReservation(request).subscribe({
+      next: () => {
+        this.isSubmittingReservation = false;
+        this.reservationSubmittedSuccess = true;
+        this.cdRef.markForCheck();
+        setTimeout(() => {
+          this.router.navigate(['/my-rentals']);
+        }, 2000);
+      },
+      error: (error) => {
+        this.isSubmittingReservation = false;
+        this.reservationError =
+          error.message || 'Failed to create reservation. Please try again.';
+        this.cdRef.markForCheck();
+      },
+    });
   }
 }
+

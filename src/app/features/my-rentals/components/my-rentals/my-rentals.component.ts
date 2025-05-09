@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core'; // Importer OnInit
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // Importer OnInit
 import { Router } from '@angular/router'; // Importer Router
-import { Reservation, ReservationsService } from '../../services/reservations.service'; // Importer le service
+import {
+  Reservation,
+  ReservationsService,
+} from '../../services/reservations.service'; // Importer le service
 import { TokenService } from '../../../auth/services/token.service';
 import { ReviewService } from '../../../../core/services/review.service';
 
@@ -25,12 +28,17 @@ export class MyRentalsComponent implements OnInit {
   selectedReservation: Reservation | null = null;
   currentUserId!: number | null; // Replace with your actual logic to get current user ID
 
+  // Action states
+  processingActionForId: number | null = null;
+  actionError: string | null = null;
+  actionSuccess: string | null = null;
   // Injecter le service de réservations et Router
   constructor(
     private reservationsService: ReservationsService,
     private router: Router, // Injecter Router
     private tokenService: TokenService,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +76,7 @@ export class MyRentalsComponent implements OnInit {
     });
   }
 
-  // this loads 
+  // this loads
   loadPastRentals(): void {
     this.isLoadingPast = true;
     this.reservationsService.getPastUserReservations().subscribe({
@@ -144,20 +152,40 @@ export class MyRentalsComponent implements OnInit {
   }
 
   cancelRental(rentalId: number): void {
-    console.log(`Canceling rental ${rentalId}`);
-    // TODO: Appeler le service pour annuler la réservation
-    // Exemple: this.reservationsService.cancelReservation(rentalId).subscribe(() => { ... });
-    // Mettre à jour la liste ou recharger après succès
-    // Par exemple, déplacer la réservation vers l'historique ou la supprimer de 'currentRentals'
-    alert(`Action: Cancel rental ${rentalId}`); // Placeholder
+    // Confirm before canceling
+    if (!confirm('Are you sure you want to cancel this reservation?')) {
+      return;
+    }
+
+    this.processingActionForId = rentalId; // Track this specific reservation ID
+    this.actionError = null;
+
+    this.reservationsService.cancelReservation(rentalId).subscribe({
+      next: () => {
+        console.log('Reservation canceled successfully');
+        this.actionSuccess = 'Reservation canceled successfully';
+        setTimeout(() => {
+          this.actionSuccess = null;
+          this.cdRef.markForCheck();
+        }, 3000);
+
+        this.loadRentals(); // Reload all rentals
+        this.processingActionForId = null;
+      },
+      error: (error) => {
+        console.error('Error canceling reservation:', error);
+        this.actionError = 'Failed to cancel reservation. Please try again.';
+        this.processingActionForId = null;
+      },
+    });
   }
 
   leaveReview(rentalId: number): void {
     console.log(`Opening review modal for rental ${rentalId}`);
-    
+
     // Find the rental in pastRentals
-    const rental = this.pastRentals.find(r => r.id === rentalId);
-    
+    const rental = this.pastRentals.find((r) => r.id === rentalId);
+
     if (rental && rental.status === 'completed') {
       this.selectedReservation = rental;
       this.showReviewModal = true;
@@ -167,12 +195,12 @@ export class MyRentalsComponent implements OnInit {
   }
 
   closeReviewModal(success: boolean): void {
-    console.log("closing modal")
+    console.log('closing modal');
     if (success && this.selectedReservation) {
       // If review was successful, reload past rentals to update status
       this.loadPastRentals();
     }
-    
+
     this.showReviewModal = false;
     this.selectedReservation = null;
   }
