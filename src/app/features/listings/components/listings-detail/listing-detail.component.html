@@ -151,5 +151,49 @@
         </div>
       </div>
     </div>
+
+    <!-- Listing Reviews Section -->
+    <div class="detail-section reviews-section">
+      <h2 class="section-title">Reviews</h2>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoadingReviews" class="reviews-loading">
+        <i class="fas fa-spinner fa-spin"></i> Loading reviews...
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="reviewsError" class="reviews-error">
+        <i class="fas fa-exclamation-circle"></i> {{ reviewsError }}
+      </div>
+
+      <!-- Reviews List -->
+      <div *ngIf="!isLoadingReviews && !reviewsError && listingReviews.length > 0" class="reviews-list">
+        <div *ngFor="let review of listingReviews" class="review-item">
+          <div class="review-header">
+            <img [src]="review.reviewer.avatar_url || 'assets/images/default-avatar.jpeg'" alt="Reviewer avatar"
+              class="reviewer-avatar">
+            <div class="reviewer-details">
+              <div class="reviewer-name">{{ review.reviewer.username }}</div>
+              <div class="review-date">{{ review.created_at | date:'mediumDate' }}</div>
+            </div>
+            <div class="review-rating">
+              <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+                <i class="fas fa-star" [class.filled]="i <= review.rating"></i>
+              </ng-container>
+            </div>
+          </div>
+          <div class="review-comment">
+            {{ review.comment }}
+          </div>
+        </div>
+      </div>
+
+      <!-- No Reviews State -->
+      <div *ngIf="!isLoadingReviews && !reviewsError && listingReviews.length === 0" class="no-reviews">
+        <p>This listing has no reviews yet.</p>
+      </div>
+    </div>
   </div>
+
+
 </ng-container>

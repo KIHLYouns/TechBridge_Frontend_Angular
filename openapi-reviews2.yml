@@ -19,12 +19,12 @@ paths:
             schema:
               $ref: '#/components/schemas/ReviewSubmitRequest'
             example:
-              reviewerId: 101
-              revieweeId: 54
+              reviewer_id: 101
+              reviewee_id: 54
               rating: 5
               comment: "Excellent service, equipment was in perfect condition!"
-              reservationId: 1004
-              listingId: 104  # Added listing ID to example
+              reservation_id: 1004
+              listing_id: 104  # Added listing ID to example
               type: "forPartner"
       responses:
         '201':
@@ -72,17 +72,17 @@ components:
     ReviewSubmitRequest:
       type: object
       required:
-        - reviewerId
-        - revieweeId
+        - reviewer_id
+        - reviewee_id
         - rating
         - comment
         - type
-        - reservationId
+        - reservation_id
       properties:
-        reviewerId:
+        reviewer_id:
           type: integer
           description: ID of the user submitting the review
-        revieweeId:
+        reviewee_id:
           type: integer
           description: ID of the user being reviewed
         rating:
@@ -95,10 +95,10 @@ components:
           minLength: 5
           maxLength: 500
           description: Review comment
-        reservationId:
+        reservation_id:
           type: integer
           description: ID of the reservation being reviewed
-        listingId:
+        listing_id:
           type: integer
           description: ID of the listing (optional, for forObject reviews)
         type:

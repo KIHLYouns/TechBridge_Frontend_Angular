@@ -233,9 +233,9 @@ export class PartnerBookingsComponent implements OnInit {
     alert(`Action: Contact client ${clientId}`); // Placeholder */
   }
 
-  goToListing(listingId: number | undefined): void {
-    if (!listingId) return;
-    this.router.navigate(['/listings', listingId]);
+  goToListing(listing_id: number | undefined): void {
+    if (!listing_id) return;
+    this.router.navigate(['/listings', listing_id]);
   }
 
   // Client review functionality

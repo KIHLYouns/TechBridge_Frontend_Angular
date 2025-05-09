@@ -20,7 +20,7 @@ paths:
           schema:
             type: integer
           example: 101
-        - name: reservationId
+        - name: reservation_id
           in: query
           required: true
           description: ID of the reservation

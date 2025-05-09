@@ -17,7 +17,7 @@ export class AddListingComponent implements OnInit, OnDestroy {
   selectedFiles: File[] = [];
   imagePreviews: string[] = [];
   isEditMode = false;
-  listingId: number | null = null;
+  listing_id: number | null = null;
   private routeSub!: Subscription;
 
   constructor(
@@ -34,8 +34,8 @@ export class AddListingComponent implements OnInit, OnDestroy {
       const id = params.get('id');
       if (id) {
         this.isEditMode = true;
-        this.listingId = +id;
-        this.loadListingData(this.listingId);
+        this.listing_id = +id;
+        this.loadListingData(this.listing_id);
       } else {
         this.addAvailabilityPeriod();
       }
@@ -133,7 +133,7 @@ export class AddListingComponent implements OnInit, OnDestroy {
     }
     delete formData.premium_duration;
 
-    if (this.isEditMode && this.listingId) {
+    if (this.isEditMode && this.listing_id) {
       console.log('Updating listing:', formData);
     } else {
       console.log('Creating listing:', formData);

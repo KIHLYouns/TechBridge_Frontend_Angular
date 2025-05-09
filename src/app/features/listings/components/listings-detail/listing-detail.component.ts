@@ -16,7 +16,14 @@ import { filter, switchMap, tap } from 'rxjs/operators';
 import { Listing } from '../../../../shared/database.model';
 import { ListingsService } from '../../services/listings.service';
 import { TokenService } from '../../../auth/services/token.service';
-import { ReservationsService, CreateReservationRequest } from '../../../my-rentals/services/reservations.service';
+import {
+  ReservationsService,
+  CreateReservationRequest,
+} from '../../../my-rentals/services/reservations.service';
+import {
+  ListingReview,
+  ReviewService,
+} from '../../../../core/services/review.service';
 
 const defaultIcon = L.icon({
   iconUrl: 'assets/images/marker-icon.png',
@@ -61,13 +68,18 @@ export class ListingDetailComponent
   private routeSub!: Subscription;
   private listingSub!: Subscription;
 
+  listingReviews: ListingReview[] = [];
+  isLoadingReviews: boolean = false;
+  reviewsError: string | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private listingsService: ListingsService,
     private router: Router,
     private cdRef: ChangeDetectorRef,
     private tokenService: TokenService,
-    private reservationsService: ReservationsService
+    private reservationsService: ReservationsService,
+    private reviewService: ReviewService
   ) {
     this.listing$ = this.route.paramMap.pipe(
       switchMap((params) => {
@@ -84,6 +96,7 @@ export class ListingDetailComponent
           this.selectedImageUrl = listing.images?.[0]?.url || null;
           this.cdRef.markForCheck();
           this.initializeMapAndCalendar();
+          this.loadListingReviews(listing.id);
         } else {
           this.router.navigate(['/not-found']);
         }
@@ -259,7 +272,7 @@ export class ListingDetailComponent
       this.isSubmittingReservation = false;
       this.reservationError =
         'You must be logged in to make a reservation. Please sign in first.';
-      this.cdRef.markForCheck(); 
+      this.cdRef.markForCheck();
       return;
     }
 
@@ -303,5 +316,29 @@ export class ListingDetailComponent
       },
     });
   }
-}
 
+  // Add method to load listing reviews
+  loadListingReviews(listingId: number): void {
+    this.isLoadingReviews = true;
+    this.reviewsError = null;
+
+    this.reviewService.getListingReviews(listingId).subscribe({
+      next: (reviews) => {
+        this.listingReviews = reviews;
+        this.isLoadingReviews = false;
+        this.cdRef.markForCheck();
+      },
+      error: (error) => {
+        console.error('Error loading listing reviews:', error);
+        this.reviewsError = 'Failed to load reviews. Please try again.';
+        this.isLoadingReviews = false;
+        this.cdRef.markForCheck();
+      },
+    });
+  }
+
+  // Add helper method for stars
+  getStarArray2(rating: number): number[] {
+    return Array(Math.floor(rating)).fill(0);
+  }
+}

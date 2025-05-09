@@ -670,8 +670,8 @@ export class ReservationsService {
   }
 
   // this method sends a request to concel a reservation (by a client), this sends an email to the partner 
-  cancelReservation(reservationId: number): Observable<void> {
-    /*const url = `/api/reservations/${reservationId}/cancel`;
+  cancelReservation(reservation_id: number): Observable<void> {
+    /*const url = `/api/reservations/${reservation_id}/cancel`;
   return this.http.patch<any>(url, {}).pipe(
     catchError(error => {
       console.error('Error canceling reservation:', error);
@@ -686,8 +686,8 @@ export class ReservationsService {
   }
 
   // Accept a pending reservation (partner action)
-  acceptReservation(reservationId: number): Observable<void> {
-    // const url = `/api/reservations/${reservationId}/accept`;
+  acceptReservation(reservation_id: number): Observable<void> {
+    // const url = `/api/reservations/${reservation_id}/accept`;
     /*return this.http.patch<any>(url, {}).pipe(
     catchError(error => {
       console.error('Error accepting reservation:', error);
@@ -701,8 +701,8 @@ export class ReservationsService {
   }
 
   // Decline a pending reservation (partner action)
-  declineReservation(reservationId: number): Observable<any> {
-    /*const url = `/api/reservations/${reservationId}/decline`;
+  declineReservation(reservation_id: number): Observable<any> {
+    /*const url = `/api/reservations/${reservation_id}/decline`;
   return this.http.delete<any>(url).pipe(
     catchError(error => {
       console.error('Error declining reservation:', error);
@@ -717,8 +717,8 @@ export class ReservationsService {
   }
 
   // this method sends a request to concel a reservation (canceled by partner), this sends an email to the client 
-  cancelReservationByPartner(reservationId: number): Observable<any> {
-    /*const url = `/api/reservations/${reservationId}/cancel-by-partner`;
+  cancelReservationByPartner(reservation_id: number): Observable<any> {
+    /*const url = `/api/reservations/${reservation_id}/cancel-by-partner`;
   return this.http.patch<any>(url, {}).pipe(
     catchError(error => {
       console.error('Error canceling reservation by partner:', error);

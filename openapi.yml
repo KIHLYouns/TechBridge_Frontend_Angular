@@ -473,12 +473,12 @@ paths:
     get:
       description: Get reviews for or by a user
       parameters:
-        - name: revieweeId
+        - name: reviewee_id
           in: query
           description: ID of the user who received the reviews
           schema:
             type: integer
-        - name: reviewerId
+        - name: reviewer_id
           in: query
           description: ID of the user who gave the reviews
           schema:

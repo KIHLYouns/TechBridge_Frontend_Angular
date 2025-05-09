@@ -30,12 +30,12 @@ export interface UserReviewsResponse {
 }
 
 export interface ReviewSubmitRequest {
-  reviewerId: number;
-  revieweeId: number;
+  reviewer_id: number;
+  reviewee_id: number;
   rating: number;
   comment: string;
-  reservationId: number;
-  listingId?: number;
+  reservation_id: number;
+  listing_id?: number;
   type: 'forPartner' | 'forClient' | 'forObject';
 }
 
@@ -51,6 +51,19 @@ export interface ClientReview {
     avatar_url: string;
   };
 }
+
+export interface ListingReview {
+  id: number;
+  rating: number;
+  comment: string;
+  created_at: string;
+  reviewer: {
+    id: number;
+    username: string;
+    avatar_url: string;
+  };
+}
+
 
 @Injectable({
   providedIn: 'root',
@@ -170,8 +183,8 @@ export class ReviewService {
   }
 
   // Lina
-  hasUserReviewedReservation(userId: number | null, reservationId: number): Observable<boolean> {
-    // return this.http.get<boolean>(`${this.apiUrl}/reviews/check?userId=${userId}&reservationId=${reservationId}`);
+  hasUserReviewedReservation(userId: number | null, reservation_id: number): Observable<boolean> {
+    // return this.http.get<boolean>(`${this.apiUrl}/reviews/check?userId=${userId}&reservation_id=${reservation_id}`);
     const hasReviewed = Math.random() >= 0.5;
     return of(hasReviewed).pipe(delay(300));
   }
@@ -183,6 +196,49 @@ export class ReviewService {
     const randomDelay = 300 + Math.floor(Math.random() * 500);
     return of(mockReviews).pipe(delay(randomDelay));
   }
+
+getListingReviews(listingId: number): Observable<ListingReview[]> {
+  // In real app: return this.http.get<ListingReview[]>(`${this.apiUrl}/listings/${listingId}/reviews`);
+  const mockReviews: ListingReview[] = [
+    {
+      id: 501,
+      rating: 5,
+      comment: "Excellent camera! Perfect condition and worked flawlessly for my photoshoot. Highly recommended!",
+      created_at: "2025-03-15T14:30:00Z",
+      reviewer: {
+        id: 201,
+        username: "marcus_photo",
+        avatar_url: "https://ui-avatars.com/api/?name=Marcus+Photo"
+      }
+    },
+    {
+      id: 502,
+      rating: 4,
+      comment: "Great equipment, easy to use. Battery life was a bit shorter than expected, but overall a positive experience.",
+      created_at: "2025-02-10T09:15:00Z",
+      reviewer: {
+        id: 202,
+        username: "sarah_filmmaker",
+        avatar_url: "https://ui-avatars.com/api/?name=Sarah+Filmmaker"
+      }
+    },
+    {
+      id: 503,
+      rating: 5,
+      comment: "This equipment exceeded my expectations. The owner provided excellent instructions and the quality was top-notch.",
+      created_at: "2025-01-20T16:45:00Z",
+      reviewer: {
+        id: 203,
+        username: "michael_studio",
+        avatar_url: "https://ui-avatars.com/api/?name=Michael+Studio"
+      }
+    }
+  ];
+  
+  const randomDelay = 300 + Math.floor(Math.random() * 500);
+  return of(mockReviews).pipe(delay(randomDelay));
+}
+
 
 }
 

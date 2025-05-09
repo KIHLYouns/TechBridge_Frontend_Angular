@@ -58,12 +58,12 @@ export class ClientReviewComponent implements OnInit {
     this.submitError = null;
 
     const reviewData: ReviewSubmitRequest = {
-      reviewerId: this.userId, // user reviewing (partner)
-      revieweeId: this.reservation.client?.id || 0, // user reviewed (client) 
+      reviewer_id: this.userId, // user reviewing (partner)
+      reviewee_id: this.reservation.client?.id || 0, // user reviewed (client) 
       rating: this.reviewForm.value.rating, // client rating 
       comment: this.reviewForm.value.comment, // comment
-      reservationId: this.reservation.id, // reservation id
-      listingId: this.reservation.listing?.id, // listing id
+      reservation_id: this.reservation.id, // reservation id
+      listing_id: this.reservation.listing?.id, // listing id
       type: 'forClient'  // type for CLient
     };
 

@@ -135,9 +135,9 @@ export class MyRentalsComponent implements OnInit {
 
   // --- Méthodes pour les actions (Exemples à implémenter) ---
 
-  goToListing(listingId: number | undefined): void {
-    if (!listingId) return;
-    this.router.navigate(['/listings', listingId]); // Navigue vers la page détail
+  goToListing(listing_id: number | undefined): void {
+    if (!listing_id) return;
+    this.router.navigate(['/listings', listing_id]); // Navigue vers la page détail
   }
 
   acceptRental(rentalId: number): void {
@@ -210,10 +210,10 @@ export class MyRentalsComponent implements OnInit {
     return rental.isReviewedByCurrentUser === true;
   }
 
-  rentAgain(listingId: number | undefined): void {
-    if (!listingId) return;
-    console.log(`Renting again listing ${listingId}`);
-    this.router.navigate(['/listings', listingId]); // Utiliser le Router pour naviguer
+  rentAgain(listing_id: number | undefined): void {
+    if (!listing_id) return;
+    console.log(`Renting again listing ${listing_id}`);
+    this.router.navigate(['/listings', listing_id]); // Utiliser le Router pour naviguer
   }
 
   contactPartner(partnerId: number | undefined): void {

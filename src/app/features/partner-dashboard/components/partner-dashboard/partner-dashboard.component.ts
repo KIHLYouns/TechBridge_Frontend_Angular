@@ -97,9 +97,9 @@ export class PartnerDashboardComponent implements OnInit {
     this.router.navigate(['/listing']);
   }
 
-  editListing(listingId: number | undefined): void {
-    if (listingId) {
-      this.router.navigate(['/listing', listingId, 'edit']);
+  editListing(listing_id: number | undefined): void {
+    if (listing_id) {
+      this.router.navigate(['/listing', listing_id, 'edit']);
     }
   }
 

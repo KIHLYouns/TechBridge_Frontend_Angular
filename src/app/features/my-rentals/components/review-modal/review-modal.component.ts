@@ -85,23 +85,23 @@ export class ReviewModalComponent implements OnInit {
 
     // Create partner review request
     const partnerReviewData: ReviewSubmitRequest = {
-      reviewerId: this.userId,
-      revieweeId: this.reservation.partner?.id || 0,
+      reviewer_id: this.userId,
+      reviewee_id: this.reservation.partner?.id || 0,
       rating: this.partnerReviewForm.value.rating,
       comment: this.partnerReviewForm.value.comment,
-      reservationId: this.reservation.id,
-      listingId: this.reservation.listing?.id,
+      reservation_id: this.reservation.id,
+      listing_id: this.reservation.listing?.id,
       type: 'forPartner'
     };
 
     // Create item review request
     const itemReviewData: ReviewSubmitRequest = {
-      reviewerId: this.userId,
-      revieweeId: this.reservation.partner?.id || 0,
+      reviewer_id: this.userId,
+      reviewee_id: this.reservation.partner?.id || 0,
       rating: this.itemReviewForm.value.rating,
       comment: this.itemReviewForm.value.comment,
-      reservationId: this.reservation.id,
-      listingId: this.reservation.listing?.id,
+      reservation_id: this.reservation.id,
+      listing_id: this.reservation.listing?.id,
       type: 'forObject'
     };
 
