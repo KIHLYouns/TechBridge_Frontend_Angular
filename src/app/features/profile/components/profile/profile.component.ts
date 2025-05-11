@@ -116,6 +116,10 @@ export class ProfileComponent implements OnInit {
       )
       .subscribe({
         next: (reviewData: UserReviewsResponse) => {
+          console.log("//////////////////////");
+          console.log("//////////////////////");
+          console.log("user reviews : ");
+          console.log(reviewData);
           // Store the received reviews in their respective arrays
           this.reviews = reviewData.received_reviews;
           this.outgoingReviews = reviewData.given_reviews;

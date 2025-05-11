@@ -593,3 +593,123 @@ span.flatpickr-weekday {
     width: 100%;
   }
 }
+
+.reservation-error {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 4px;
+  background-color: rgba(244, 67, 54, 0.1);
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size-sm);
+}
+
+.reservation-success {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 4px;
+  background-color: rgba(76, 175, 80, 0.1);
+  color: var(--color-success);
+  border: 1px solid var(--color-success);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size-sm);
+}
+
+/* Reviews Section Styles */
+.reviews-section {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.reviews-loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-medium);
+}
+
+.reviews-error {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: var(--color-error);
+  padding: 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.review-item {
+  background-color: var(--color-bg-light);
+  border-radius: 8px;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border-light);
+}
+
+.review-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.reviewer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.reviewer-details {
+  flex-grow: 1;
+}
+
+.reviewer-name {
+  font-weight: var(--font-semibold);
+  color: var(--color-text-light);
+  margin-bottom: 0.25rem;
+}
+
+.review-date {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-medium);
+}
+
+.review-rating {
+  display: flex;
+  font-size: var(--font-size-sm);
+}
+
+.review-rating i {
+  color: var(--color-text-dark);
+  margin: 0 1px;
+}
+
+.review-rating i.filled {
+  color: var(--color-warning);
+}
+
+.review-comment {
+  color: var(--color-text-light);
+  line-height: 1.6;
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-medium);
+  background-color: var(--color-bg-light);
+  border: 1px dashed var(--color-border-light);
+  border-radius: 8px;
+}

@@ -1,12 +1,26 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
-import { SignUpRequest, SignUpResponse } from '../models/sign-up.model';
-import { SignInRequest, SignInResponse } from '../models/sign-in.model';
+import { catchError, delay, tap } from 'rxjs/operators';
 import { TokenService } from './token.service';
 import { Router } from '@angular/router';
 import { UserService } from '../../profile/services/user.service';
+import { SignUpRequest } from '../models/sign-up.model';
+import { SignInRequest } from '../models/sign-in.model';
+
+// To this
+export interface SignInResponse {
+  userId: number;
+  token: string;
+}
+
+
+// To this
+export interface SignUpResponse {
+  userId: number;
+  token: string;
+}
+
 
 @Injectable({
   providedIn: 'root',
@@ -48,95 +62,68 @@ export class AuthService {
     }
   }
 
-  login(request: SignInRequest): Observable<SignInResponse> {
-    // the user will send his credentials
-    // and get a token in response
-    // we will simulate the creation of the token here
-    // Create mock token with claims
-    const mockToken = this.createMockJwt({
-      sub: 'user-' + Math.floor(Math.random() * 10000),
-      userId: 1,
-      roles: ['USER'],
-    });
+// Mock login implementation
+login(request: SignInRequest): Observable<SignInResponse> {
+  console.log('Processing login request:', request);
+  
+  // Create mock response (simulating Laravel Sanctum response)
+  const mockResponse: SignInResponse = {
+    userId: 1,
+    token: `mock_token_${Math.random().toString(36).substring(2)}`
+  };
 
-    return of({
-      'access-token': mockToken,
-    }).pipe(
-      delay(1000),
-      tap((response) => {
-        if (response && response['access-token']) {
-          // when the token arrives we will persist it to local storage.
-          this.tokenService.saveAccessToken(response['access-token']);
-          // we will extract the userID from the token
-          const userId = this.tokenService.getUserIdFromToken();
-          if (userId) {
-            // then we will get the user by its ID so that ist saved to our local storage
-            this.userService.getUserById(userId).subscribe({
-              next: () => {
-                // after this will emit a true value so the nav bar changes 
-                this.authStateSubject.next(true);
-                // and then we route to listings
-                this.router.navigate(['/listings']);
-              },
-              error: (error) =>
-                console.error('Error getting user data:', error),
-            });
-          } else {
+  // Return mock Observable with delay to simulate network request
+  return of(mockResponse).pipe(
+    delay(1000), // 1 second delay to simulate network
+    tap((response) => {
+      if (response && response.token) {
+        // Store both token and userId
+        this.tokenService.saveAccessToken(response.token, response.userId);
+        
+        // Get user data based on userId from token
+        this.userService.getUserById(response.userId).subscribe({
+          next: () => {
             this.authStateSubject.next(true);
             this.router.navigate(['/listings']);
-          }
-        }
-      })
-    );
-  }
+          },
+          error: (error) => console.error('Error getting user data:', error)
+        });
+      }
+    }),
+    catchError(error => {
+      console.error('Login error:', error);
+      return throwError(() => new Error('Login failed. Please check your credentials.'));
+    })
+  );
+}
 
-  signUp(request: SignUpRequest): Observable<SignUpResponse> {
-    // Mock implementation
-    console.log('Sign up request:', request);
+// Mock signUp implementation
+signUp(request: SignUpRequest): Observable<SignUpResponse> {
+  console.log('Processing signup request:', request);
+  
+  // Create mock response
+  const mockResponse: SignUpResponse = {
+    userId: 1,
+    token: `mock_token_${Math.random().toString(36).substring(2)}`
+  };
 
-    console.log('here the backend should use : ');
-    console.log(request.coordinates);
-    console.log('and extract the city');
-
-    let city = 'Unknown';
-    if (request.coordinates) {
-      const cities = [
-        'Paris',
-        'Lyon',
-        'Marseille',
-        'Bordeaux',
-        'Lille',
-        'Toulouse',
-      ];
-      const randomIndex =
-        Math.floor(
-          Math.abs(
-            request.coordinates.latitude + request.coordinates.longitude
-          ) * 100
-        ) % cities.length;
-      city = cities[randomIndex];
-    }
-
-    // Create mock token with all user data in claims
-    const mockToken = this.createMockJwt({
-      sub: 'user-' + Math.floor(Math.random() * 10000),
-      userId: 1,
-      roles: ['USER'],
-    });
-
-    return of({
-      'access-token': mockToken,
-    }).pipe(
-      delay(1500),
-      tap((response) => {
-        if (response && response['access-token']) {
-          this.tokenService.saveAccessToken(response['access-token']);
-          this.authStateSubject.next(true);
-          this.router.navigate(['/listings']);
-        }
-      })
-    );
-  }
+  // Return mock Observable with delay
+  return of(mockResponse).pipe(
+    delay(1500), // 1.5 second delay to simulate network
+    tap((response) => {
+      if (response && response.token) {
+        // Store both token and userId
+        this.tokenService.saveAccessToken(response.token, response.userId);
+        this.authStateSubject.next(true);
+        this.router.navigate(['/listings']);
+      }
+    }),
+    catchError(error => {
+      console.error('Signup error:', error);
+      return throwError(() => new Error('Registration failed. Please try again.'));
+    })
+  );
+}
 
   checkAndRestoreAuth(): boolean {
     const isAuthenticated = this.tokenService.hasValidToken();

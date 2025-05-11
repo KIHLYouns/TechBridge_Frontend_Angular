@@ -6,11 +6,12 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class TokenService {
   private readonly TOKEN_KEY = 'access_token';
-
+  private readonly USER_ID_KEY = 'user_id'; 
   constructor() {}
 
-  saveAccessToken(token: string): void {
+  saveAccessToken(token: string, userId: number): void {
     localStorage.setItem(this.TOKEN_KEY, token);
+    localStorage.setItem(this.USER_ID_KEY, userId.toString());
   }
 
   getAccessToken(): string | null {
@@ -19,53 +20,17 @@ export class TokenService {
 
   clearStorage(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.USER_ID_KEY);
   }
 
   hasValidToken(): boolean {
-    const token = this.getAccessToken();
-    if (!token) return false;
-    
-    try {
-      // Parse the token
-      const payload = this.parseJwt(token);
-      
-      // Check if token is expired
-      const expiryTime = payload.exp * 1000; // Convert to milliseconds
-      return Date.now() < expiryTime;
-    } catch (e) {
-      console.error('Error validating token:', e);
-      return false;
-    }
+    return !!this.getAccessToken(); // Sanctum tokens don't have expiry in them
   }
-
-  parseJwt(token: string): any {
-    try {
-      // Get the payload part of the JWT (second part)
-      const base64Payload = token.split('.')[1];
-      // Replace characters and decode
-      const payload = JSON.parse(atob(base64Payload));
-      return payload;
-    } catch (e) {
-      console.error('Error parsing JWT:', e);
-      throw e;
-    }
-  }
-
-
 
   getUserIdFromToken(): number | null {
-    try {
-      const token = this.getAccessToken();
-      if (!token) return null;
-      
-      const payload = this.parseJwt(token);
-      // The user ID could be in different claims depending on your JWT structure
-      // Check common places where it might be
-      return payload.userId || payload.sub || null;
-    } catch (e) {
-      console.error('Error getting user ID from token:', e);
-      return null;
-    }
+    // Instead of parsing JWT, get userId from localStorage
+    const userId = localStorage.getItem(this.USER_ID_KEY);
+    return userId ? parseInt(userId) : null;
   }
 
 }

@@ -65,22 +65,9 @@ export class AppComponent implements OnInit {
       
       // Only redirect to login if on a protected route
       // This prevents redirect loops when already on auth pages
-      if (this.isProtectedRoute(this.router.url)) {
-        this.router.navigate(['/auth/sign-in']);
-      }
-    }
-  }
 
-  // here we will put protected routes
-  private isProtectedRoute(url: string): boolean {
-    const protectedPaths = [
-      '/profile',
-      '/my-rentals',
-      '/partner-dashboard',
-      '/partner-bookings',
-      '/listing',
-    ];
-    
-    return protectedPaths.some(path => url.startsWith(path));
+        this.router.navigate(['/auth/sign-in']);
+
+    }
   }
 }

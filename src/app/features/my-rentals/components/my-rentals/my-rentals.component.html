@@ -8,31 +8,39 @@
     <i class="fas fa-exclamation-triangle"></i> {{ errorMessage }}
   </div>
 
+  <!-- Add to both tabs -->
+  <div *ngIf="actionError" class="error-message alert alert-danger">
+    <i class="fas fa-exclamation-triangle"></i> {{ actionError }}
+    <button class="close-btn" (click)="actionError = null">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div *ngIf="actionSuccess" class="success-message alert alert-success">
+    <i class="fas fa-check-circle"></i> {{ actionSuccess }}
+    <button class="close-btn" (click)="actionSuccess = null">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
   <div class="rentals-tabs">
-    <div class="tab" [class.active]="activeTab === 'current'"
-      (click)="setActiveTab('current')">Current</div>
-    <div class="tab" [class.active]="activeTab === 'history'"
-      (click)="setActiveTab('history')">History</div>
+    <div class="tab" [class.active]="activeTab === 'current'" (click)="setActiveTab('current')">Current</div>
+    <div class="tab" [class.active]="activeTab === 'history'" (click)="setActiveTab('history')">History</div>
   </div>
 
   <div class="rentals-content">
     <!-- Current Rentals Tab -->
-    <div class="tab-content" [class.active]="activeTab === 'current'"
-      id="current-content">
+    <div class="tab-content" [class.active]="activeTab === 'current'" id="current-content">
       <!-- Indicateur de chargement -->
       <div *ngIf="isLoadingCurrent" class="loading-indicator">
         <i class="fas fa-spinner fa-spin"></i> Loading current rentals...
       </div>
 
       <!-- Liste des locations actuelles -->
-      <div *ngIf="!isLoadingCurrent && currentRentals.length > 0"
-        class="rentals-list">
+      <div *ngIf="!isLoadingCurrent && currentRentals.length > 0" class="rentals-list">
         <div *ngFor="let rental of currentRentals" class="rental-card">
-          <img
-            [src]="rental.listing.main_image || 'assets/images/item-placeholder.jpg'"
-            [alt]="rental.listing.title || 'Rental item'"
-            class="rental-image"
-            (click)="goToListing(rental.listing.id)"
+          <img [src]="rental.listing.main_image || 'assets/images/item-placeholder.jpg'"
+            [alt]="rental.listing.title || 'Rental item'" class="rental-image" (click)="goToListing(rental.listing.id)"
             style="cursor: pointer;" />
           <div class="rental-details">
             <h3 class="rental-title" (click)="goToListing(rental.listing.id)"
@@ -47,9 +55,7 @@
               </div>
               <div class="rental-price">
                 {{ rental.total_cost | currency:'EUR':'symbol':'1.0-0' }}
-                <span
-                  *ngIf="calculateDays(rental.start_date, rental.end_date) as days"
-                  class="rental-days">
+                <span *ngIf="calculateDays(rental.start_date, rental.end_date) as days" class="rental-days">
                   ({{ days }} {{ days === 1 ? 'day' : 'days' }})
                 </span>
               </div>
@@ -66,45 +72,40 @@
             </div>
           </div>
           <div class="rental-actions">
-            <button
-              *ngIf="rental.status === 'pending' || rental.status === 'confirmed'"
-              class="rental-action-btn cancel"
+            <button *ngIf="rental.status === 'pending' || rental.status === 'confirmed'"
+              class="rental-action-btn cancel" [disabled]="processingActionForId === rental.id"
               (click)="cancelRental(rental.id)">
-              <i class="fas fa-times"></i> Cancel
+              <ng-container *ngIf="processingActionForId !== rental.id">
+                <i class="fas fa-times"></i> Cancel
+              </ng-container>
+              <ng-container *ngIf="processingActionForId === rental.id">
+                <i class="fas fa-spinner fa-spin"></i> Canceling...
+              </ng-container>
             </button>
-            <button
-              *ngIf="rental.status === 'confirmed' || rental.status === 'ongoing'"
-              class="rental-action-btn contact"
-              (click)="contactPartner(rental.partner.id)">
+            <button *ngIf="rental.status === 'confirmed' || rental.status === 'ongoing'"
+              class="rental-action-btn contact" (click)="contactPartner(rental.partner.id)">
               <i class="fas fa-comments"></i> Contact Partner
             </button>
           </div>
         </div>
       </div>
-      <div
-        *ngIf="!isLoadingCurrent && currentRentals.length === 0 && !errorMessage"
-        class="no-data-message">
+      <div *ngIf="!isLoadingCurrent && currentRentals.length === 0 && !errorMessage" class="no-data-message">
         <i class="fas fa-box-open"></i> You have no current rentals.
       </div>
     </div>
 
     <!-- Rental History Tab -->
-    <div class="tab-content" [class.active]="activeTab === 'history'"
-      id="history-content">
+    <div class="tab-content" [class.active]="activeTab === 'history'" id="history-content">
       <!-- Indicateur de chargement -->
       <div *ngIf="isLoadingPast" class="loading-indicator">
         <i class="fas fa-spinner fa-spin"></i> Loading rental history...
       </div>
 
       <!-- Liste de l'historique -->
-      <div *ngIf="!isLoadingPast && pastRentals.length > 0"
-        class="rentals-list">
+      <div *ngIf="!isLoadingPast && pastRentals.length > 0" class="rentals-list">
         <div *ngFor="let rental of pastRentals" class="rental-card past">
-          <img
-            [src]="rental.listing.main_image || 'assets/images/item-placeholder.jpg'"
-            [alt]="rental.listing.title || 'Rental item'"
-            class="rental-image"
-            (click)="goToListing(rental.listing.id)"
+          <img [src]="rental.listing.main_image || 'assets/images/item-placeholder.jpg'"
+            [alt]="rental.listing.title || 'Rental item'" class="rental-image" (click)="goToListing(rental.listing.id)"
             style="cursor: pointer;" />
           <div class="rental-details">
             <h3 class="rental-title" (click)="goToListing(rental.listing.id)"
@@ -119,9 +120,7 @@
               </div>
               <div class="rental-price">
                 {{ rental.total_cost | currency:'EUR':'symbol':'1.0-0' }}
-                <span
-                  *ngIf="calculateDays(rental.start_date, rental.end_date) as days"
-                  class="rental-days">
+                <span *ngIf="calculateDays(rental.start_date, rental.end_date) as days" class="rental-days">
                   ({{ days }} {{ days === 1 ? 'day' : 'days' }})
                 </span>
               </div>
@@ -140,28 +139,22 @@
           <div class="rental-actions">
             <!-- With these buttons -->
             <!-- Replace these buttons -->
-            <button
-              *ngIf="rental.status === 'completed' && !rental.isReviewedByCurrentUser"
-              class="rental-action-btn review"
-              (click)="leaveReview(rental.id)">
+            <button *ngIf="rental.status === 'completed' && !rental.isReviewedByCurrentUser"
+              class="rental-action-btn review" (click)="leaveReview(rental.id)">
               <i class="fas fa-star"></i> Leave Review
             </button>
-            <button
-              *ngIf="rental.status === 'completed' && rental.isReviewedByCurrentUser"
+            <button *ngIf="rental.status === 'completed' && rental.isReviewedByCurrentUser"
               class="rental-action-btn review completed" disabled>
               <i class="fas fa-check"></i> Review Submitted
             </button>
-            <button
-              *ngIf="rental.status === 'completed' || rental.status === 'canceled'"
-              class="rental-action-btn rent-again"
-              (click)="rentAgain(rental.listing.id)">
+            <button *ngIf="rental.status === 'completed' || rental.status === 'canceled'"
+              class="rental-action-btn rent-again" (click)="rentAgain(rental.listing.id)">
               <i class="fas fa-redo"></i> Rent Again
             </button>
           </div>
         </div>
       </div>
-      <div *ngIf="!isLoadingPast && pastRentals.length === 0 && !errorMessage"
-        class="no-data-message">
+      <div *ngIf="!isLoadingPast && pastRentals.length === 0 && !errorMessage" class="no-data-message">
         <i class="fas fa-history"></i> You have no rental history.
       </div>
     </div>
@@ -169,8 +162,5 @@
 </main>
 
 <!-- Add this at the end of the template, before the closing </main> tag -->
-<app-review-modal
-  *ngIf="showReviewModal"
-  [reservation]="selectedReservation"
-  [userId]="currentUserId"
+<app-review-modal *ngIf="showReviewModal" [reservation]="selectedReservation" [userId]="currentUserId"
   (close)="closeReviewModal($event)"></app-review-modal>

@@ -1,0 +1,90 @@
+<div class="modal-overlay" (click)="closeModal()">
+    <div class="review-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">Review Client</h2>
+        <button type="button" class="close-btn" (click)="closeModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+  
+      <div class="modal-body">
+        <!-- Reservation details -->
+        <div class="reservation-summary" *ngIf="reservation && reservation.client">
+          <img 
+            [src]="reservation.client.avatar_url || 'assets/images/default-avatar.jpeg'"
+            alt="Client Avatar"
+            class="client-avatar"
+          />
+          <div class="reservation-info">
+            <h3 class="client-name">{{ reservation.client.username }}</h3>
+            <p class="reservation-details">
+              <i class="fas fa-calendar"></i>
+              {{ reservation.start_date | date:'MMM d' }} - {{ reservation.end_date | date:'MMM d, y' }}
+            </p>
+            <p class="item-name">
+              <i class="fas fa-box"></i>
+              {{ reservation.listing.title }}
+            </p>
+          </div>
+        </div>
+  
+        <!-- Review form -->
+        <form [formGroup]="reviewForm" class="review-form">
+          <div class="form-group rating-group">
+            <label>Client Rating:</label>
+            <div class="star-rating">
+              <button type="button"
+                *ngFor="let star of stars"
+                class="star-btn"
+                [class.active]="star <= selectedRating"
+                (click)="selectRating(star)">
+                <i class="fas fa-star"></i>
+              </button>
+            </div>
+            <div 
+              *ngIf="reviewForm.get('rating')?.invalid && reviewForm.get('rating')?.touched"
+              class="error-message">
+              Please select a rating
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="comment">Comments about the client:</label>
+            <textarea 
+              id="comment" 
+              formControlName="comment" 
+              class="review-comment"
+              placeholder="How was your experience with this client? Did they treat your equipment well? Were they punctual?"></textarea>
+            
+            <div 
+              *ngIf="reviewForm.get('comment')?.invalid && reviewForm.get('comment')?.touched"
+              class="error-message">
+              <span *ngIf="reviewForm.get('comment')?.errors?.['required']">Please provide a comment</span>
+              <span *ngIf="reviewForm.get('comment')?.errors?.['minlength']">Comment must be at least 5 characters</span>
+              <span *ngIf="reviewForm.get('comment')?.errors?.['maxlength']">Comment cannot exceed 500 characters</span>
+            </div>
+          </div>
+  
+          <div *ngIf="submitError" class="error-message submit-error">
+            {{ submitError }}
+          </div>
+  
+          <div class="form-actions">
+            <button 
+              type="button" 
+              class="cancel-btn" 
+              (click)="closeModal()">
+              Cancel
+            </button>
+            <button 
+              class="submit-btn"
+              [disabled]="reviewForm.invalid || isSubmitting"
+              (click)="submitReview()">
+              <span *ngIf="!isSubmitting">Submit Review</span>
+              <span *ngIf="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Submitting...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

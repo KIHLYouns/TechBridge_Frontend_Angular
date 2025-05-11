@@ -38,7 +38,7 @@ describe('ReviewService', () => {
       expect(reviews).toEqual(dummyReviews);
     });
 
-    const req = httpMock.expectOne(`${service.apiUrl}?revieweeId=${userId}`);
+    const req = httpMock.expectOne(`${service.apiUrl}?reviewee_id=${userId}`);
     expect(req.request.method).toBe('GET');
     req.flush(dummyReviews);
   });

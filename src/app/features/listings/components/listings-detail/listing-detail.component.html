@@ -16,21 +16,13 @@
       <div>
         <!-- Galerie d'images -->
         <div class="main-image-container">
-          <img
-            [src]="selectedImageUrl || listing.images?.[0]?.url || 'assets/images/item-placeholder.jpg'"
-            [alt]="listing.title"
-            id="main-image"
-            class="main-image">
+          <img [src]="selectedImageUrl || listing.images?.[0]?.url || 'assets/images/item-placeholder.jpg'"
+            [alt]="listing.title" id="main-image" class="main-image">
           <div *ngIf="listing.is_premium" class="premium-tag">Premium</div>
         </div>
-        <div class="thumbnail-container"
-          *ngIf="listing.images && listing.images.length > 1">
-          <img *ngFor="let image of listing.images"
-            [src]="image.url"
-            alt="Thumbnail"
-            class="thumbnail"
-            [class.active]="image.url === (selectedImageUrl || listing.images[0].url)"
-            (click)="selectImage(image.url)">
+        <div class="thumbnail-container" *ngIf="listing.images && listing.images.length > 1">
+          <img *ngFor="let image of listing.images" [src]="image.url" alt="Thumbnail" class="thumbnail"
+            [class.active]="image.url === (selectedImageUrl || listing.images[0].url)" (click)="selectImage(image.url)">
         </div>
         <!-- Contenu principal -->
         <div class="detail-content">
@@ -65,8 +57,7 @@
               <div class="partner-name">{{ listing.partner.username }}</div>
               <div class="partner-rating"
                 *ngIf="listing.partner.partner_rating !== undefined && listing.partner.partner_rating !== null">
-                <ng-container
-                  *ngFor="let i of getStarArray(listing.partner.partner_rating)">
+                <ng-container *ngFor="let i of getStarArray(listing.partner.partner_rating)">
                   <i class="fas fa-star star"></i>
                 </ng-container>
                 <span class="rating-value">{{ listing.partner.partner_rating |
@@ -109,16 +100,14 @@
         <div class="booking-card">
           <h3 class="booking-title">Book This Item</h3>
           <div class="item-price">
-            {{ listing.price_per_day | currency:'USD':'symbol':'1.0-0' }} <span
-              class="price-period">/ day</span>
+            {{ listing.price_per_day | currency:'USD':'symbol':'1.0-0' }} <span class="price-period">/ day</span>
           </div>
           <div class="booking-form">
             <div class="price-breakdown">
               <div class="breakdown-item">
                 <span class="item-label">Selected dates:</span>
                 <span id="selected-dates" class="item-value">
-                  <ng-container
-                    *ngIf="selectedStartDate && selectedEndDate; else selectDatesText">
+                  <ng-container *ngIf="selectedStartDate && selectedEndDate; else selectDatesText">
                     {{ selectedStartDate }} to {{ selectedEndDate }} ({{
                     numberOfDays }} days)
                   </ng-container>
@@ -140,14 +129,71 @@
                 </span>
               </div>
             </div>
-            <button class="reserve-button" (click)="rentObject()"           
-              [disabled]="!selectedStartDate || !selectedEndDate">
-              <i class="fas fa-calendar-check"></i>
-              Reserve Now
+            <button class="reserve-button" (click)="rentObject()"
+              [disabled]="!selectedStartDate || !selectedEndDate || isSubmittingReservation">
+              <span *ngIf="!isSubmittingReservation && !reservationSubmittedSuccess">
+                <i class="fas fa-calendar-check"></i> Reserve Now
+              </span>
+              <span *ngIf="isSubmittingReservation">
+                <i class="fas fa-spinner fa-spin"></i> Processing...
+              </span>
+              <span *ngIf="!isSubmittingReservation && reservationSubmittedSuccess">
+                <i class="fas fa-check"></i> Reserved Successfully!
+              </span>
             </button>
+            <div *ngIf="reservationError" class="reservation-error">
+              <i class="fas fa-exclamation-circle"></i> {{ reservationError }}
+            </div>
+            <div *ngIf="reservationSubmittedSuccess" class="reservation-success">
+              <i class="fas fa-check-circle"></i> Reservation submitted successfully! Redirecting...
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Listing Reviews Section -->
+    <div class="detail-section reviews-section">
+      <h2 class="section-title">Reviews</h2>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoadingReviews" class="reviews-loading">
+        <i class="fas fa-spinner fa-spin"></i> Loading reviews...
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="reviewsError" class="reviews-error">
+        <i class="fas fa-exclamation-circle"></i> {{ reviewsError }}
+      </div>
+
+      <!-- Reviews List -->
+      <div *ngIf="!isLoadingReviews && !reviewsError && listingReviews.length > 0" class="reviews-list">
+        <div *ngFor="let review of listingReviews" class="review-item">
+          <div class="review-header">
+            <img [src]="review.reviewer.avatar_url || 'assets/images/default-avatar.jpeg'" alt="Reviewer avatar"
+              class="reviewer-avatar">
+            <div class="reviewer-details">
+              <div class="reviewer-name">{{ review.reviewer.username }}</div>
+              <div class="review-date">{{ review.created_at | date:'mediumDate' }}</div>
+            </div>
+            <div class="review-rating">
+              <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+                <i class="fas fa-star" [class.filled]="i <= review.rating"></i>
+              </ng-container>
+            </div>
+          </div>
+          <div class="review-comment">
+            {{ review.comment }}
+          </div>
+        </div>
+      </div>
+
+      <!-- No Reviews State -->
+      <div *ngIf="!isLoadingReviews && !reviewsError && listingReviews.length === 0" class="no-reviews">
+        <p>This listing has no reviews yet.</p>
+      </div>
+    </div>
   </div>
+
+
 </ng-container>
