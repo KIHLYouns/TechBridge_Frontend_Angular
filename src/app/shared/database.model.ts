@@ -51,6 +51,7 @@ export interface Listing {
   city?: City;
   partner?: User;
   images?: Image[];
+  main_image?: string;
   availabilities?: Availability[];
 }
 

@@ -1,10 +1,14 @@
 <div class="home-container">
-    <app-categories class="categories"></app-categories>
+    <app-categories
+        class="categories"
+        (categorySelected)="onCategorySelected($event)">
+    </app-categories>
     <div class="content-wrapper">
-        <app-filters-side-bar class="filter-sidebar"></app-filters-side-bar>
-        <!-- we will render the containt of this ng-container only if the observable exists -->
-        <ng-container *ngIf="this.listings$ | async as listings">
-            <!-- here we subscribe to the observable that emits arrays of our data -->
+        <app-filters-side-bar
+            class="filter-sidebar"
+            (filtersApplied)="onFiltersApplied($event)">
+        </app-filters-side-bar>
+        <ng-container *ngIf="listings$ | async as listings">
             <app-listings-list [listings]="listings" class="items-grid"></app-listings-list>
         </ng-container>
     </div>

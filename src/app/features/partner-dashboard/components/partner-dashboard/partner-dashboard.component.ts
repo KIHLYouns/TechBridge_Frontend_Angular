@@ -32,7 +32,7 @@ export class PartnerDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.listingsService.getAllListings().subscribe({
+    this.listingsService.getListings().subscribe({
       next: (allListings) => {
         this.allPartnerListings = allListings;
         this.updateDynamicStats();

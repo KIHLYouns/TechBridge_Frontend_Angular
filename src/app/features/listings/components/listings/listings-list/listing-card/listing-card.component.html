@@ -5,7 +5,7 @@
         <div class="premium-tag">Premium</div>
       </ng-container>
       <img
-        [src]="listing.images?.[0]?.url"
+        [src]="listing.main_image"
         alt="Equipment"
         class="item-image"
       />
@@ -21,21 +21,19 @@
                 listing.partner?.avatar_url ||
                 'assets/images/default-avatar.jpeg'
               "
-              alt="{{ listing.partner?.firstname }} {{
-                listing.partner?.lastname
-              }}"
+              alt="{{ listing.partner?.username }}"
               class="partner-avatar"
             />
             <span class="item-partner">
-              {{ listing.partner?.firstname }} {{ listing.partner?.lastname }}
+              {{ listing.partner?.username }}
             </span>
             <div class="partner-rating" *ngIf="listing.partner">
               <i class="fas fa-star star"></i>
               <span>{{ listing.partner.partner_rating }}</span>
             </div>
           </div>
-          <div class="item-location" *ngIf="listing.city">
-            {{ listing.city.name }}
+          <div class="item-location" *ngIf="listing.partner">
+            {{ listing.partner.city?.name }}
           </div>
         </div>
       </div>

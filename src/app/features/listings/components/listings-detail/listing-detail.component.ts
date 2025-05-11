@@ -13,7 +13,7 @@ import { Instance as FlatpickrInstance } from 'flatpickr/dist/types/instance';
 import * as L from 'leaflet';
 import { Observable, Subscription } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
-import { Listing } from '../../../../shared/database.model';
+import { Listing, Review } from '../../../../shared/database.model';
 import { ListingsService } from '../../services/listings.service';
 
 const defaultIcon = L.icon({
@@ -38,10 +38,10 @@ L.Marker.prototype.options.icon = defaultIcon;
 export class ListingDetailComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-
   listing$: Observable<Listing | null>;
   listingData: Listing | null = null;
   selectedImageUrl: string | null = null;
+  reviews: Review[] = [];
 
   private map!: L.Map;
   private mapInitialized = false;
@@ -192,18 +192,31 @@ export class ListingDetailComponent
       return;
     }
 
+    const enabledDates =
+      this.listingData.availabilities?.map((availability) => {
+        return {
+          from: availability.start_date, // Doit être au format YYYY-MM-DD
+          to: availability.end_date, // Doit être au format YYYY-MM-DD
+        };
+      }) || [];
+
     this.calendarInstance = flatpickr(element, {
       mode: 'range',
       inline: true,
-      dateFormat: 'Y-m-d',
-      minDate: 'today',
+      dateFormat: 'Y-m-d', // Format standard pour la logique
+      minDate: 'today', // Empêche la sélection de dates passées
       showMonths: 2,
       locale: english,
-      onChange: (selectedDates, dateStr, instance) => {
+      enable: enabledDates.length > 0 ? enabledDates : [],
+      onChange: (selectedDates, _dateStr, _instance) => {
         this.updatePriceCalculation(selectedDates);
         this.cdRef.markForCheck();
       },
     });
+
+    if (enabledDates.length === 0) {
+      console.warn("Aucune date de disponibilité n'est configurée pour cette annonce.");
+    }
   }
 
   private updatePriceCalculation(dates: Date[]): void {
@@ -235,7 +248,25 @@ export class ListingDetailComponent
     return rating ? Array(Math.floor(rating)).fill(0) : [];
   }
 
-  rentObject() {
-    throw new Error('Method not implemented.');
+  rentObject(): void {
+    if (
+      !this.listingData ||
+      !this.selectedStartDate ||
+      !this.selectedEndDate ||
+      !this.calendarInstance?.selectedDates[0] ||
+      !this.calendarInstance?.selectedDates[1]
+    ) {
+      console.error('Missing data for reservation');
+      return;
+    }
+
+    const reservationRequest = {
+      listing_id: this.listingData.id,
+      start_date: this.calendarInstance.selectedDates[0].toISOString(),
+      end_date: this.calendarInstance.selectedDates[1].toISOString(),
+    };
+
+    console.log('Reservation request:', reservationRequest);
+    alert('Fonction de réservation à implémenter ! Voir la console pour la requête.');
   }
 }

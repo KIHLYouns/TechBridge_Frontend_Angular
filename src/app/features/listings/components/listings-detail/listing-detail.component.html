@@ -60,10 +60,9 @@
           <div class="partner-info" *ngIf="listing.partner">
             <img
               [src]="listing.partner.avatar_url || 'assets/images/default-avatar.jpeg'"
-              alt="Partner Avatar" class="partner-avatar">
+              alt="Partner Avatar" class="partner-avatar">  
             <div class="partner-details">
-              <div class="partner-name">{{ listing.partner.firstname + ' ' +
-                listing.partner.lastname || 'Partner Name' }}</div>
+              <div class="partner-name">{{ listing.partner.username }}</div>
               <div class="partner-rating"
                 *ngIf="listing.partner.partner_rating !== undefined && listing.partner.partner_rating !== null">
                 <ng-container

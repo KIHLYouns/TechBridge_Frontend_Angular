@@ -1,0 +1,381 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Gaming & eSports"
+    },
+    {
+      "id": 2,
+      "name": "Photo & Vidéo"
+    },
+    {
+      "id": 3,
+      "name": "Audio"
+    },
+    {
+      "id": 4,
+      "name": "Drones"
+    },
+    {
+      "id": 5,
+      "name": "Projecteurs & Écrans"
+    },
+    {
+      "id": 6,
+      "name": "Ordinateurs & Tablettes"
+    }
+  ],
+  "cities": [
+    {
+      "id": 1,
+      "name": "Casablanca"
+    },
+    {
+      "id": 2,
+      "name": "Rabat"
+    },
+    {
+      "id": 3,
+      "name": "Marrakech"
+    },
+    {
+      "id": 4,
+      "name": "Tanger"
+    },
+    {
+      "id": 5,
+      "name": "Agadir"
+    }
+  ],
+  "users": [
+    {
+      "id": 101,
+      "username": "hmed_samaki",
+      "firstname": "Ahmed",
+      "lastname": "Samaki",
+      "email": "ahmed.samaki@example.com",
+      "phone_number": "0601020304",
+      "avatar_url": "https://ui-avatars.com/api/?name=Ahmed+Samaki&background=random",
+      "is_partner": true,
+      "partner_rating": 4.7,
+      "partner_reviews": 22,
+      "city": {
+        "id": 1,
+        "name": "Casablanca"
+      },
+      "longitude": -7.6185,
+      "latitude": 33.5731
+    },
+    {
+      "id": 102,
+      "username": "fatima_tech",
+      "firstname": "Fatima",
+      "lastname": "Zahra",
+      "email": "fatima.zahra@example.com",
+      "phone_number": "0611223344",
+      "avatar_url": "https://ui-avatars.com/api/?name=Fatima+Zahra&background=random",
+      "is_partner": true,
+      "partner_rating": 4.9,
+      "partner_reviews": 35,
+      "city": {
+        "id": 2,
+        "name": "Rabat"
+      },
+      "longitude": -6.8498,
+      "latitude": 34.0209
+    },
+    {
+      "id": 103,
+      "username": "younes_gamer",
+      "firstname": "Younes",
+      "lastname": "Berrada",
+      "email": "younes.berrada@example.com",
+      "phone_number": "0622334455",
+      "avatar_url": "https://ui-avatars.com/api/?name=Younes+Berrada&background=random",
+      "is_partner": false,
+      "city": {
+        "id": 3,
+        "name": "Marrakech"
+      }
+    },
+    {
+      "id": 104,
+      "username": "camera_pro",
+      "firstname": "Leila",
+      "lastname": "Alaoui",
+      "email": "leila.alaoui@example.com",
+      "phone_number": "0633445566",
+      "avatar_url": "https://ui-avatars.com/api/?name=Leila+Alaoui&background=random",
+      "is_partner": true,
+      "partner_rating": 4.5,
+      "partner_reviews": 15,
+      "city": {
+        "id": 1,
+        "name": "Casablanca"
+      },
+      "longitude": -7.5898,
+      "latitude": 33.5331
+    }
+  ],
+  "listings": [
+    {
+      "id": "1",
+      "title": "PlayStation 5 Slim + 2 Manettes",
+      "description": "Console PS5 Slim en excellent état, fournie avec deux manettes DualSense et le jeu Spider-Man 2. Parfait pour des soirées gaming intenses.",
+      "price_per_day": 35,
+      "status": "active",
+      "is_premium": true,
+      "premium_start_date": "2025-03-20T00:00:00Z",
+      "premium_end_date": "2025-06-20T00:00:00Z",
+      "created_at": "2024-02-15T09:15:00Z",
+      "delivery_option": false,
+      "category": {
+        "id": 1,
+        "name": "Gaming & eSports"
+      },
+      "partner": {
+        "id": 101,
+        "username": "hmed_samaki",
+        "avatar_url": "https://ui-avatars.com/api/?name=Ahmed+Samaki&background=random",
+        "partner_rating": 4.7,
+        "partner_reviews": 22,
+        "city": {
+          "id": 1,
+          "name": "Casablanca"
+        },
+        "longitude": -7.6185,
+        "latitude": 33.5731
+      },
+      "images": [
+        {
+          "id": 1,
+          "url": "https://picsum.photos/600/400?random=1"
+        },
+        {
+          "id": 2,
+          "url": "https://picsum.photos/600/400?random=2"
+        }
+      ],
+      "availabilities": [
+        {
+          "start_date": "2025-05-15T00:00:00Z",
+          "end_date": "2025-05-25T00:00:00Z"
+        },
+        {
+          "start_date": "2025-06-10T00:00:00Z",
+          "end_date": "2025-06-20T00:00:00Z"
+        }
+      ],
+      "main_image": "https://picsum.photos/600/400?random=1"
+    },
+    {
+      "id": 2,
+      "title": "Canon EOS R6 Mark II",
+      "description": "Appareil photo hybride plein format Canon EOS R6 Mark II. Idéal pour professionnels et amateurs exigeants. Objectif RF 24-105mm f/4L IS USM inclus.",
+      "price_per_day": 70,
+      "status": "active",
+      "is_premium": false,
+      "created_at": "2024-03-01T11:00:00Z",
+      "delivery_option": true,
+      "category": {
+        "id": 2,
+        "name": "Photo & Vidéo"
+      },
+      "partner": {
+        "id": 102,
+        "username": "fatima_tech",
+        "avatar_url": "https://ui-avatars.com/api/?name=Fatima+Zahra&background=random",
+        "partner_rating": 4.9,
+        "partner_reviews": 35,
+        "city": {
+          "id": 2,
+          "name": "Rabat"
+        },
+        "longitude": -6.8498,
+        "latitude": 34.0209
+      },
+      "images": [
+        {
+          "id": 3,
+          "url": "https://picsum.photos/600/400?random=3"
+        },
+        {
+          "id": 4,
+          "url": "https://picsum.photos/600/400?random=4"
+        }
+      ],
+      "availabilities": [
+        {
+          "start_date": "2025-05-20T00:00:00Z",
+          "end_date": "2025-05-30T00:00:00Z"
+        },
+        {
+          "start_date": "2025-06-05T00:00:00Z",
+          "end_date": "2025-06-15T00:00:00Z"
+        }
+      ],
+      "main_image": "https://picsum.photos/600/400?random=3"
+    },
+    {
+      "id": 3,
+      "title": "DJI Mavic 3 Pro Drone",
+      "description": "Drone DJI Mavic 3 Pro avec triple caméra, qualité d'image exceptionnelle. Longue autonomie et détection d'obstacles avancée.",
+      "price_per_day": 90,
+      "status": "paused",
+      "is_premium": true,
+      "premium_start_date": "2025-04-01T00:00:00Z",
+      "premium_end_date": "2025-04-30T00:00:00Z",
+      "created_at": "2024-01-20T14:30:00Z",
+      "delivery_option": true,
+      "category": {
+        "id": 4,
+        "name": "Drones"
+      },
+      "partner": {
+        "id": 101,
+        "username": "hmed_samaki",
+        "avatar_url": "https://ui-avatars.com/api/?name=Ahmed+Samaki&background=random",
+        "partner_rating": 4.7,
+        "partner_reviews": 22,
+        "city": {
+          "id": 1,
+          "name": "Casablanca"
+        },
+        "longitude": -7.6185,
+        "latitude": 33.5731
+      },
+      "images": [
+        {
+          "id": 5,
+          "url": "https://picsum.photos/600/400?random=5"
+        }
+      ],
+      "availabilities": [
+        {
+          "start_date": "2025-05-01T00:00:00Z",
+          "end_date": "2025-05-20T00:00:00Z"
+        }
+      ],
+      "main_image": "https://picsum.photos/600/400?random=5"
+    },
+    {
+      "id": 4,
+      "title": "Microphone Shure SM7B",
+      "description": "Microphone dynamique de studio légendaire, idéal pour voix, podcasts et streaming. Qualité sonore professionnelle.",
+      "price_per_day": 25,
+      "status": "active",
+      "is_premium": false,
+      "created_at": "2024-04-10T10:00:00Z",
+      "delivery_option": false,
+      "category": {
+        "id": 3,
+        "name": "Audio"
+      },
+      "partner": {
+        "id": 104,
+        "username": "camera_pro",
+        "avatar_url": "https://ui-avatars.com/api/?name=Leila+Alaoui&background=random",
+        "partner_rating": 4.5,
+        "partner_reviews": 15,
+        "city": {
+          "id": 1,
+          "name": "Casablanca"
+        },
+        "longitude": -7.5898,
+        "latitude": 33.5331
+      },
+      "images": [
+        {
+          "id": 6,
+          "url": "https://picsum.photos/600/400?random=6"
+        }
+      ],
+      "availabilities": [
+        {
+          "start_date": "2025-05-10T00:00:00Z",
+          "end_date": "2025-08-30T00:00:00Z"
+        }
+      ],
+      "main_image": "https://picsum.photos/600/400?random=6"
+    },
+    {
+      "id": 5,
+      "title": "VidéoProjecteur BenQ 4K",
+      "description": "Projecteur 4K UHD pour des images époustouflantes. Idéal pour home cinéma ou présentations professionnelles.",
+      "price_per_day": 55,
+      "status": "archived",
+      "is_premium": false,
+      "created_at": "2023-12-01T16:00:00Z",
+      "delivery_option": true,
+      "category": {
+        "id": 5,
+        "name": "Projecteurs & Écrans"
+      },
+      "partner": {
+        "id": 102,
+        "username": "fatima_tech",
+        "avatar_url": "https://ui-avatars.com/api/?name=Fatima+Zahra&background=random",
+        "partner_rating": 4.9,
+        "partner_reviews": 35,
+        "city": {
+          "id": 2,
+          "name": "Rabat"
+        },
+        "longitude": -6.8498,
+        "latitude": 34.0209
+      },
+      "images": [
+        {
+          "id": 7,
+          "url": "https://picsum.photos/600/400?random=7"
+        }
+      ],
+      "availabilities": [],
+      "main_image": "https://picsum.photos/600/400?random=7"
+    },
+    {
+      "id": 101,
+      "title": "Canon EOS R6 Camera",
+      "price_per_day": 45,
+      "is_premium": true,
+      "main_image": "https://picsum.photos/600/400?random=101",
+      "partner": {
+        "id": 21,
+        "username": "aymane_cam",
+        "avatar_url": "https://ui-avatars.com/api/?name=Aymane+Cam",
+        "partner_rating": 4.8,
+        "partner_reviews": 34,
+        "coordinates": {
+          "latitude": 33.5898,
+          "longitude": -7.6039
+        },
+        "city": {
+          "id": 2,
+          "name": "Casablanca"
+        }
+      }
+    },
+    {
+      "id": 102,
+      "title": "DJI Mavic Air 2 Drone",
+      "price_per_day": 40,
+      "is_premium": false,
+      "main_image": "https://picsum.photos/600/400?random=102",
+      "partner": {
+        "id": 22,
+        "username": "tech_rentals",
+        "avatar_url": "https://ui-avatars.com/api/?name=Tech+Rentals",
+        "partner_rating": 4.5,
+        "partner_reviews": 29,
+        "coordinates": {
+          "latitude": 34.0209,
+          "longitude": -6.8416
+        },
+        "city": {
+          "id": 3,
+          "name": "Rabat"
+        }
+      }
+    }
+  ]
+}

@@ -1,61 +1,38 @@
 <div class="filter-section">
     <h3 class="filter-title">Location</h3>
-    <select class="location-filter">
-        <option value>All locations</option>
-        <option value="San Francisco">Tétouan</option>
-        <option value="New York">New York, NY</option>
-        <option value="Brooklyn">Tanger</option>
-        <option value="Austin">Rabat</option>
-        <option value="Los Angeles">Los Angeles, CA</option>
-        <option value="Chicago">Chicago, IL</option>
-        <option value="Miami">Miami, FL</option>
-        <option value="Seattle">Seattle, WA</option>
+    <select class="location-filter" [(ngModel)]="selectedCityId" (ngModelChange)="onModelChange()">
+        <option [ngValue]="null">All locations</option>
+        <ng-container *ngIf="cities$ | async as cities">
+            <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+        </ng-container>
     </select>
 </div>
+
 <div class="filter-section">
     <h3 class="filter-title">Rental Rate (/day)</h3>
     <div class="price-inputs">
-        <input type="number" placeholder="Min $" class="price-input" />
+        <input type="number" placeholder="Min $" class="price-input" [(ngModel)]="minPrice" (ngModelChange)="onModelChange()" />
         <span>-</span>
-        <input type="number" placeholder="Max $" class="price-input" />
+        <input type="number" placeholder="Max $" class="price-input" [(ngModel)]="maxPrice" (ngModelChange)="onModelChange()" />
     </div>
 </div>
+
 <div class="filter-section">
-    <h3 class="filter-title">Availability</h3>
-    <label for="start-date">From:</label>
-    <input
-        type="date"
-        id="start-date"
-        name="start-date"
-        class="date-input" />
-    <label for="end-date">To:</label>
-    <input
-        type="date"
-        id="end-date"
-        name="end-date"
-        class="date-input" />
-</div>
-<div class="filter-section">
-    <h3 class="filter-title">Minimum Rating</h3>
+    <h3 class="filter-title">Minimum Partner Rating</h3>
     <div class="rating-filter">
-        <label>
-            <input type="radio" name="rating" value="4" /> 4★ & plus
-        </label>
-        <label>
-            <input type="radio" name="rating" value="3" /> 3★ & plus
-        </label>
-        <label>
-            <input type="radio" name="rating" value="0" checked /> Tous
+        <label *ngFor="let option of partnerRatingOptions">
+            <input type="radio" name="partner_rating" [value]="option.value" [(ngModel)]="selectedPartnerRating" (ngModelChange)="onModelChange()" /> {{ option.label }}
         </label>
     </div>
 </div>
+
 <div class="filter-section">
-    <h3 class="filter-title">Sort By</h3>
-    <select class="sort-select">
-        <option>Recently Added</option>
-        <option>Rate: Low to High</option>
-        <option>Rate: High to Low</option>
-        <option>Distance: Nearest First</option>
-    </select>
+    <h3 class="filter-title">Minimum Equipment Rating</h3>
+    <div class="rating-filter">
+         <label *ngFor="let option of equipmentRatingOptions">
+            <input type="radio" name="equipment_rating" [value]="option.value" [(ngModel)]="selectedEquipmentRating" (ngModelChange)="onModelChange()" /> {{ option.label }}
+        </label>
+    </div>
 </div>
-<button class="filter-button">Clear All</button>
+
+<button class="filter-button" (click)="clearFilters()">Clear All</button>

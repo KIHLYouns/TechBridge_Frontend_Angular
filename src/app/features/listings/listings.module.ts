@@ -9,6 +9,8 @@ import { FiltersSideBarComponent } from './components/listings/filters-side-bar/
 import { ListingCardComponent } from './components/listings/listings-list/listing-card/listing-card.component';
 import { ListingsListComponent } from './components/listings/listings-list/listings-list.component';
 import { ListingsComponent } from './components/listings/listings.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { ListingsComponent } from './components/listings/listings.component';
   ],
   imports: [
     SharedModule,
+    CommonModule,
+    FormsModule,
     ListingsRoutingModule
   ]
 })
