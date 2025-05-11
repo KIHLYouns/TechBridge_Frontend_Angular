@@ -36,9 +36,7 @@
             <div class="detail-section availability-section">
               <h2 class="section-title">Availability</h2>
               <div class="availability-container">
-                <div class="calendar-wrapper">
-                  <div id="reservation-calendar" #reservationCalendar></div>
-                </div>
+                <div id="reservation-calendar"></div> <!-- Conteneur pour le calendrier -->
               </div>
             </div>
           </div>
@@ -51,8 +49,10 @@
           <!-- Informations partenaire -->
           <div class="partner-info" *ngIf="listing.partner">
             <img
-              [src]="listing.partner.avatar_url || 'assets/images/default-avatar.jpeg'"
-              alt="Partner Avatar" class="partner-avatar">  
+              [src]="listing.partner.avatar_url"
+              alt="Avatar de {{ listing.partner.username }}"
+              class="partner-avatar"
+              (error)="getDefaultAvatar($event, listing.partner.username)">  
             <div class="partner-details">
               <div class="partner-name">{{ listing.partner.username }}</div>
               <div class="partner-rating"
@@ -86,14 +86,14 @@
               <span>Pickup only</span>
             </div>
           </div>
-          <div class="item-location" *ngIf="listing.city">
+          <div class="item-location" *ngIf="listing.partner?.city">
             <i class="fas fa-map-marker-alt"></i>
-            <span>{{ listing.city.name }}</span>
+            <span>{{ listing.partner?.city?.name }}</span>
           </div>
           <!-- Carte de localisation -->
           <div class="detail-section location-map-section"
             *ngIf="listing.partner?.latitude && listing.partner?.longitude">
-            <div id="map" #map></div>
+            <div id="map"></div> <!-- Conteneur pour la carte -->
           </div>
         </div>
         <!-- Carte de réservation -->
@@ -171,7 +171,8 @@
         <div *ngFor="let review of listingReviews" class="review-item">
           <div class="review-header">
             <img [src]="review.reviewer.avatar_url || 'assets/images/default-avatar.jpeg'" alt="Reviewer avatar"
-              class="reviewer-avatar">
+              class="reviewer-avatar"
+              (error)="getDefaultAvatar($event, review.reviewer.username)">
             <div class="reviewer-details">
               <div class="reviewer-name">{{ review.reviewer.username }}</div>
               <div class="review-date">{{ review.created_at | date:'mediumDate' }}</div>

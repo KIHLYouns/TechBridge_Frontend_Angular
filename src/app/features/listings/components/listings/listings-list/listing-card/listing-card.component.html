@@ -12,17 +12,15 @@
       <div class="item-details">
         <div class="item-header">
           <h3 class="item-title">{{ listing.title }}</h3>
-          <div class="item-price">$ {{ listing.price_per_day }} / day</div>
         </div>
+        <div class="item-price">$ {{ listing.price_per_day }} / day</div>
         <div class="item-info-line">
           <div class="item-partner-container">
             <img
-              [src]="
-                listing.partner?.avatar_url ||
-                'assets/images/default-avatar.jpeg'
-              "
+              [src]="listing.partner?.avatar_url"
               alt="{{ listing.partner?.username }}"
               class="partner-avatar"
+              (error)="getDefaultAvatar($event, listing.partner?.username)"
             />
             <span class="item-partner">
               {{ listing.partner?.username }}

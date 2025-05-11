@@ -17,4 +17,13 @@ export class ListingCardComponent {
   getStarArray(rating: number): number[] {
     return Array(Math.floor(rating)).fill(0);
   }
+
+  getDefaultAvatar(event: Event, username?: string): void {
+    const target = event.target as HTMLImageElement;
+    const name = username || 'Default User';
+
+    const encodedName = encodeURIComponent(name.trim()).replace(/%20/g, '+');
+    target.src = `https://ui-avatars.com/api/?name=${encodedName}&background=random&color=fff&size=128`;
+    target.onerror = null; // Prevents infinite error loops
+  }
 }

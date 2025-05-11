@@ -1,7 +1,7 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import {
   Category,
   City,
@@ -34,9 +34,6 @@ export class ListingsService {
         params = params.append('equipment_rating', filters.equipment_rating_gte.toString());
       }
       if (filters.partner_rating_gte !== undefined && filters.partner_rating_gte > 0) {
-        // Pour JSON Server, si partner_rating est imbriqué, cela peut nécessiter une gestion spécifique
-        // ou que le backend expose un paramètre direct comme 'partner_rating_gte'.
-        // En supposant que le backend gère 'partner_rating' pour 'partner.partner_rating'.
         params = params.append('partner_rating', filters.partner_rating_gte.toString());
       }
     }
@@ -52,6 +49,24 @@ export class ListingsService {
     );
   }
 
+  getListingsByPartnerId(partnerId: number): Observable<Listing[]> {
+    return this.http.get<Listing[]>(`${this.apiUrl}/listings/partner/${partnerId}`).pipe(
+      catchError(this.handleError<Listing[]>('getListingsByPartnerId', []))
+    );
+  }
+
+  toggleListingStatus(id: number): Observable<{ status: string }> {
+    return this.http.patch<{ status: string }>(`${this.apiUrl}/listings/${id}/toggle-status`, {}).pipe(
+      catchError(this.handleError<{ status: string }>(`toggleListingStatus id=${id}`))
+    );
+  }
+
+  toggleListingArchivedStatus(id: number): Observable<{ message: string; warning?: string }> {
+    return this.http.patch<{ message: string; warning?: string }>(`${this.apiUrl}/listings/${id}/toggle-archived`, {}).pipe(
+      catchError(this.handleError<{ message: string; warning?: string }>(`toggleListingArchivedStatus id=${id}`))
+    );
+  }
+
   getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(`${this.apiUrl}/categories`).pipe(
       catchError(this.handleError<Category[]>('getCategories', []))
@@ -64,9 +79,27 @@ export class ListingsService {
     );
   }
 
+  createListing(formData: FormData): Observable<Listing> {
+    return this.http.post<Listing>(`${this.apiUrl}/listings`, formData).pipe(
+      catchError(this.handleError<Listing>('createListing'))
+    );
+  }
+
+  updateListing(id: number, data: Partial<Listing> | FormData): Observable<Listing> {
+    if (data instanceof FormData) {
+      return this.http.post<Listing>(`${this.apiUrl}/listings/${id}`, data).pipe(
+        catchError(this.handleError<Listing>(`updateListing id=${id} with FormData`))
+      );
+    } else {
+      return this.http.put<Listing>(`${this.apiUrl}/listings/${id}`, data).pipe(
+        catchError(this.handleError<Listing>(`updateListing id=${id} with JSON`))
+      );
+    }
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      console.error(`${operation} failed: ${error.message}`, error);
+    return (error: HttpErrorResponse): Observable<T> => {
+      console.error(`${operation} failed: ${error.message}`);
       return of(result as T);
     };
   }

@@ -13,17 +13,17 @@ import { Instance as FlatpickrInstance } from 'flatpickr/dist/types/instance';
 import * as L from 'leaflet';
 import { Observable, Subscription } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
-import { Listing, Review } from '../../../../shared/database.model';
-import { ListingsService } from '../../services/listings.service';
-import { TokenService } from '../../../auth/services/token.service';
-import {
-  ReservationsService,
-  CreateReservationRequest,
-} from '../../../my-rentals/services/reservations.service';
 import {
   ListingReview,
   ReviewService,
 } from '../../../../core/services/review.service';
+import { Listing, Review } from '../../../../shared/database.model';
+import { TokenService } from '../../../auth/services/token.service';
+import {
+  CreateReservationRequest,
+  ReservationsService,
+} from '../../../my-rentals/services/reservations.service';
+import { ListingsService } from '../../services/listings.service';
 
 const defaultIcon = L.icon({
   iconUrl: 'assets/images/marker-icon.png',
@@ -96,7 +96,10 @@ export class ListingDetailComponent
           this.listingData = listing;
           this.selectedImageUrl = listing.images?.[0]?.url || null;
           this.cdRef.markForCheck();
-          this.initializeMapAndCalendar();
+          // Retarder l'initialisation pour garantir que le DOM est prêt
+          setTimeout(() => {
+            this.initializeMapAndCalendar();
+          }, 100);
           this.loadListingReviews(listing.id);
         } else {
           this.router.navigate(['/not-found']);
@@ -108,9 +111,7 @@ export class ListingDetailComponent
 
   ngOnInit(): void {}
 
-  ngAfterViewInit(): void {
-    this.initializeMapAndCalendar();
-  }
+  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     if (this.routeSub) {
@@ -132,22 +133,26 @@ export class ListingDetailComponent
     this.cdRef.markForCheck();
   }
 
-  // Méthode qui récupère les éléments via document.getElementById
   private initializeMapAndCalendar(): void {
-    if (this.listingData) {
-      setTimeout(() => {
-        // Initialiser la carte si l'élément est présent et si non déjà initialisée
-        const mapDiv = document.getElementById('map');
-        if (mapDiv && !this.mapInitialized) {
-          this.initMap();
-        }
-        // Initialiser le calendrier
-        const calendarDiv = document.getElementById('reservation-calendar');
-        if (calendarDiv && !this.calendarInstance) {
-          this.initCalendar(calendarDiv);
-        }
-      }, 0);
+    if (!this.listingData) {
+      console.warn('listingData non disponible.');
+      return;
     }
+    // Vérifier et initialiser la carte
+    const mapDiv = document.getElementById('map');
+    if (mapDiv && !this.mapInitialized) {
+      this.initMap();
+    } else if (!mapDiv) {
+      console.warn('Conteneur #map non trouvé dans le template.');
+    }
+    // Vérifier et initialiser le calendrier
+    const calendarDiv = document.getElementById('reservation-calendar');
+    if (calendarDiv && !this.calendarInstance) {
+      this.initCalendar(calendarDiv);
+    } else if (!calendarDiv) {
+      console.warn('Conteneur #reservation-calendar non trouvé dans le template.');
+    }
+    this.cdRef.markForCheck();
   }
 
   private initMap(): void {
@@ -200,7 +205,12 @@ export class ListingDetailComponent
         })
         .addTo(this.map);
 
-      setTimeout(() => this.map.invalidateSize(), 100);
+      setTimeout(() => {
+        if (this.map) {
+          // Vérifier si la carte existe toujours (au cas où le composant serait détruit rapidement)
+          this.map.invalidateSize();
+        }
+      }, 100);
       this.cdRef.markForCheck();
     } catch (e) {
       console.error('Error initializing map:', e);
@@ -236,7 +246,9 @@ export class ListingDetailComponent
     });
 
     if (enabledDates.length === 0) {
-      console.warn("Aucune date de disponibilité n'est configurée pour cette annonce.");
+      console.warn(
+        "Aucune date de disponibilité n'est configurée pour cette annonce."
+      );
     }
   }
 
@@ -354,5 +366,14 @@ export class ListingDetailComponent
   // Add helper method for stars
   getStarArray2(rating: number): number[] {
     return Array(Math.floor(rating)).fill(0);
+  }
+
+  getDefaultAvatar(event: Event, username?: string): void {
+    const target = event.target as HTMLImageElement;
+    const name = username || 'Default User';
+
+    const encodedName = encodeURIComponent(name.trim()).replace(/%20/g, '+');
+    target.src = `https://ui-avatars.com/api/?name=${encodedName}&background=random&color=fff&size=128`;
+    target.onerror = null; // Prevents infinite error loops
   }
 }

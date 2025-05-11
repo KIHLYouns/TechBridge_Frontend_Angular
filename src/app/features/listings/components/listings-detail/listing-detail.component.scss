@@ -409,13 +409,11 @@
 /* Section de la carte de localisation */
 
 #map {
-  height: 250px;      /* Hauteur légèrement réduite pour un design intégré */
+  height: 250px; /* Hauteur définie pour la carte */
   width: 100%;
-  border-radius: 6px; /* Bordure moins arrondie */
-  margin-top: 15px;
-  z-index: 0;
-  border: 1px solid #dee2e6; /* Bordure subtile */
-  background-color: #f8f9fa; /* Fond affiché pendant le chargement */
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background-color: #f8f9fa;
 }
 
 /* Style pour l'attribution Leaflet */
@@ -443,6 +441,14 @@
   padding: 1rem;
   overflow: hidden; /* Pour éviter les débordements */
 }
+
+#reservation-calendar {
+  padding: 1rem; /* Espacement interne pour le calendrier */
+  background-color: var(--color-bg-light);
+  border-radius: 6px;
+  border: 1px solid var(--color-border-light);
+}
+
 .flatpickr-calendar {
   width: 100% !important;
   max-width: 100% !important;

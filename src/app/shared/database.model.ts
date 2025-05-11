@@ -34,14 +34,14 @@ export interface User {
   // Add other relevant user properties
 }
 
-export type ListingStatus = 'active' | 'archived' | 'paused';
+export type ListingStatus = 'active' | 'inactive' | 'archived';
 
 export interface Listing {
   id: number;
   title: string;
   description: string;
   price_per_day: number;
-  status: ListingStatus;
+  status?: ListingStatus; // Mise à jour pour correspondre aux valeurs du backend
   is_premium: boolean;
   premium_start_date?: string;
   premium_end_date?: string;

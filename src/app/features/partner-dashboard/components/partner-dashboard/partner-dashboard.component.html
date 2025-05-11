@@ -99,10 +99,6 @@
           <button *ngIf="listing.status === 'archived'" class="listing-action-btn activate" (click)="restoreListing(listing)">
             <i class="fas fa-undo"></i> Restore
           </button>
-
-          <button *ngIf="!listing.is_premium && listing.status === 'active'" class="listing-action-btn boost" (click)="boostListing(listing)">
-            <i class="fas fa-rocket"></i> Boost
-          </button>
         </div>
       </div>
     </div>

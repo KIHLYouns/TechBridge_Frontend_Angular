@@ -284,12 +284,12 @@
         <div class="premium-option">
           <h3>Premium Option</h3>
           <p>Highlight your listing on the platform</p>
-          <!-- Utiliser formControlName sur le conteneur des radios -->
-          <div class="premium-choices" formControlName="premium_duration">
+          <div class="premium-choices">
             <div class="premium-choice">
               <input
                 type="radio"
                 id="premium-none"
+                formControlName="premium_duration"
                 name="premium_duration"
                 [value]="0"
               />
@@ -299,31 +299,31 @@
               <input
                 type="radio"
                 id="premium-week"
+                formControlName="premium_duration"
                 name="premium_duration"
                 [value]="7"
               />
               <label for="premium-week">1 week ($5)</label>
-              <!-- Prix indicatifs -->
             </div>
             <div class="premium-choice">
               <input
                 type="radio"
                 id="premium-2weeks"
+                formControlName="premium_duration"
                 name="premium_duration"
                 [value]="15"
               />
               <label for="premium-2weeks">15 days ($9)</label>
-              <!-- Prix indicatifs -->
             </div>
             <div class="premium-choice">
               <input
                 type="radio"
                 id="premium-month"
+                formControlName="premium_duration"
                 name="premium_duration"
                 [value]="30"
               />
               <label for="premium-month">1 month ($15)</label>
-              <!-- Prix indicatifs -->
             </div>
           </div>
         </div>
