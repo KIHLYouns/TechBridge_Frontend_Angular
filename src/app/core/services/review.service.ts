@@ -64,7 +64,6 @@ export interface ListingReview {
   };
 }
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -73,10 +72,8 @@ export class ReviewService {
 
   constructor(private http: HttpClient) {}
 
-  // Lina
   getUserReviews(userId: number): Observable<UserReviewsResponse> {
-    // return this.http.get<UserReviewsResponse>(`${this.apiUrl}/users/${userId}/reviews`);
-    const mockResponse: UserReviewsResponse = {
+  /*  const mockResponse: UserReviewsResponse = {
       received_reviews: [
         {
           id: 245,
@@ -169,81 +166,89 @@ export class ReviewService {
           type: 'forPartner',
         },
       ],
-    };
-    return of(mockResponse).pipe(delay(800));
+    }; */
+  //  return of(mockResponse).pipe(delay(800));
+    return this.http.get<UserReviewsResponse>(`/api/users/${userId}/reviews`);
   }
 
-  // Lina
   submitReview(request: ReviewSubmitRequest): Observable<void> {
     // return this.http.post<Review>(`${this.apiUrl}/reviews`, request);
-    return of(undefined).pipe(
+    /* return of(undefined).pipe(
       delay(3000),
       map(() => void 0) // Explicitly return void to match Observable<void>
-    );
+    ); */
+    return this.http.post<void>(`/api/reviews`, request);
   }
 
-  // Lina
-  hasUserReviewedReservation(userId: number | null, reservation_id: number): Observable<boolean> {
+  hasUserReviewedReservation(
+    userId: number | null,
+    reservation_id: number
+  ): Observable<boolean> {
     // return this.http.get<boolean>(`${this.apiUrl}/reviews/check?userId=${userId}&reservation_id=${reservation_id}`);
-    const hasReviewed = Math.random() >= 0.5;
-    return of(hasReviewed).pipe(delay(300));
+   /* const hasReviewed = Math.random() >= 0.5;
+    return of(hasReviewed).pipe(delay(300)); */
+    return this.http.get<boolean>(`/api/reviews/check?userId=${userId}&reservation_id=${reservation_id}`);
   }
 
-  // Implementation for the service method
+  // To Test with the backend !!
   getClientReviews(clientId: number): Observable<ClientReview[]> {
-    // In a real app: return this.http.get<ClientReview[]>(`${this.apiUrl}/clients/${clientId}/reviews`);
-    const mockReviews = getMockClientReviews(clientId);
+    // In a real app: return this.http.get<ClientReview[]>(`${this.apiUrl}/reviews/clients/${clientId}`);
+    /*const mockReviews = getMockClientReviews(clientId);
     const randomDelay = 300 + Math.floor(Math.random() * 500);
-    return of(mockReviews).pipe(delay(randomDelay));
+    return of(mockReviews).pipe(delay(randomDelay)); */
+      return this.http.get<{total: number, data: ClientReview[]}>(`/api/reviews/clients/${clientId}`)
+           .pipe(map(response => response.data));
   }
 
-getListingReviews(listingId: number): Observable<ListingReview[]> {
-  // In real app: return this.http.get<ListingReview[]>(`${this.apiUrl}/listings/${listingId}/reviews`);
-  const mockReviews: ListingReview[] = [
-    {
-      id: 501,
-      rating: 5,
-      comment: "Excellent camera! Perfect condition and worked flawlessly for my photoshoot. Highly recommended!",
-      created_at: "2025-03-15T14:30:00Z",
-      reviewer: {
-        id: 201,
-        username: "marcus_photo",
-        avatar_url: "https://ui-avatars.com/api/?name=Marcus+Photo"
-      }
-    },
-    {
-      id: 502,
-      rating: 4,
-      comment: "Great equipment, easy to use. Battery life was a bit shorter than expected, but overall a positive experience.",
-      created_at: "2025-02-10T09:15:00Z",
-      reviewer: {
-        id: 202,
-        username: "sarah_filmmaker",
-        avatar_url: "https://ui-avatars.com/api/?name=Sarah+Filmmaker"
-      }
-    },
-    {
-      id: 503,
-      rating: 5,
-      comment: "This equipment exceeded my expectations. The owner provided excellent instructions and the quality was top-notch.",
-      created_at: "2025-01-20T16:45:00Z",
-      reviewer: {
-        id: 203,
-        username: "michael_studio",
-        avatar_url: "https://ui-avatars.com/api/?name=Michael+Studio"
-      }
-    }
-  ];
-  
-  const randomDelay = 300 + Math.floor(Math.random() * 500);
-  return of(mockReviews).pipe(delay(randomDelay));
-}
+  getListingReviews(listingId: number): Observable<ListingReview[]> {
+    // In real app: return this.http.get<ListingReview[]>(`${this.apiUrl}/listings/${listingId}/reviews`);
+   /* const mockReviews: ListingReview[] = [
+      {
+        id: 501,
+        rating: 5,
+        comment:
+          'Excellent camera! Perfect condition and worked flawlessly for my photoshoot. Highly recommended!',
+        created_at: '2025-03-15T14:30:00Z',
+        reviewer: {
+          id: 201,
+          username: 'marcus_photo',
+          avatar_url: 'https://ui-avatars.com/api/?name=Marcus+Photo',
+        },
+      },
+      {
+        id: 502,
+        rating: 4,
+        comment:
+          'Great equipment, easy to use. Battery life was a bit shorter than expected, but overall a positive experience.',
+        created_at: '2025-02-10T09:15:00Z',
+        reviewer: {
+          id: 202,
+          username: 'sarah_filmmaker',
+          avatar_url: 'https://ui-avatars.com/api/?name=Sarah+Filmmaker',
+        },
+      },
+      {
+        id: 503,
+        rating: 5,
+        comment:
+          'This equipment exceeded my expectations. The owner provided excellent instructions and the quality was top-notch.',
+        created_at: '2025-01-20T16:45:00Z',
+        reviewer: {
+          id: 203,
+          username: 'michael_studio',
+          avatar_url: 'https://ui-avatars.com/api/?name=Michael+Studio',
+        },
+      },
+    ]; 
 
-
+    const randomDelay = 300 + Math.floor(Math.random() * 500);
+    return of(mockReviews).pipe(delay(randomDelay)); */
+    return this.http.get<ListingReview[]>(`/api/listings/${listingId}/reviews`);
+  }
 }
 
 // Mock data function for client reviews
-function getMockClientReviews(clientId: number): ClientReview[] {
+/*function getMockClientReviews(clientId: number): ClientReview[] {
   // Create different reviews based on client ID for variety
   const mockReviewsBase: ClientReview[] = [
     {
@@ -482,4 +487,4 @@ function getMockClientReviews(clientId: number): ClientReview[] {
     const seed = clientId % 10;
     return mockReviewsBase.filter((_, index) => (index + seed) % 3 === 0);
   }
-}
+} */

@@ -6,8 +6,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'listings', pathMatch: 'full' },
   { path: 'listings', loadChildren: () => import('./features/listings/listings.module').then(m => m.ListingsModule) },
   { path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) },
-  { 
-    path: 'my-rentals', 
+  {
+    path: 'my-rentals',
     canActivate: [AuthGuard],
     loadChildren: () => import('./features/my-rentals/my-rentals.module').then(m => m.MyRentalsModule)
   },

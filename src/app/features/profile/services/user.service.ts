@@ -1,6 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, delay, Observable, of, tap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  delay,
+  map,
+  Observable,
+  of,
+  tap,
+  throwError,
+} from 'rxjs';
 import { TokenService } from '../../auth/services/token.service';
 import { User } from '../../../shared/database.model'; // Adjust path as needed
 
@@ -8,8 +16,7 @@ import { User } from '../../../shared/database.model'; // Adjust path as needed
   providedIn: 'root',
 })
 export class UserService {
-
-  private mockUser: User = {
+  /*private mockUser: User = {
     id: 105,
     username: 'younsk', // Added username
     firstname: 'Youns',
@@ -26,8 +33,8 @@ export class UserService {
     is_partner: false, // Added is_partner
     latitude: 35.5785, // Added latitude
     longitude: -5.3684, // Added longitude
-    client_reviews: 5 // Example value for review count
-  };
+    client_reviews: 5, // Example value for review count
+  };*/
 
   private readonly CURRENT_USER_KEY = 'currentUser';
 
@@ -38,7 +45,8 @@ export class UserService {
   public isPartner$ = this.isPartnerSubject.asObservable();
 
   private interfaceToggleStateSubject = new BehaviorSubject<boolean>(false);
-public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
+  public interfaceToggleState$ =
+    this.interfaceToggleStateSubject.asObservable();
 
   private apiUrl = '/api/users'; // Example API endpoint
 
@@ -75,9 +83,7 @@ public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
   // User management
 
   public getUserById(userId: number): Observable<User> {
-    console.log(`Getting user by ID: ${userId}`);
-
-    return of(this.mockUser).pipe(
+    /*return of(this.mockUser).pipe(
       delay(300),
       tap((user) => {
         // Save to localStorage
@@ -85,7 +91,19 @@ public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
         // Update partner status
         this.isPartnerSubject.next(user.is_partner);
       })
-    );
+    );*/
+
+    return this.http
+      .get<{ success: boolean; data: User }>(`/api/users/${userId}/profile`)
+      .pipe(
+        map((response) => response.data),
+        tap((user) => {
+          // Save to localStorage
+          this.saveUserToStorage(user);
+          // Update partner status
+          this.isPartnerSubject.next(user.is_partner);
+        })
+      );
   }
 
   public getCurrentUserFromLocalStorage(): User | null {
@@ -124,6 +142,30 @@ public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
         this.isPartnerSubject.next(true);
       })
     );
+
+    /*
+    const userId = this.getCurrentUserId();
+  // Need to implement endpoint to match backend
+  return this.http.patch<{success: boolean}>(`/api/users/${userId}/enable-partner`, {}).pipe(
+    map(response => response.success),
+    tap((success) => {
+      if (success) {
+        // Get current user from storage
+        const user = this.getCurrentUserFromLocalStorage();
+        if (!user) {
+          console.error('No user found in storage');
+          return;
+        }
+        // Update is_partner flag
+        user.is_partner = true;
+        // Save updated user to storage
+        this.saveUserToStorage(user);
+        // Publish partner status change
+        this.isPartnerSubject.next(true);
+      }
+    })
+  );
+    */
   }
 
   getCurrentUserId(): number | null {
@@ -135,20 +177,21 @@ public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
     if (!userId) {
       return of({} as User);
     }
-     return this.getUserById(userId);
+    return this.getUserById(userId);
   }
   // Method to update a user's profile
   updateUserProfile(userId: number, userData: Partial<User>): Observable<User> {
-    console.log('Updating user profile:', userId, userData);
-
     // Merge existing data with updates
-    const updatedMockUser: User = {
+    /*const updatedMockUser: User = {
       ...this.mockUser, // Start with current data
       ...userData, // Apply updates
       // Ensure avatar updates if name changes (example logic)
-      avatar_url: userData.firstname || userData.lastname
-        ? `https://ui-avatars.com/api/?name=${userData.firstname || this.mockUser.firstname}+${userData.lastname || this.mockUser.lastname}`
-        : this.mockUser.avatar_url,
+      avatar_url:
+        userData.firstname || userData.lastname
+          ? `https://ui-avatars.com/api/?name=${
+              userData.firstname || this.mockUser.firstname
+            }+${userData.lastname || this.mockUser.lastname}`
+          : this.mockUser.avatar_url,
     };
     console.log('Returning updated mock user:', updatedMockUser);
     return of(updatedMockUser).pipe(
@@ -156,9 +199,18 @@ public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
       tap((data) => {
         this.saveUserToStorage(data);
       })
-    );
-    // --- End Mock Update ---
-  }
+    );*/
 
-  // Add other methods as needed (e.g., uploadAvatar)
+    return this.http
+      .patch<{ success: boolean; message: string; data: User }>(
+        `/api/users/${userId}/profile`,
+        userData
+      )
+      .pipe(
+        map((response) => response.data),
+        tap((data) => {
+          this.saveUserToStorage(data);
+        })
+      );
+  }
 }
