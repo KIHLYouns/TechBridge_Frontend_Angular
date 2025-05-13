@@ -5,7 +5,6 @@
   <!-- Profile Header -->
   <div class="profile-header" *ngIf="user && !isLoadingUser">
     <div class="profile-avatar-container">
-      <!-- Use default avatar if user.avatar_url is null/empty -->
       <img
         [src]="user.avatar_url || defaultAvatar"
         alt="Profile Avatar"
@@ -22,20 +21,16 @@
     <div class="profile-info">
       <div class="profile-name-container">
         <h1 class="profile-name">{{ user.firstname }} {{ user.lastname }}</h1>
-        <!-- Display Username -->
-        <span class="profile-username" *ngIf="user.username"
-          >({{ user.username }})</span
-        >
+        <span class="profile-username" *ngIf="user.username">
+          ({{ user.username }})
+        </span>
       </div>
-      <!-- Display city name if available -->
       <p class="profile-location" *ngIf="user.city?.name">
         <i class="fas fa-map-marker-alt"></i> {{ user.city?.name }}
       </p>
-      <!-- Display address if city is not available but address is -->
       <p class="profile-location" *ngIf="!user.city?.name && user.address">
         <i class="fas fa-map-marker-alt"></i> {{ user.address | slice : 0 : 30
         }}{{ user.address && user.address.length > 30 ? "..." : "" }}
-        <!-- Show truncated address -->
       </p>
       <p
         class="profile-location"
@@ -118,11 +113,17 @@
     </div>
   </div>
 
-  <!-- Section pour devenir partenaire (affichée si l'utilisateur N'EST PAS partenaire) -->
-  <div *ngIf="user?.is_partner === false" [formGroup]="profileForm" class="become-partner-section">
+  <!-- Section for becoming a partner -->
+  <div
+    *ngIf="user?.is_partner === false"
+    [formGroup]="profileForm"
+    class="become-partner-section"
+  >
     <h3>Become a TechBridge Partner</h3>
-    <p>Offer your equipment for rent and manage your bookings directly from the platform.</p>
-
+    <p>
+      Offer your equipment for rent and manage your bookings directly from the
+      platform.
+    </p>
     <div class="terms-section">
       <div class="checkbox-group">
         <input
@@ -132,28 +133,35 @@
         />
         <label for="accept-partner-terms" class="checkbox-label">
           I accept the
-          <a href="/partner-terms" target="_blank" class="terms-link">Specific Terms for Partners</a>
+          <a href="/partner-terms" target="_blank" class="terms-link"
+            >Specific Terms for Partners</a
+          >
           and the applicable regulations for equipment rental.
         </label>
       </div>
-      <!-- Afficher l'erreur si la case n'est pas cochée et qu'on a essayé de soumettre (ou si elle est touchée) -->
-       <div *ngIf="f['isPartner'].invalid && (f['isPartner'].touched || f['isPartner'].dirty)" class="validation-error">
-          You must accept the partner terms.
-        </div>
+      <div
+        *ngIf="
+          f['isPartner'].invalid &&
+          (f['isPartner'].touched || f['isPartner'].dirty)
+        "
+        class="validation-error"
+      >
+        You must accept the partner terms.
+      </div>
     </div>
-
     <button
       class="become-partner-btn"
       type="button"
       (click)="becomePartner()"
-      [disabled]="f['isPartner'].invalid || isBecomingPartner">
+      [disabled]="f['isPartner'].invalid || isBecomingPartner"
+    >
       <i *ngIf="isBecomingPartner" class="fas fa-spinner fa-spin"></i>
       <span *ngIf="!isBecomingPartner">Become a Partner</span>
       <span *ngIf="isBecomingPartner">Switching...</span>
     </button>
   </div>
 
-  <!-- Section du switch (affichée si l'utilisateur EST partenaire) -->
+  <!-- Section for partner toggle -->
   <div *ngIf="user?.is_partner === true" class="partner-toggle-section">
     <h3>Switch Interface</h3>
     <div class="toggle-container">
@@ -171,10 +179,10 @@
       </span>
     </div>
     <p class="toggle-description">
-      Toggle this switch to change to the client interface. You can switch back at any time from your profile.
+      Toggle this switch to change to the client interface. You can switch back
+      at any time from your profile.
     </p>
-  </div>  
-</div>
+  </div>
 
   <!-- Profile Tabs -->
   <div class="profile-tabs" *ngIf="user && !isLoadingUser">
@@ -220,7 +228,6 @@
               >
             </div>
           </div>
-
           <div class="form-group">
             <label for="lastname">Last Name</label>
             <input type="text" id="lastname" formControlName="lastname" />
@@ -237,8 +244,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Username -->
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" id="username" formControlName="username" />
@@ -264,7 +269,6 @@
             >
           </div>
         </div>
-
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" formControlName="email" />
@@ -282,7 +286,6 @@
             >
           </div>
         </div>
-
         <div class="form-group">
           <label for="phone">Phone</label>
           <input
@@ -292,12 +295,10 @@
             placeholder="e.g., 0612345678"
           />
         </div>
-
         <div class="form-group">
           <label for="address">Address</label>
           <textarea id="address" formControlName="address" rows="3"></textarea>
         </div>
-
         <button
           type="submit"
           class="save-btn"
@@ -308,8 +309,9 @@
         <small
           *ngIf="profileForm.pristine && !isSaving"
           class="pristine-message"
-          >No changes to save.</small
         >
+          No changes to save.
+        </small>
       </form>
     </div>
 
@@ -318,7 +320,6 @@
       class="tab-content reviews-tab-content"
       *ngIf="activeTab === 'reviews'"
     >
-      <!-- Review Sub-Tabs -->
       <div class="review-sub-tabs">
         <button
           class="sub-tab-btn"
@@ -335,8 +336,6 @@
           Reviews Given ({{ outgoingReviews.length }})
         </button>
       </div>
-
-      <!-- Incoming Reviews Section -->
       <div *ngIf="activeReviewSubTab === 'incoming'">
         <h2>Reviews Received</h2>
         <div *ngIf="isLoadingIncomingReviews" class="loading-indicator">
@@ -385,8 +384,6 @@
           <p *ngIf="!isLoadingIncomingReviews">No reviews received yet.</p>
         </ng-template>
       </div>
-
-      <!-- Outgoing Reviews Section -->
       <div *ngIf="activeReviewSubTab === 'outgoing'">
         <h2>Reviews Given</h2>
         <div *ngIf="isLoadingOutgoingReviews" class="loading-indicator">
@@ -441,8 +438,5 @@
         </ng-template>
       </div>
     </div>
-    <!-- End Reviews Tab Content -->
   </div>
-  <!-- End profile-content -->
 </div>
-<!-- End profile-container -->

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { finalize } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import {
   Review,
   ReviewService,
@@ -8,6 +8,7 @@ import {
 } from '../../../../core/services/review.service';
 import { User } from '../../../../shared/database.model';
 import { UserService } from '../../services/user.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -100,28 +101,27 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (!this.user?.id) return;
     this.isLoadingIncomingReviews = true;
     this.reviewService
-      .getReviewsReceivedForUser(this.user.id)
+      .getUserReviews(this.user.id)
       .pipe(finalize(() => (this.isLoadingIncomingReviews = false)))
       .subscribe({
-        next: (reviews) => (this.reviews = reviews),
-        error: (err) => console.error('Error loading reviews:', err),
+        next: (response: UserReviewsResponse) => {
+          this.reviews = response.received_reviews;
+        },
+        error: (err: any) => console.error('Error loading reviews:', err),
       });
   }
 
   loadOutgoingReviews(): void {
     if (!this.user?.id) return;
     this.isLoadingOutgoingReviews = true;
-
     this.reviewService
-      .getReviewsGivenByUser(this.user.id)
+      .getUserReviews(this.user.id)
       .pipe(finalize(() => (this.isLoadingOutgoingReviews = false)))
       .subscribe({
-        next: (reviews) => {
-          this.outgoingReviews = reviews;
+        next: (response: UserReviewsResponse) => {
+          this.outgoingReviews = response.given_reviews;
         },
-        error: (err) => {
-          console.error('Error loading outgoing reviews:', err);
-        },
+        error: (err: any) => console.error('Error loading outgoing reviews:', err),
       });
   }
 
