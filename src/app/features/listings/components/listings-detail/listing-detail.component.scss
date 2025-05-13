@@ -442,13 +442,6 @@
   overflow: hidden; /* Pour éviter les débordements */
 }
 
-#reservation-calendar {
-  padding: 1rem; /* Espacement interne pour le calendrier */
-  background-color: var(--color-bg-light);
-  border-radius: 6px;
-  border: 1px solid var(--color-border-light);
-}
-
 .flatpickr-calendar {
   width: 100% !important;
   max-width: 100% !important;

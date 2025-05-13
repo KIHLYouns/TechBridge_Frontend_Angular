@@ -88,7 +88,9 @@
       <img [src]="listing.images?.[0]?.full_url || 'assets/images/item-placeholder.jpg'" [alt]="listing.title" class="listing-image" />
       <div class="listing-details">
         <div class="listing-header-row">
-          <h3 class="listing-title">{{ listing.title }}</h3>
+          <a [routerLink]="['/listings', listing.id]" class="listing-title-link">
+            <h3 class="listing-title">{{ listing.title }}</h3>
+          </a>
           <div class="listing-price">€{{ listing.price_per_day }}/day</div>
         </div>
         <div class="listing-actions">

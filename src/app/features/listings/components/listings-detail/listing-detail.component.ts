@@ -94,7 +94,7 @@ export class ListingDetailComponent
       tap((listing) => {
         if (listing) {
           this.listingData = listing;
-          this.selectedImageUrl = listing.images?.[0]?.url || null;
+          this.selectedImageUrl = listing.images?.[0]?.full_url || null;
           this.cdRef.markForCheck();
           // Retarder l'initialisation pour garantir que le DOM est prêt
           setTimeout(() => {

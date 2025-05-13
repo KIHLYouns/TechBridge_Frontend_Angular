@@ -238,6 +238,18 @@
   gap: 1rem;
   margin-bottom: 1rem;
 }
+.listing-title-link {
+  text-decoration: none; // Enlève le soulignement du lien
+  color: inherit; // Fait hériter la couleur du texte parent
+  flex-grow: 1;
+  white-space: nowrap; /* Prevents wrapping */
+  overflow: hidden; /* Hides overflowed text */
+  text-overflow: ellipsis; /* Adds ellipsis for overflowed text */
+
+  &:hover {
+    text-decoration: underline; // Optionnel: souligner au survol
+  }
+}
 
 .listing-title {
   font-weight: var(--font-semibold);

@@ -16,13 +16,13 @@
       <div>
         <!-- Galerie d'images -->
         <div class="main-image-container">
-          <img [src]="selectedImageUrl || listing.images?.[0]?.url || 'assets/images/item-placeholder.jpg'"
+          <img [src]="selectedImageUrl || listing.images?.[0]?.full_url || 'assets/images/item-placeholder.jpg'"
             [alt]="listing.title" id="main-image" class="main-image">
           <div *ngIf="listing.is_premium" class="premium-tag">Premium</div>
         </div>
         <div class="thumbnail-container" *ngIf="listing.images && listing.images.length > 1">
-          <img *ngFor="let image of listing.images" [src]="image.url" alt="Thumbnail" class="thumbnail"
-            [class.active]="image.url === (selectedImageUrl || listing.images[0].url)" (click)="selectImage(image.url)">
+          <img *ngFor="let image of listing.images" [src]="image.full_url" alt="Thumbnail" class="thumbnail"
+            [class.active]="image.full_url === (selectedImageUrl || listing.images[0].full_url)" (click)="selectImage(image.full_url)">
         </div>
         <!-- Contenu principal -->
         <div class="detail-content">
