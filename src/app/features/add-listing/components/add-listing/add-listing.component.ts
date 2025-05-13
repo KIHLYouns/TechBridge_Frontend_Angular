@@ -18,20 +18,22 @@ export class AddListingComponent implements OnInit, OnDestroy {
   listingForm!: FormGroup;
   categories$!: Observable<Category[]>;
   selectedFiles: File[] = [];
+  existingImages: { id: number, url: string }[] = [];
+  imagesToDelete_ids: number[] = [];
   imagePreviews: string[] = [];
-  existingImageUrls: { id: number, url: string }[] = [];
   isEditMode = false;
   listing_id: number | null = null;
   isLoading = false;
   errorMessage: string | null = null;
   private routeSub!: Subscription;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private fb: FormBuilder,
     private listingsService: ListingsService,
     private userService: UserService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +53,7 @@ export class AddListingComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.routeSub) this.routeSub.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   private initForm(): void {
@@ -61,9 +64,21 @@ export class AddListingComponent implements OnInit, OnDestroy {
       description: ['', Validators.required],
       availabilities: this.fb.array([]),
       delivery_option: [false],
-      is_premium: [false],
       premium_duration: [0, Validators.required]
     });
+
+    /* this.subscriptions.add(
+      this.listingForm.get('is_premium')!.valueChanges.subscribe(isPremium => {
+        const durationControl = this.listingForm.get('premium_duration');
+        if (isPremium) {
+          durationControl!.enable();
+          durationControl!.setValue(durationControl!.value || 7);
+        } else {
+          durationControl!.disable();
+          durationControl!.setValue(null);
+        }
+      })
+    ); */
   }
 
   get availabilitiesFormArray(): FormArray {
@@ -91,7 +106,8 @@ export class AddListingComponent implements OnInit, OnDestroy {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const files = Array.from(input.files);
-      files.slice(0, 5 - this.selectedFiles.length).forEach(file => {
+      const remainingSlots = 5 - this.imagePreviews.length;
+      files.slice(0, remainingSlots).forEach(file => {
         if (file.type.match('image.*') && file.size <= 5 * 1024 * 1024) {
           this.selectedFiles.push(file);
           const reader = new FileReader();
@@ -104,56 +120,111 @@ export class AddListingComponent implements OnInit, OnDestroy {
   }
 
   removeImage(index: number): void {
-    this.selectedFiles.splice(index, 1);
+    const removedPreviewUrl = this.imagePreviews[index];
+    const existingImgIndex = this.existingImages.findIndex(img => img.url === removedPreviewUrl);
+    if (existingImgIndex !== -1) {
+      this.imagesToDelete_ids.push(this.existingImages[existingImgIndex].id);
+      this.existingImages.splice(existingImgIndex, 1);
+    } else {
+      const newFileIndex = index - this.existingImages.length;
+      if (newFileIndex >= 0) this.selectedFiles.splice(newFileIndex, 1);
+    }
     this.imagePreviews.splice(index, 1);
   }
 
   private loadListingData(id: number): void {
-    this.listingsService.getListingById(id).subscribe(listing => {
-      if (listing) {
-        this.listingForm.patchValue({
-          title: listing.title,
-          category_id: listing.category?.id,
-          price_per_day: listing.price_per_day,
-          description: listing.description,
-          delivery_option: listing.delivery_option,
-          premium_duration: listing.is_premium ? 30 : 0
-        });
-        this.availabilitiesFormArray.clear();
-        listing.availabilities?.forEach(avail =>
-          this.availabilitiesFormArray.push(this.createAvailabilityPeriod(avail.start_date, avail.end_date))
-        );
-        this.imagePreviews = listing.images?.map(img => img.url) || [];
-        this.existingImageUrls = listing.images?.map(img => ({ id: img.id, url: img.url })) || [];
+    this.isLoading = true;
+    this.listingsService.getListingById(id).pipe(
+      finalize(() => this.isLoading = false)
+    ).subscribe({
+      next: (listing) => {
+        if (listing) {
+          let calculatedPremiumDuration = 0;
+          let isCurrentlyPremiumAndActive = false;
+
+          if (listing.is_premium && listing.premium_start_date && listing.premium_end_date) {
+            const endDate = new Date(listing.premium_end_date);
+            if (endDate > new Date()) { // Vérifier si la période premium est toujours active
+              isCurrentlyPremiumAndActive = true;
+              const startDate = new Date(listing.premium_start_date);
+              // Calculer la durée originale de la période premium
+              const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+              const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+              if ([7, 15, 30].includes(diffDays)) {
+                calculatedPremiumDuration = diffDays;
+              }
+            }
+          }
+
+          this.listingForm.patchValue({
+            title: listing.title,
+            category_id: listing.category?.id,
+            price_per_day: listing.price_per_day,
+            description: listing.description,
+            delivery_option: listing.delivery_option,
+            premium_duration: calculatedPremiumDuration
+          });
+
+          const premiumDurationControl = this.listingForm.get('premium_duration');
+          if (premiumDurationControl) {
+            if (isCurrentlyPremiumAndActive) {
+              premiumDurationControl.disable(); // Désactiver si déjà premium et actif
+            } else {
+              premiumDurationControl.enable();  // Activer sinon (par ex. premium expiré ou jamais premium)
+            }
+          }
+
+          this.availabilitiesFormArray.clear();
+          if (listing.availabilities && listing.availabilities.length > 0) {
+            listing.availabilities?.forEach(avail =>
+              this.availabilitiesFormArray.push(this.createAvailabilityPeriod(avail.start_date, avail.end_date))
+            );
+          } else {
+            this.addAvailabilityPeriod();
+          }
+          this.existingImages = listing.images?.map(img => ({ id: img.id, url: img.full_url })) || [];
+          this.imagePreviews = this.existingImages.map(img => img.url);
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        this.errorMessage = "Failed to load listing data. " + (err.error?.message || err.message);
       }
     });
   }
 
   onSubmit(): void {
-    if (this.listingForm.invalid) {
-      this.listingForm.markAllAsTouched();
-      this.errorMessage = "Please fill all required fields correctly.";
+    if (this.listingForm.invalid || (!this.isEditMode && this.selectedFiles.length === 0 && this.imagePreviews.length === 0)) {
+      this.errorMessage = "Please fill all required fields correctly and add at least one image.";
+      Object.values(this.listingForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      if (this.availabilitiesFormArray.invalid) {
+        this.availabilitiesFormArray.markAllAsTouched();
+      }
       return;
     }
 
     this.isLoading = true;
-    this.errorMessage = null;
-
-    const formValue = this.listingForm.value;
     const formData = new FormData();
-    const partnerId = this.userService.getCurrentUserId();
+    // Utilisez getRawValue() pour obtenir toutes les valeurs, y compris celles des contrôles désactivés
+    const formValue = this.listingForm.getRawValue();
 
+    const partnerId = this.userService.getCurrentUserId();
     if (partnerId) {
       formData.append('partner_id', partnerId.toString());
     } else {
-      this.errorMessage = "User not identified. Cannot create listing.";
+      this.errorMessage = "User not identified. Cannot create or update listing.";
       this.isLoading = false;
       return;
     }
 
-    if (!this.isEditMode) { // Seulement pour la création
-      formData.append('status', 'active'); // Valeur par défaut pour une nouvelle annonce
+    if (!this.isEditMode) {
+      formData.append('status', 'active'); // Statut par défaut pour les nouvelles annonces
     }
+    // Pour le mode édition, le statut est géré séparément par d'autres actions (pause, archive)
+    // et ne devrait pas être modifié ici sauf si c'est une intention explicite.
+    // Si vous avez besoin de modifier le statut via ce formulaire en mode édition, ajoutez un champ de statut.
 
     formData.append('title', formValue.title);
     formData.append('category_id', formValue.category_id);
@@ -161,43 +232,44 @@ export class AddListingComponent implements OnInit, OnDestroy {
     formData.append('description', formValue.description);
     formData.append('delivery_option', formValue.delivery_option ? '1' : '0');
 
-    const premiumDuration = parseInt(formValue.premium_duration, 10);
-    formData.append('is_premium', premiumDuration > 0 ? '1' : '0');
-    if (premiumDuration > 0) {
-      formData.append('premium_duration', premiumDuration.toString());
+    const premiumDurationControl = this.listingForm.get('premium_duration');
+
+    // Envoyer les informations premium seulement si :
+    // 1. C'est une nouvelle annonce (isEditMode = false)
+    // 2. C'est une annonce existante ET le contrôle premium_duration est activé (c.a.d. pas un premium actif non modifiable)
+    if (!this.isEditMode || (premiumDurationControl && premiumDurationControl.enabled)) {
+      formData.append('is_premium', formValue.premium_duration > 0 ? '1' : '0');
+      if (formValue.premium_duration > 0) {
+        formData.append('premium_duration', formValue.premium_duration.toString());
+      }
     }
+    // Si c'est le mode édition et que premiumDurationControl est désactivé,
+    // is_premium et premium_duration ne sont PAS envoyés.
+    // Le backend devrait alors préserver le statut premium existant.
+
 
     formValue.availabilities.forEach((avail: { start_date: string, end_date: string }, index: number) => {
       formData.append(`availabilities[${index}][start_date]`, avail.start_date);
       formData.append(`availabilities[${index}][end_date]`, avail.end_date);
     });
 
-    // Gestion des images
-    this.imagePreviews.forEach(imgPreview => {
-      if ((imgPreview as any).file && !(imgPreview as any).markedForRemoval) {
-        formData.append('new_images[]', (imgPreview as any).file, (imgPreview as any).file.name);
-      } else if ((imgPreview as any).id && (imgPreview as any).markedForRemoval) {
-        formData.append('deleted_images[]', (imgPreview as any).id.toString());
-      }
-    });
-
-    if (this.isEditMode && this.listing_id) {
-      formData.append('_method', 'PUT');
-
-      this.listingsService.updateListing(this.listing_id, formData).pipe(
-        finalize(() => this.isLoading = false)
-      ).subscribe({
-        next: () => this.router.navigate(['/partner-dashboard']),
-        error: (err: HttpErrorResponse) => this.handleFormError(err, 'updating')
-      });
-    } else {
-      this.listingsService.createListing(formData).pipe(
-        finalize(() => this.isLoading = false)
-      ).subscribe({
-        next: () => this.router.navigate(['/partner-dashboard']),
-        error: (err: HttpErrorResponse) => this.handleFormError(err, 'creating')
-      });
+    this.selectedFiles.forEach(file => formData.append('new_images[]', file, file.name));
+    if (this.isEditMode) { // N'envoyer les images à supprimer qu'en mode édition
+        this.imagesToDelete_ids.forEach(id => formData.append('deleted_images[]', id.toString()));
     }
+
+
+    const request = this.isEditMode && this.listing_id
+      ? this.listingsService.updateListing(this.listing_id, formData)
+      : this.listingsService.createListing(formData);
+
+    request.pipe(finalize(() => this.isLoading = false)).subscribe({
+      next: (response) => {
+        // Naviguer vers le tableau de bord du partenaire après succès
+        this.router.navigate(['/partner-dashboard']);
+      },
+      error: (err: HttpErrorResponse) => this.handleFormError(err, this.isEditMode ? 'updating' : 'creating')
+    });
   }
 
   onCancel(): void {
@@ -207,5 +279,15 @@ export class AddListingComponent implements OnInit, OnDestroy {
   private handleFormError(err: HttpErrorResponse, action: string): void {
     this.errorMessage = `An error occurred while ${action} the listing. Please try again later.`;
     console.error(err);
+    if (err.error && err.error.errors) {
+      this.errorMessage = "Please correct the validation errors.";
+      const validationErrors = err.error.errors;
+      Object.keys(validationErrors).forEach(key => {
+        const control = this.listingForm.get(key);
+        if (control) {
+          control.setErrors({ serverError: validationErrors[key][0] });
+        }
+      });
+    }
   }
 }

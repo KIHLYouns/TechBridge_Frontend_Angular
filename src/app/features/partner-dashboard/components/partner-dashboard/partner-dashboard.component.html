@@ -4,6 +4,18 @@
     <button class="primary-button" (click)="goToAddListing()"> <i class="fas fa-plus"></i> Add Listing </button>
   </div>
 
+  <!-- Toasts pour messages d'erreur et de succès -->
+  <div class="toast-container">
+    <div *ngIf="errorMessage" class="toast toast-danger">
+      {{ errorMessage }}
+      <button class="toast-close" (click)="clearMessage('error')">&times;</button>
+    </div>
+    <div *ngIf="successMessage" class="toast toast-success">
+      {{ successMessage }}
+      <button class="toast-close" (click)="clearMessage('success')">&times;</button>
+    </div>
+  </div>
+
   <div class="stats-overview">
     <div class="stat-card">
       <div class="stat-icon">
@@ -73,7 +85,7 @@
           <div *ngIf="listing.is_premium" class="premium-badge">Premium</div>
         </div>
       </div>
-      <img [src]="listing.images?.[0]?.url || 'assets/images/item-placeholder.jpg'" [alt]="listing.title" class="listing-image" />
+      <img [src]="listing.images?.[0]?.full_url || 'assets/images/item-placeholder.jpg'" [alt]="listing.title" class="listing-image" />
       <div class="listing-details">
         <div class="listing-header-row">
           <h3 class="listing-title">{{ listing.title }}</h3>
@@ -88,7 +100,7 @@
             <button *ngSwitchCase="'active'" class="listing-action-btn pause" (click)="pauseListing(listing)">
               <i class="fas fa-pause"></i> Pause
             </button>
-            <button *ngSwitchCase="'paused'" class="listing-action-btn activate" (click)="activateListing(listing)">
+            <button *ngSwitchCase="'inactive'" class="listing-action-btn activate" (click)="activateListing(listing)">
               <i class="fas fa-play"></i> Activate
             </button>
           </ng-container>

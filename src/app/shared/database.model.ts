@@ -89,6 +89,7 @@ export interface Availability {
 export interface Image {
   id: number;
   url: string;
+  full_url: string;
   listing?: Listing;
 }
 

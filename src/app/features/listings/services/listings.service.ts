@@ -6,6 +6,7 @@ import {
   Category,
   City,
   Listing,
+  ListingStatus,
 } from '../../../shared/database.model';
 
 @Injectable({
@@ -55,15 +56,15 @@ export class ListingsService {
     );
   }
 
-  toggleListingStatus(id: number): Observable<{ status: string }> {
-    return this.http.patch<{ status: string }>(`${this.apiUrl}/listings/${id}/toggle-status`, {}).pipe(
-      catchError(this.handleError<{ status: string }>(`toggleListingStatus id=${id}`))
+  toggleListingStatus(id: number): Observable<{ status: ListingStatus, message?: string; warning?: string, error?: string }> {
+    return this.http.patch<{ status: ListingStatus }>(`${this.apiUrl}/listings/${id}/toggle-status`, {}).pipe(
+      catchError(this.handleError<{ status: ListingStatus, message?: string; warning?: string, error?: string }>(`toggleListingStatus id=${id}`))
     );
   }
 
-  toggleListingArchivedStatus(id: number): Observable<{ message: string; warning?: string }> {
-    return this.http.patch<{ message: string; warning?: string }>(`${this.apiUrl}/listings/${id}/toggle-archived`, {}).pipe(
-      catchError(this.handleError<{ message: string; warning?: string }>(`toggleListingArchivedStatus id=${id}`))
+  toggleListingArchivedStatus(id: number): Observable<{ status: ListingStatus, message?: string; warning?: string, error?: string }> {
+    return this.http.patch<{ status: ListingStatus }>(`${this.apiUrl}/listings/${id}/toggle-archived`, {}).pipe(
+      catchError(this.handleError<{ status: ListingStatus, message?: string; warning?: string, error?: string }>(`toggleListingArchivedStatus id=${id}`))
     );
   }
 
@@ -87,6 +88,7 @@ export class ListingsService {
 
   updateListing(id: number, data: Partial<Listing> | FormData): Observable<Listing> {
     if (data instanceof FormData) {
+      data.append('_method', 'PUT'); // Indiquer à Laravel de traiter ceci comme une requête PUT
       return this.http.post<Listing>(`${this.apiUrl}/listings/${id}`, data).pipe(
         catchError(this.handleError<Listing>(`updateListing id=${id} with FormData`))
       );
