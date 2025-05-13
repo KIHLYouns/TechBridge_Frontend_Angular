@@ -12,13 +12,13 @@
        
         
         <!-- Client-only links -->
-        <ng-container *ngIf="nav.isAuthenticated && !nav.showPartnerNav">
+        <ng-container *ngIf="nav.isAuthenticated && !nav.isPartnerInterface">
             <a routerLink="/listings" class="header-nav-item">Browse Listings</a>
             <a routerLink="/my-rentals" class="header-nav-item">My Rentals</a>
         </ng-container>
         
         <!-- Partner links -->
-        <ng-container *ngIf="nav.isAuthenticated && nav.showPartnerNav">
+        <ng-container *ngIf="nav.isAuthenticated && nav.isPartnerInterface">
             <a routerLink="/partner-dashboard" class="header-nav-item">Partner Dashboard</a>
             <a routerLink="/partner-bookings" class="header-nav-item">Partner Bookings</a>
             <a routerLink="/listing" class="header-nav-item">Add Listing</a>

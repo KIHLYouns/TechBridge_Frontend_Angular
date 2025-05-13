@@ -31,11 +31,8 @@ export class UserService {
 
   private readonly CURRENT_USER_KEY = 'currentUser';
 
-  // BehaviorSubject to track partner status
-  private isPartnerSubject = new BehaviorSubject<boolean>(false);
-
-  // Observable that components can subscribe to
-  public isPartner$ = this.isPartnerSubject.asObservable();
+  private isPartnerInterfaceSubject = new BehaviorSubject<boolean>(false);
+  public isPartnerInterface$ = this.isPartnerInterfaceSubject.asObservable();
 
   private interfaceToggleStateSubject = new BehaviorSubject<boolean>(false);
 public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
@@ -44,35 +41,9 @@ public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  // state management
-
-  public initializePartnerStatus(): void {
-    const userJson = localStorage.getItem(this.CURRENT_USER_KEY);
-    if (userJson) {
-      try {
-        const user: User = JSON.parse(userJson);
-        if (user) {
-          this.isPartnerSubject.next(user.is_partner);
-        }
-      } catch (e) {
-        console.error('Error parsing user from localStorage:', e);
-      }
-    }
-  }
-
-  public isPartner(): boolean {
-    return this.isPartnerSubject.value;
-  }
-
   public reset(): void {
     localStorage.removeItem(this.CURRENT_USER_KEY);
-    this.isPartnerSubject.next(false);
   }
-
-  public setInterfaceToggleState(state: boolean): void {
-    this.interfaceToggleStateSubject.next(state);
-  }
-  // User management
 
   public getUserById(userId: number): Observable<User> {
     console.log(`Getting user by ID: ${userId}`);
@@ -82,8 +53,6 @@ public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
       tap((user) => {
         // Save to localStorage
         this.saveUserToStorage(user);
-        // Update partner status
-        this.isPartnerSubject.next(user.is_partner);
       })
     );
   }
@@ -104,7 +73,7 @@ public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
     localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
   }
 
-  public switchToPartner(): Observable<boolean> {
+  public becomePartner(): Observable<boolean> {
     console.log('Switching user to partner role');
     return of(true).pipe(
       delay(1000),
@@ -120,10 +89,14 @@ public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
         user.is_partner = true;
         // Save updated user to storage
         this.saveUserToStorage(user);
-        // Publish partner status change
-        this.isPartnerSubject.next(true);
+        this.isPartnerInterfaceSubject.next(user.is_partner);
       })
     );
+  }
+
+  public switchInterface(isPartnerInterface: boolean): void {
+    console.log(`UserService: Setting interface mode to ${isPartnerInterface ? 'Partner' : 'Client'}`);
+    this.isPartnerInterfaceSubject.next(isPartnerInterface);
   }
 
   getCurrentUserId(): number | null {

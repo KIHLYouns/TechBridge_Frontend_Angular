@@ -118,54 +118,60 @@
     </div>
   </div>
 
-  <div class="partner-toggle-section">
-    
-  
-   <!-- Partner terms checkbox - only visible if user is NOT a partner -->
-  <div *ngIf="!(isPartner$ | async)" class="partner-terms-section">
-    <h3>Partner Status</h3>
-    <p class="partner-info-text">
-      Become a TechBridge Partner to list your equipment for rent and manage bookings.
-    </p>
-    <div class="toggle-container">
+  <!-- Section pour devenir partenaire (affichée si l'utilisateur N'EST PAS partenaire) -->
+  <div *ngIf="user?.is_partner === false" [formGroup]="profileForm" class="become-partner-section">
+    <h3>Become a TechBridge Partner</h3>
+    <p>Offer your equipment for rent and manage your bookings directly from the platform.</p>
+
+    <div class="terms-section">
       <div class="checkbox-group">
-        <input 
-          type="checkbox" 
-          id="accept-partner-terms" 
-          [disabled]="isTogglingPartner"
-          (change)="acceptPartnerTerms()"
+        <input
+          type="checkbox"
+          id="accept-partner-terms"
+          formControlName="isPartner"
         />
         <label for="accept-partner-terms" class="checkbox-label">
-          I accept the <a href="#" class="terms-link">Specific Terms for Partners</a>
-          of TechBridge and the applicable regulations for equipment rental
+          I accept the
+          <a href="/partner-terms" target="_blank" class="terms-link">Specific Terms for Partners</a>
+          and the applicable regulations for equipment rental.
         </label>
       </div>
+      <!-- Afficher l'erreur si la case n'est pas cochée et qu'on a essayé de soumettre (ou si elle est touchée) -->
+       <div *ngIf="f['isPartner'].invalid && (f['isPartner'].touched || f['isPartner'].dirty)" class="validation-error">
+          You must accept the partner terms.
+        </div>
     </div>
-    <div *ngIf="isTogglingPartner" class="loading-message">
-      <i class="fas fa-spinner fa-spin"></i> Processing your request...
-    </div>
+
+    <button
+      class="become-partner-btn"
+      type="button"
+      (click)="becomePartner()"
+      [disabled]="f['isPartner'].invalid || isBecomingPartner">
+      <i *ngIf="isBecomingPartner" class="fas fa-spinner fa-spin"></i>
+      <span *ngIf="!isBecomingPartner">Become a Partner</span>
+      <span *ngIf="isBecomingPartner">Switching...</span>
+    </button>
   </div>
-  
-  <!-- Interface toggle - only enabled if user IS a partner -->
-  <div class="interface-toggle-section" *ngIf="(isPartner$ | async)">
+
+  <!-- Section du switch (affichée si l'utilisateur EST partenaire) -->
+  <div *ngIf="user?.is_partner === true" class="partner-toggle-section">
     <h3>Switch Interface</h3>
     <div class="toggle-container">
       <label class="toggle-switch">
         <input
           type="checkbox"
-          [checked]="interfaceToggleState"
-          (change)="toggleInterface($event)"
-          [disabled]="!(isPartner$ | async)"
+          [checked]="isPartnerInterface"
+          (change)="switchInterface($event)"
         />
         <span class="toggle-slider"></span>
       </label>
       <span class="toggle-status">
-        <span *ngIf="interfaceToggleState">Partner Interface</span>
-        <span *ngIf="!interfaceToggleState">Client Interface</span>
+        <span *ngIf="isPartnerInterface">Partner Interface</span>
+        <span *ngIf="!isPartnerInterface">Client Interface</span>
       </span>
     </div>
     <p class="toggle-description">
-      Toggle this switch to change between client and partner interfaces.
+      Toggle this switch to change to the client interface. You can switch back at any time from your profile.
     </p>
   </div>  
 </div>
@@ -333,13 +339,13 @@
       <!-- Incoming Reviews Section -->
       <div *ngIf="activeReviewSubTab === 'incoming'">
         <h2>Reviews Received</h2>
-        <div *ngIf="isLoadingReviews" class="loading-indicator">
+        <div *ngIf="isLoadingIncomingReviews" class="loading-indicator">
           Loading reviews...
         </div>
         <div
           class="reviews-list"
           *ngIf="
-            !isLoadingReviews && reviews.length > 0;
+            !isLoadingIncomingReviews && reviews.length > 0;
             else noIncomingReviews
           "
         >
@@ -376,7 +382,7 @@
           </div>
         </div>
         <ng-template #noIncomingReviews>
-          <p *ngIf="!isLoadingReviews">No reviews received yet.</p>
+          <p *ngIf="!isLoadingIncomingReviews">No reviews received yet.</p>
         </ng-template>
       </div>
 

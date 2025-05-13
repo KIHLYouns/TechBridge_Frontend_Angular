@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import {
@@ -8,7 +8,6 @@ import {
 } from '../../../../core/services/review.service';
 import { User } from '../../../../shared/database.model';
 import { UserService } from '../../services/user.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -16,13 +15,9 @@ import { Observable } from 'rxjs';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
 })
-export class ProfileComponent implements OnInit {
-  // Inside the class, add these properties
-  isPartner$!: Observable<boolean>;
-  isTogglingPartner: boolean = false;
-  showPartnerTermsAcceptance: boolean = false;
-  interfaceToggleState: boolean = false;
-
+export class ProfileComponent implements OnInit, OnDestroy {
+  isPartnerInterface: boolean = false;
+  isBecomingPartner: boolean = false;
   user: User | null = null;
   reviews: Review[] = [];
   outgoingReviews: Review[] = [];
@@ -30,7 +25,7 @@ export class ProfileComponent implements OnInit {
   activeReviewSubTab: 'incoming' | 'outgoing' = 'incoming';
   profileForm: FormGroup;
   isLoadingUser: boolean = false;
-  isLoadingReviews: boolean = false;
+  isLoadingIncomingReviews: boolean = false;
   isLoadingOutgoingReviews: boolean = false;
   isSaving: boolean = false;
   isUpdatingLocation: boolean = false;
@@ -39,6 +34,7 @@ export class ProfileComponent implements OnInit {
   locationErrorMessage: string | null = null;
 
   defaultAvatar = 'assets/images/default-avatar.png';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private userService: UserService,
@@ -52,15 +48,25 @@ export class ProfileComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       phone: [''],
       address: [''],
+      isPartner: [false, Validators.requiredTrue],
     });
   }
 
   ngOnInit(): void {
-    this.isPartner$ = this.userService.isPartner$;
     this.loadUserProfile();
-    this.isPartner$.subscribe((isPartner) => {
-      this.interfaceToggleState = isPartner;
-    });
+    this.userService.isPartnerInterface$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isPartnerInterface) => {
+        this.isPartnerInterface = isPartnerInterface;
+        console.log(
+          'ProfileComponent: isPartnerInterface updated from service:',
+          this.isPartnerInterface
+        );
+      });
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   loadUserProfile(): void {
@@ -69,8 +75,8 @@ export class ProfileComponent implements OnInit {
       .getCurrentUserProfile()
       .pipe(finalize(() => (this.isLoadingUser = false)))
       .subscribe({
-        next: (userData) => {
-          this.user = userData;
+        next: (user) => {
+          this.user = user;
           if (this.user) {
             // Update form with user data
             this.profileForm.patchValue({
@@ -80,103 +86,84 @@ export class ProfileComponent implements OnInit {
               email: this.user.email,
               phone: this.user.phone_number,
               address: this.user.address,
+              isPartner: this.user.is_partner,
             });
-
-            // Replace the two separate review loading methods with the new combined method
-            this.loadAllUserReviews();
-          } else {
-            console.error('Received null or undefined user data.');
+            this.loadIncomingReviews();
+            this.loadOutgoingReviews();
           }
         },
-        error: (err) => {
-          console.error('Failed to load user profile:', err);
-        },
+        error: (err) => console.error('Error loading user profile:', err),
       });
   }
 
-  loadAllUserReviews(): void {
-    const userId = this.user?.id;
-    if (!userId) {
-      console.warn('User ID not available for loading reviews.');
-      return;
-    }
+  loadIncomingReviews(): void {
+    if (!this.user?.id) return;
+    this.isLoadingIncomingReviews = true;
+    this.reviewService
+      .getReviewsReceivedForUser(this.user.id)
+      .pipe(finalize(() => (this.isLoadingIncomingReviews = false)))
+      .subscribe({
+        next: (reviews) => (this.reviews = reviews),
+        error: (err) => console.error('Error loading reviews:', err),
+      });
+  }
 
-    // Set loading state for both types of reviews
-    this.isLoadingReviews = true;
+  loadOutgoingReviews(): void {
+    if (!this.user?.id) return;
     this.isLoadingOutgoingReviews = true;
 
     this.reviewService
-      .getUserReviews(userId)
-      .pipe(
-        finalize(() => {
-          // Clear loading state when finished (success or error)
-          this.isLoadingReviews = false;
-          this.isLoadingOutgoingReviews = false;
-        })
-      )
+      .getReviewsGivenByUser(this.user.id)
+      .pipe(finalize(() => (this.isLoadingOutgoingReviews = false)))
       .subscribe({
-        next: (reviewData: UserReviewsResponse) => {
-          console.log("//////////////////////");
-          console.log("//////////////////////");
-          console.log("user reviews : ");
-          console.log(reviewData);
-          // Store the received reviews in their respective arrays
-          this.reviews = reviewData.received_reviews;
-          this.outgoingReviews = reviewData.given_reviews;
+        next: (reviews) => {
+          this.outgoingReviews = reviews;
         },
         error: (err) => {
-          console.error('Failed to load user reviews:', err);
+          console.error('Error loading outgoing reviews:', err);
         },
       });
   }
 
   setActiveTab(tabName: string): void {
     this.activeTab = tabName;
-    if (tabName === 'reviews') {
-      this.activeReviewSubTab = 'incoming';
+    if (tabName === 'reviews' && this.reviews.length === 0) {
+      this.loadIncomingReviews();
+    }
+    if (tabName === 'reviews' && this.outgoingReviews.length === 0) {
+      this.loadOutgoingReviews();
     }
   }
 
   setActiveReviewSubTab(subTab: 'incoming' | 'outgoing'): void {
     this.activeReviewSubTab = subTab;
+    if (subTab === 'outgoing' && this.outgoingReviews.length === 0) {
+      this.loadOutgoingReviews();
+    }
   }
 
   saveProfileChanges(): void {
-    if (this.profileForm.invalid || !this.user?.id || this.isSaving) {
-      this.profileForm.markAllAsTouched();
+    if (this.profileForm.invalid || !this.user?.id) {
       return;
     }
-
     this.isSaving = true;
-    const formValues = this.profileForm.value;
-
-    const updatedUserData: Partial<User> = {
-      firstname: formValues.firstname,
-      lastname: formValues.lastname,
-      username: formValues.username,
-      email: formValues.email,
-      phone_number: formValues.phone || null,
-      address: formValues.address || null,
-      latitude: this.user?.latitude,
-      longitude: this.user?.longitude,
+    const updatedProfileData = {
+      firstname: this.f['firstname'].value,
+      lastname: this.f['lastname'].value,
+      username: this.f['username'].value,
+      email: this.f['email'].value,
+      phone_number: this.f['phone'].value,
+      address: this.f['address'].value,
     };
 
     this.userService
-      .updateUserProfile(this.user.id, updatedUserData)
+      .updateUserProfile(this.user.id, updatedProfileData)
       .pipe(finalize(() => (this.isSaving = false)))
       .subscribe({
         next: (updatedUser) => {
           this.user = updatedUser;
-          this.profileForm.patchValue({
-            firstname: this.user.firstname,
-            lastname: this.user.lastname,
-            username: this.user.username,
-            email: this.user.email,
-            phone: this.user.phone_number,
-            address: this.user.address,
-          });
           this.profileForm.markAsPristine();
-          console.log('Profile updated successfully!');
+          console.log('Profile updated successfully');
         },
         error: (err) => {
           console.error('Error updating profile:', err);
@@ -185,16 +172,10 @@ export class ProfileComponent implements OnInit {
   }
 
   updateLocation(): void {
-    if (!('geolocation' in navigator)) {
+    if (!navigator.geolocation) {
       this.locationStatus = 'error';
       this.locationErrorMessage =
         'Geolocation is not supported by your browser.';
-      return;
-    }
-
-    if (!this.user?.id) {
-      this.locationStatus = 'error';
-      this.locationErrorMessage = 'User not loaded. Cannot update location.';
       return;
     }
 
@@ -204,14 +185,18 @@ export class ProfileComponent implements OnInit {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const coords = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-        console.log('Location acquired:', coords);
         this.locationStatus = 'granted';
+        const coords = position.coords;
+        console.log(
+          `Location obtained: Lat ${coords.latitude}, Lon ${coords.longitude}`
+        );
 
-        const locationUpdate: Partial<User> = {
+        if (this.user) {
+          this.user.latitude = coords.latitude;
+          this.user.longitude = coords.longitude;
+        }
+
+        const locationUpdate = {
           latitude: coords.latitude,
           longitude: coords.longitude,
         };
@@ -223,6 +208,7 @@ export class ProfileComponent implements OnInit {
             next: (updatedUser) => {
               this.user = updatedUser;
               console.log('Location updated successfully in backend.');
+              this.locationStatus = 'idle';
             },
             error: (err) => {
               console.error('Error saving location:', err);
@@ -242,57 +228,65 @@ export class ProfileComponent implements OnInit {
             break;
           case error.POSITION_UNAVAILABLE:
             this.locationErrorMessage = 'Location information is unavailable.';
-            this.locationStatus = 'error';
             break;
           case error.TIMEOUT:
             this.locationErrorMessage =
               'The request to get user location timed out.';
-            this.locationStatus = 'error';
             break;
           default:
             this.locationErrorMessage =
               'An unknown error occurred while getting location.';
-            this.locationStatus = 'error';
             break;
         }
-        console.warn('Geolocation error:', error);
+        console.error(`Geolocation error: ${this.locationErrorMessage}`);
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
   }
 
   editAvatar(): void {
-    console.log('Edit avatar clicked - implement file upload logic.');
-    alert('Avatar editing not implemented yet.');
+    console.log('Edit avatar clicked');
+    alert("Fonctionnalité de changement d'avatar à implémenter.");
   }
 
   get f() {
     return this.profileForm.controls;
   }
 
-
-
-  // Add method to accept partner terms
-  acceptPartnerTerms(): void {
-    this.isTogglingPartner = true;
-
+  becomePartner(): void {
+    // Ensure the checkbox is checked (form control is valid)
+    if (this.f['isPartner'].invalid) {
+      this.f['isPartner'].markAsTouched();
+      return;
+    }
+    this.isBecomingPartner = true; // Use the dedicated loading flag
     this.userService
-      .switchToPartner()
-      .pipe(finalize(() => (this.isTogglingPartner = false)))
+      .becomePartner()
+      .pipe(
+        finalize(() => (this.isBecomingPartner = false)) // Stop loading
+      )
       .subscribe({
-        next: () => {
-          // After becoming a partner, enable the interface toggle
-          this.interfaceToggleState = true;
-          console.log('Partner terms accepted, user is now a partner');
+        next: (/* optional updated user data */) => {
+          console.log('Successfully became partner');
+          if (this.user) {
+            this.user.is_partner = true; // <-- IMPORTANT: Update local user state
+          }
+          // The *ngIf in the template will now automatically show the switch section
+          // No need to manually set isPartnerInterface here. Let the user switch if they want.
+          this.f['isPartner'].setValue(true); // Ensure form control reflects the state
+          this.f['isPartner'].markAsPristine(); // Optional
         },
-        error: (err) => console.error('Error accepting partner terms:', err),
+        error: (err) => {
+          console.error('Error becoming partner:', err);
+          // Optional: Reset checkbox if API call failed
+          // this.f['isPartner'].setValue(false);
+        },
       });
   }
 
-  // Handle interface toggle - purely UI, NO backend changes
-  toggleInterface(event: any): void {
-    this.interfaceToggleState = event.target.checked;
-    this.userService.setInterfaceToggleState(this.interfaceToggleState);
+  switchInterface(event: any): void {
+    const isChecked = event.target.checked;
+    this.userService.switchInterface(isChecked);
   }
 }
 

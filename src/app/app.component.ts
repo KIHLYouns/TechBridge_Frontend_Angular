@@ -37,8 +37,6 @@ export class AppComponent implements OnInit {
       const currentUser = this.userService.getCurrentUserFromLocalStorage();
       
       if (currentUser) {
-        // User data exists - make sure partner status is initialized
-        this.userService.initializePartnerStatus();
         console.log('User data found, partner status:', currentUser.is_partner);
       } else {
         // Token is valid but user data is missing - likely an inconsistent state

@@ -643,7 +643,6 @@
   }
 }
 
-
 /* Partner toggle section styling */
 .partner-toggle-section {
   margin: 2rem 0;
@@ -771,5 +770,86 @@ input:disabled + .toggle-slider {
     width: 100%;
     margin-top: 0.5rem;
     margin-left: 0;
+  }
+}
+
+/* Styles pour la section "Devenir Partenaire" */
+.become-partner-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: var(--color-bg-dark);
+  border-radius: 8px;
+  border: 1px solid var(--color-border-light);
+
+  h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-light);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-medium);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .terms-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .checkbox-group {
+    display: flex;
+    align-items: flex-start; // Aligner avec le début du texte si multiligne
+    gap: 0.75rem;
+  }
+
+  input[type="checkbox"] {
+    margin-top: 0.2em; // Ajuster la position verticale de la checkbox
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary); // Couleur de la coche
+  }
+
+  .checkbox-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-medium);
+    line-height: 1.4;
+
+    .terms-link {
+      color: var(--color-primary);
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .become-partner-btn {
+    background-color: var(--color-primary);
+    color: var(--color-bg-dark);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-primary-dark);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    i {
+      font-size: var(--font-size-base);
+    }
   }
 }
