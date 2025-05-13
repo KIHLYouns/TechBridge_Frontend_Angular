@@ -10,14 +10,14 @@ import { SignInRequest } from '../models/sign-in.model';
 
 // To this
 export interface SignInResponse {
-  userId: number;
+  id: number;
   token: string;
 }
 
 
 // To this
 export interface SignUpResponse {
-  userId: number;
+  id: number;
   token: string;
 }
 
@@ -31,6 +31,7 @@ export class AuthService {
 
   // Observable that components can subscribe to
   public authState$: Observable<boolean>;
+  private apiUrl = 'http://localhost:8000/api';
 
   constructor(
     private http: HttpClient,
@@ -64,16 +65,15 @@ export class AuthService {
 
 // Mock login implementation
 login(request: SignInRequest): Observable<SignInResponse> {
-  console.log('Processing login request:', request);
   
   // Create mock response (simulating Laravel Sanctum response)
-  const mockResponse: SignInResponse = {
+  /*const mockResponse: SignInResponse = {
     userId: 1,
     token: `mock_token_${Math.random().toString(36).substring(2)}`
-  };
+  };*/
 
   // Return mock Observable with delay to simulate network request
-  return of(mockResponse).pipe(
+  /*return of(mockResponse).pipe(
     delay(1000), // 1 second delay to simulate network
     tap((response) => {
       if (response && response.token) {
@@ -94,21 +94,43 @@ login(request: SignInRequest): Observable<SignInResponse> {
       console.error('Login error:', error);
       return throwError(() => new Error('Login failed. Please check your credentials.'));
     })
+  ); */
+
+    // Replace mock with actual endpoint
+  return this.http.post<SignInResponse>(`${this.apiUrl}/auth/login`, request).pipe(
+    tap((response) => {
+      if (response && response.token) {
+        // Store both token and userId
+        this.tokenService.saveAccessToken(response.token, response.id);
+        
+        // Get user data based on userId from token
+        this.userService.getUserById(response.id).subscribe({
+          next: () => {
+            this.authStateSubject.next(true);
+            this.router.navigate(['/listings']);
+          },
+          error: (error) => console.error('Error getting user data:', error)
+        });
+      }
+    }),
+    catchError(error => {
+      console.error('Login error:', error);
+      return throwError(() => new Error('Login failed. Please check your credentials.'));
+    })
   );
 }
 
 // Mock signUp implementation
 signUp(request: SignUpRequest): Observable<SignUpResponse> {
-  console.log('Processing signup request:', request);
   
   // Create mock response
-  const mockResponse: SignUpResponse = {
+  /*const mockResponse: SignUpResponse = {
     userId: 1,
     token: `mock_token_${Math.random().toString(36).substring(2)}`
-  };
+  };*/
 
   // Return mock Observable with delay
-  return of(mockResponse).pipe(
+  /*return of(mockResponse).pipe(
     delay(1500), // 1.5 second delay to simulate network
     tap((response) => {
       if (response && response.token) {
@@ -116,6 +138,30 @@ signUp(request: SignUpRequest): Observable<SignUpResponse> {
         this.tokenService.saveAccessToken(response.token, response.userId);
         this.authStateSubject.next(true);
         this.router.navigate(['/listings']);
+      }
+    }),
+    catchError(error => {
+      console.error('Signup error:', error);
+      return throwError(() => new Error('Registration failed. Please try again.'));
+    })
+  );*/
+
+    // Replace mock with actual endpoint
+  return this.http.post<SignUpResponse>(`${this.apiUrl}/auth/signup`, request).pipe(
+    tap((response) => {
+      if (response && response.token) {
+        // Store both token and userId
+        this.tokenService.saveAccessToken(response.token, response.id);
+        //this.authStateSubject.next(true);
+        //this.router.navigate(['/listings']);
+        // Get user data based on userId from token
+        this.userService.getUserById(response.id).subscribe({
+          next: () => {
+            this.authStateSubject.next(true);
+            this.router.navigate(['/listings']);
+          },
+          error: (error) => console.error('Error getting user data:', error)
+        });
       }
     }),
     catchError(error => {
@@ -153,27 +199,4 @@ signUp(request: SignUpRequest): Observable<SignUpResponse> {
     return this.tokenService.hasValidToken();
   }
 
-  private createMockJwt(claims: any): string {
-    // Create a header
-    const header = {
-      alg: 'HS256',
-      typ: 'JWT',
-    };
-
-    // Add standard claims
-    const payload = {
-      ...claims,
-      iat: Math.floor(Date.now() / 1000),
-      exp: Math.floor(Date.now() / 1000) + 3600, // Expires in 1 hour
-    };
-
-    // Base64 encode parts
-    const base64Header = btoa(JSON.stringify(header));
-    const base64Payload = btoa(JSON.stringify(payload));
-
-    // Create a signature
-    const signature = btoa('mockSignature');
-
-    return `${base64Header}.${base64Payload}.${signature}`;
-  }
 }

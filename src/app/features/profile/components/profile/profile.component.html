@@ -6,9 +6,10 @@
   <div class="profile-header" *ngIf="user && !isLoadingUser">
     <div class="profile-avatar-container">
       <img
-        [src]="user.avatar_url || defaultAvatar"
+        [src]="user.avatar_url"
         alt="Profile Avatar"
         class="profile-avatar"
+        (error)="getDefaultAvatar($event, user.firstname + ' ' + user.lastname)"
       />
       <button
         class="edit-avatar-btn"
@@ -91,7 +92,7 @@
           "
         >
           <span class="stat-label">Rating</span>
-          <span class="stat-value">{{ user.client_rating.toFixed(1) }}</span>
+          <span class="stat-value">{{ user.client_rating }}</span>
           <div class="star-rating">
             <i class="fas fa-star"></i>
           </div>

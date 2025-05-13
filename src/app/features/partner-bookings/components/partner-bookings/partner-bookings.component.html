@@ -174,18 +174,14 @@
           </div>
           <div class="rental-actions">
             <!-- Partner can leave review for clients on completed bookings -->
-            <button *ngIf="booking.status === 'completed'" class="rental-action-btn review"
-              (click)="leaveReview(booking.id)">
+            <button *ngIf="booking.status === 'completed' && !booking.isReviewedByCurrentUser"
+              class="rental-action-btn review" (click)="leaveReview(booking.id)">
               <i class="fas fa-star"></i> Leave Review
             </button>
-
-
-            <!-- Review status if already reviewed 
-              <button 
-                *ngIf="booking.status === 'completed'"
-                class="rental-action-btn review completed" disabled>
-                <i class="fas fa-check"></i> Review Submitted
-              </button> -->
+            <button *ngIf="booking.status === 'completed' && booking.isReviewedByCurrentUser"
+              class="rental-action-btn review completed" disabled>
+              <i class="fas fa-check"></i> Review Submitted
+            </button>
 
             <!-- Contact client for completed bookings -->
             <button *ngIf="booking.status === 'completed'" class="rental-action-btn contact"

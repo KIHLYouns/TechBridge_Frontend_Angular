@@ -66,7 +66,7 @@ export class SignInComponent implements OnInit {
       this.errorMessage = '';
       
       const loginRequest: SignInRequest = {
-        username: this.usernameCtrl.value,
+        email: this.usernameCtrl.value,
         password: this.passwordCtrl.value
       };
       

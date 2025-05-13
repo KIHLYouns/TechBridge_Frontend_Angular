@@ -141,7 +141,7 @@
             <!-- Replace these buttons -->
             <button *ngIf="rental.status === 'completed' && !rental.isReviewedByCurrentUser"
               class="rental-action-btn review" (click)="leaveReview(rental.id)">
-              <i class="fas fa-star"></i> Leave Review
+              <i class="fas fa-star"></i> Leave Review 
             </button>
             <button *ngIf="rental.status === 'completed' && rental.isReviewedByCurrentUser"
               class="rental-action-btn review completed" disabled>

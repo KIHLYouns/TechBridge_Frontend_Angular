@@ -7,14 +7,14 @@ export interface UserCoordinates {
 
 // Sign-Up Request model
 export interface SignUpRequest {
-  email: string;
   username: string;
+  firstname: string;
+  lastname: string;
+  email: string;
   password: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  isPartner?: boolean;
-  coordinates?: UserCoordinates; 
+  phone_number: string;
+  latitude: number;
+  longitude: number;
 }
 
 // Sign-Up Response model

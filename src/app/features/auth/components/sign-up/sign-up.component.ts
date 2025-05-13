@@ -210,7 +210,7 @@ export class SignUpComponent implements OnInit {
         },
         {
           enableHighAccuracy: true,
-          timeout: 10000,
+          timeout: 20000,
           maximumAge: 0,
         }
       );
@@ -233,14 +233,15 @@ export class SignUpComponent implements OnInit {
       this.errorMessage = '';
 
       const signUpRequest = {
-        firstName: this.firstnameCtrl.value,
-        lastName: this.lastnameCtrl.value,
+        firstname: this.firstnameCtrl.value,
+        lastname: this.lastnameCtrl.value,
         username: this.usernameCtrl.value,
         email: this.emailCtrl.value,
-        phone: this.phoneCtrl.value,
-        coordinates: this.userCoordinates,
+        phone_number: this.phoneCtrl.value,
+        longitude: this.userCoordinates.longitude,
+        latitude: this.userCoordinates.latitude,
         password: this.passwordCtrl.value,
-        isPartner: this.becomePartnerCtrl.value,
+        is_partner: this.becomePartnerCtrl.value,
       };
       console.log(signUpRequest);
 

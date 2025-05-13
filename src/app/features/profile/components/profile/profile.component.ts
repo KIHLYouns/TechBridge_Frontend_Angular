@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       email: ['', [Validators.required, Validators.email]],
       phone: [''],
       address: [''],
-      isPartner: [false, Validators.requiredTrue],
+      is_partner: [false, Validators.requiredTrue],
     });
   }
 
@@ -87,7 +87,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
               email: this.user.email,
               phone: this.user.phone_number,
               address: this.user.address,
-              isPartner: this.user.is_partner,
+              is_partner: this.user.is_partner,
             });
             this.loadIncomingReviews();
             this.loadOutgoingReviews();
@@ -287,6 +287,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
   switchInterface(event: any): void {
     const isChecked = event.target.checked;
     this.userService.switchInterface(isChecked);
+  }
+
+  getDefaultAvatar(event: Event, username?: string): void {
+    const target = event.target as HTMLImageElement;
+    const name = username || 'Default User';
+
+    const encodedName = encodeURIComponent(name.trim()).replace(/%20/g, '+');
+    target.src = `https://ui-avatars.com/api/?name=${encodedName}&color=000&size=128`;
+    target.onerror = null; // Prevents infinite error loops
   }
 }
 
