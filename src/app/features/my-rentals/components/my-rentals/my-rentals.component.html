@@ -164,3 +164,6 @@
 <!-- Add this at the end of the template, before the closing </main> tag -->
 <app-review-modal *ngIf="showReviewModal" [reservation]="selectedReservation" [userId]="currentUserId"
   (close)="closeReviewModal($event)"></app-review-modal>
+
+<!-- Add the contact modal -->
+<app-contact-modal *ngIf="showContactModal" [contactInfo]="contactInfo" (close)="closeContactModal()"></app-contact-modal>

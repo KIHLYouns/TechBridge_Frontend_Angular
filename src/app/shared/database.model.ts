@@ -55,6 +55,7 @@ export interface Listing {
   images?: Image[];
   main_image?: string;
   availabilities?: Availability[];
+  booked?: Availability[];
 }
 
 export type ReservationStatus =

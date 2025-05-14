@@ -207,3 +207,5 @@
 
 <app-client-reviews *ngIf="showClientReviewsModal" [clientId]="selectedClientId"
   (close)="closeClientReviewsModal()"></app-client-reviews>
+
+<app-contact-modal *ngIf="showContactModal" [contactInfo]="contactInfo" (close)="closeContactModal()"></app-contact-modal>

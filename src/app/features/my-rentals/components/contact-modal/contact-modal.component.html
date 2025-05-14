@@ -1,0 +1,49 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="contact-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Contact Information</h2>
+      <button type="button" class="close-btn" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="contactInfo">
+      <div class="contact-profile">
+        <img 
+          [src]="contactInfo.avatar || 'assets/images/default-avatar.jpeg'" 
+          alt="{{ contactInfo.name }}" 
+          class="contact-avatar"
+          onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.alt) + '&background=random&color=fff&size=128'"
+        />
+        <h3 class="contact-name">{{ contactInfo.name }}</h3>
+      </div>
+
+      <div class="contact-details">
+        <div class="contact-item" *ngIf="contactInfo.email">
+          <div class="contact-label">
+            <i class="fas fa-envelope"></i>
+            <span>Email</span>
+          </div>
+          <div class="contact-value">
+            <a [href]="'mailto:' + contactInfo.email">{{ contactInfo.email }}</a>
+          </div>
+        </div>
+        
+        <div class="contact-item" *ngIf="contactInfo.phone">
+          <div class="contact-label">
+            <i class="fas fa-phone"></i>
+            <span>Phone</span>
+          </div>
+          <div class="contact-value">
+            <a [href]="'tel:' + contactInfo.phone">{{ contactInfo.phone }}</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-message" *ngIf="!contactInfo.email && !contactInfo.phone">
+        <i class="fas fa-exclamation-circle"></i>
+        <p>No contact information available for this user.</p>
+      </div>
+    </div>
+  </div>
+</div>

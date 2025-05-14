@@ -24,9 +24,19 @@ export class PartnerBookingsComponent implements OnInit {
   // For review modal (will implement later)
   showReviewModal = false;
   showClientReviewsModal = false;
+  showContactModal = false;
   selectedReservation: Reservation | null = null;
   selectedClientId: number | null = null;
   currentUserId!: number | null;
+
+    // Contact info for the modal
+  contactInfo: {
+    name: string;
+    email?: string;
+    phone?: string;
+    avatar?: string;
+  } | null = null;
+
 
   // Action states
   processingAction: {
@@ -226,11 +236,39 @@ export class PartnerBookingsComponent implements OnInit {
       });
   }
 
+    // Updated contact client method
   contactClient(clientId: number | undefined): void {
-    /*  if (!clientId) return;
-    console.log(`Contacting client ${clientId}`);
-    // Implement contact functionality or navigation
-    alert(`Action: Contact client ${clientId}`); // Placeholder */
+    if (!clientId) return;
+    
+    // Find the booking with this client
+    const booking = [...this.currentBookings, ...this.pastBookings].find(
+      b => b.client?.id === clientId
+    );
+    
+    if (!booking || !booking.client) {
+      this.actionError = 'Cannot find client information.';
+      setTimeout(() => {
+        this.actionError = null;
+        this.cdRef.markForCheck();
+      }, 3000);
+      return;
+    }
+    
+    // Prepare contact info for the modal
+    this.contactInfo = {
+      name: booking.client.username,
+      email: booking.client.email,
+      phone: booking.client.phone_number || undefined,
+      avatar: booking.client.avatar_url || undefined
+    };
+    
+    this.showContactModal = true;
+    this.cdRef.markForCheck();
+  }
+
+  closeContactModal(): void {
+    this.showContactModal = false;
+    this.contactInfo = null;
   }
 
   goToListing(listing_id: number | undefined): void {

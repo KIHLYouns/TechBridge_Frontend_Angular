@@ -25,8 +25,18 @@ export class MyRentalsComponent implements OnInit {
 
   // Add these properties
   showReviewModal = false;
+  showContactModal = false;
   selectedReservation: Reservation | null = null;
   currentUserId!: number | null; // Replace with your actual logic to get current user ID
+
+  // Contact info for the modal
+  contactInfo: {
+    name: string;
+    email?: string;
+    phone?: string;
+    avatar?: string;
+  } | null = null;
+
 
   // Action states
   processingActionForId: number | null = null;
@@ -216,10 +226,39 @@ export class MyRentalsComponent implements OnInit {
     this.router.navigate(['/listings', listing_id]); // Utiliser le Router pour naviguer
   }
 
+  // Updated contact partner method
   contactPartner(partnerId: number | undefined): void {
     if (!partnerId) return;
-    console.log(`Contacting partner ${partnerId}`);
-    // TODO: Implémenter la logique de contact (ex: ouvrir chat, afficher infos)
-    alert(`Action: Contact partner ${partnerId}`); // Placeholder
+    
+    // Find the rental with this partner
+    const rental = [...this.currentRentals, ...this.pastRentals].find(
+      r => r.partner?.id === partnerId
+    );
+    
+    if (!rental || !rental.partner) {
+      this.actionError = 'Cannot find partner information.';
+      setTimeout(() => {
+        this.actionError = null;
+        this.cdRef.markForCheck();
+      }, 3000);
+      return;
+    }
+    
+    // Prepare contact info for the modal
+    this.contactInfo = {
+      name: rental.partner.username,
+      email: rental.partner.email,
+      phone: rental.partner.phone_number || undefined,
+      avatar: rental.partner.avatar_url || undefined
+    };
+    
+    this.showContactModal = true;
+    this.cdRef.markForCheck();
   }
+
+    closeContactModal(): void {
+    this.showContactModal = false;
+    this.contactInfo = null;
+  }
+
 }

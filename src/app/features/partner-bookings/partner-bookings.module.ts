@@ -6,6 +6,7 @@ import { PartnerBookingsComponent } from './components/partner-bookings/partner-
 import { ClientReviewComponent } from './components/client-review/client-review.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ClientReviewsComponent } from './components/client-reviews/client-reviews.component';
+import { SharedModule } from '../../shared/shared.module';
 
 
 @NgModule({
@@ -15,7 +16,7 @@ import { ClientReviewsComponent } from './components/client-reviews/client-revie
     ClientReviewsComponent
   ],
   imports: [
-    CommonModule,
+    SharedModule,
     PartnerBookingsRoutingModule, 
     ReactiveFormsModule
   ]
