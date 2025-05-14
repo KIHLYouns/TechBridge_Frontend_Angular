@@ -39,7 +39,7 @@
       <!-- Liste des locations actuelles -->
       <div *ngIf="!isLoadingCurrent && currentRentals.length > 0" class="rentals-list">
         <div *ngFor="let rental of currentRentals" class="rental-card">
-          <img [src]="rental.listing.main_image || 'assets/images/item-placeholder.jpg'"
+          <img [src]="rental.listing.images?.[0]?.full_url || 'assets/images/item-placeholder.jpg'"
             [alt]="rental.listing.title || 'Rental item'" class="rental-image" (click)="goToListing(rental.listing.id)"
             style="cursor: pointer;" />
           <div class="rental-details">
@@ -104,7 +104,7 @@
       <!-- Liste de l'historique -->
       <div *ngIf="!isLoadingPast && pastRentals.length > 0" class="rentals-list">
         <div *ngFor="let rental of pastRentals" class="rental-card past">
-          <img [src]="rental.listing.main_image || 'assets/images/item-placeholder.jpg'"
+          <img [src]="rental.listing.images?.[0]?.full_url || 'assets/images/item-placeholder.jpg'"
             [alt]="rental.listing.title || 'Rental item'" class="rental-image" (click)="goToListing(rental.listing.id)"
             style="cursor: pointer;" />
           <div class="rental-details">
