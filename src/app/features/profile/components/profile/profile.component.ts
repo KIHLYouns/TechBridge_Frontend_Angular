@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { finalize, takeUntil } from 'rxjs/operators';
 import {
@@ -20,14 +20,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isPartnerInterface: boolean = false;
   isBecomingPartner: boolean = false;
   user: User | null = null;
-  reviews: Review[] = [];
-  outgoingReviews: Review[] = [];
+
+  receivedReviewsAsPartner: Review[] = [];
+  receivedReviewsAsClient: Review[] = [];
+  givenReviewsAsPartner: Review[] = [];
+  givenReviewsAsClient: Review[] = [];
+
+    // Reviews currently displayed based on interface mode
+  displayedIncomingReviews: Review[] = [];
+  displayedOutgoingReviews: Review[] = [];
+
+
   activeTab: string = 'info';
   activeReviewSubTab: 'incoming' | 'outgoing' = 'incoming';
   profileForm: FormGroup;
   isLoadingUser: boolean = false;
-  isLoadingIncomingReviews: boolean = false;
-  isLoadingOutgoingReviews: boolean = false;
+  isLoadingReviews: boolean = false;
   isSaving: boolean = false;
   isUpdatingLocation: boolean = false;
 
@@ -40,7 +48,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private reviewService: ReviewService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdRef: ChangeDetectorRef
   ) {
     this.profileForm = this.fb.group({
       firstname: ['', Validators.required],
@@ -55,16 +64,31 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadUserProfile();
+    
+    // Subscribe to interface mode changes
     this.userService.isPartnerInterface$
       .pipe(takeUntil(this.destroy$))
       .subscribe((isPartnerInterface) => {
-        this.isPartnerInterface = isPartnerInterface;
         console.log(
           'ProfileComponent: isPartnerInterface updated from service:',
-          this.isPartnerInterface
+          isPartnerInterface
         );
+        
+        // Only update if the state has changed
+        if (this.isPartnerInterface !== isPartnerInterface) {
+          this.isPartnerInterface = isPartnerInterface;
+          
+          // Update displayed reviews when interface mode changes
+          this.updateDisplayedReviews();
+          
+          // Force change detection to update the UI
+          this.cdRef.detectChanges();
+          
+          console.log('ProfileComponent: UI updated after interface mode change');
+        }
       });
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -89,57 +113,67 @@ export class ProfileComponent implements OnInit, OnDestroy {
               address: this.user.address,
               is_partner: this.user.is_partner,
             });
-            this.loadIncomingReviews();
-            this.loadOutgoingReviews();
+            this.loadAllReviews();
           }
         },
         error: (err) => console.error('Error loading user profile:', err),
       });
   }
 
-  loadIncomingReviews(): void {
+    // New method to load all review types at once
+  loadAllReviews(): void {
     if (!this.user?.id) return;
-    this.isLoadingIncomingReviews = true;
+    this.isLoadingReviews = true;
+    
     this.reviewService
       .getUserReviews(this.user.id)
-      .pipe(finalize(() => (this.isLoadingIncomingReviews = false)))
+      .pipe(finalize(() => {
+        this.isLoadingReviews = false;
+        this.updateDisplayedReviews();
+      }))
       .subscribe({
         next: (response: UserReviewsResponse) => {
-          this.reviews = response.received_reviews;
+          // Store all review types
+          this.receivedReviewsAsPartner = response.received_reviews_as_partner || [];
+          this.receivedReviewsAsClient = response.received_reviews_as_client || [];
+          this.givenReviewsAsPartner = response.given_reviews_as_partner || [];
+          this.givenReviewsAsClient = response.given_reviews_as_client || [];
+          
+          // Update displayed reviews based on current interface mode
+          this.updateDisplayedReviews();
         },
         error: (err: any) => console.error('Error loading reviews:', err),
       });
   }
 
-  loadOutgoingReviews(): void {
-    if (!this.user?.id) return;
-    this.isLoadingOutgoingReviews = true;
-    this.reviewService
-      .getUserReviews(this.user.id)
-      .pipe(finalize(() => (this.isLoadingOutgoingReviews = false)))
-      .subscribe({
-        next: (response: UserReviewsResponse) => {
-          this.outgoingReviews = response.given_reviews;
-        },
-        error: (err: any) => console.error('Error loading outgoing reviews:', err),
-      });
+    // New method to update which reviews are displayed based on interface mode
+  updateDisplayedReviews(): void {
+    if (this.isPartnerInterface) {
+      this.displayedIncomingReviews = this.receivedReviewsAsPartner;
+      this.displayedOutgoingReviews = this.givenReviewsAsPartner;
+    } else {
+      this.displayedIncomingReviews = this.receivedReviewsAsClient;
+      this.displayedOutgoingReviews = this.givenReviewsAsClient;
+    }
+    
+    // Force change detection to update the UI
+    this.cdRef.detectChanges();
   }
+
+
+
 
   setActiveTab(tabName: string): void {
     this.activeTab = tabName;
-    if (tabName === 'reviews' && this.reviews.length === 0) {
-      this.loadIncomingReviews();
-    }
-    if (tabName === 'reviews' && this.outgoingReviews.length === 0) {
-      this.loadOutgoingReviews();
+    if (tabName === 'reviews' && 
+        (this.receivedReviewsAsClient.length === 0 || 
+         this.receivedReviewsAsPartner.length === 0)) {
+      this.loadAllReviews();
     }
   }
 
   setActiveReviewSubTab(subTab: 'incoming' | 'outgoing'): void {
     this.activeReviewSubTab = subTab;
-    if (subTab === 'outgoing' && this.outgoingReviews.length === 0) {
-      this.loadOutgoingReviews();
-    }
   }
 
   saveProfileChanges(): void {
@@ -286,10 +320,52 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   switchInterface(event: any): void {
     const isChecked = event.target.checked;
-    console.log(
-      'Switching interface to partner mode:',)
+    console.log('ProfileComponent: Switching interface to:', isChecked ? 'Partner' : 'Client');
+    
+    // Prevent default to ensure we control the event completely
+    if (event.preventDefault) {
+      event.preventDefault();
+    }
+    
+    if (event.stopPropagation) {
+      event.stopPropagation();
+    }
+    
+    // Update local state immediately for UI consistency
+    this.isPartnerInterface = isChecked;
+    
+    // Update the service with the new preference
     this.userService.switchInterface(isChecked);
+    
+    // Update the displayed reviews based on the new interface mode
+    this.updateDisplayedReviews();
+    
+    // Force change detection to update the UI
+    this.cdRef.detectChanges();
+    
+    // For debugging
+    console.log('ProfileComponent: Interface switched, local state:', this.isPartnerInterface);
   }
+  
+  // Add this new method specifically for clicking on the status text
+  toggleInterfaceFromLabel(): void {
+    // Toggle to the opposite of current state
+    const newState = !this.isPartnerInterface;
+    console.log('ProfileComponent: Toggling interface from label to:', newState ? 'Partner' : 'Client');
+    
+    // Update local state
+    this.isPartnerInterface = newState;
+    
+    // Update service
+    this.userService.switchInterface(newState);
+    
+    // Update displayed reviews
+    this.updateDisplayedReviews();
+    
+    // Force change detection
+    this.cdRef.detectChanges();
+  }
+
 
   getDefaultAvatar(event: Event, username?: string): void {
     const target = event.target as HTMLImageElement;
@@ -301,17 +377,3 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 }
 
-/*  loadOutgoingReviews(): void {
-    const userId = this.user?.id;
-    if (!userId) {
-      console.warn('User ID not available for loading outgoing reviews.');
-      return;
-    }
-    this.isLoadingOutgoingReviews = true;
-    this.reviewService
-      .getReviewsGivenByUser(userId)
-      .pipe(finalize(() => (this.isLoadingOutgoingReviews = false)))
-      .subscribe((reviewData) => {
-        this.outgoingReviews = reviewData;
-      });
-  } */

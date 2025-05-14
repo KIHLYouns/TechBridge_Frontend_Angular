@@ -23,10 +23,11 @@ export interface Review {
   listing_id?: number;
 }
 
-// Create a new interface for the combined reviews response
 export interface UserReviewsResponse {
-  received_reviews: Review[];
-  given_reviews: Review[];
+  received_reviews_as_partner: Review[];
+  received_reviews_as_client: Review[];
+  given_reviews_as_client: Review[];
+  given_reviews_as_partner: Review[];
 }
 
 export interface ReviewSubmitRequest {
@@ -72,104 +73,21 @@ export class ReviewService {
 
   constructor(private http: HttpClient) {}
 
-  getUserReviews(userId: number): Observable<UserReviewsResponse> {
-  /*  const mockResponse: UserReviewsResponse = {
-      received_reviews: [
-        {
-          id: 245,
-          reviewer: {
-            id: 83,
-            username: 'sarah_tech',
-            firstname: 'Sarah',
-            lastname: 'Johnson',
-            avatar_url: 'https://ui-avatars.com/api/?name=Sarah+Johnson',
-          },
-          reviewee: {
-            id: userId,
-            username: 'hmed_samaki',
-            firstname: 'Jean',
-            lastname: 'Dupont',
-            avatar_url: 'https://ui-avatars.com/api/?name=Jean+Dupont',
-          },
-          rating: 5,
-          comment:
-            'Jean was very professional and the equipment was in perfect condition. Delivery was on time and he provided great instructions on how to use the camera.',
-          created_at: '2025-04-15T14:30:00Z',
-          type: 'forPartner',
-        },
-        {
-          id: 198,
-          reviewer: {
-            id: 42,
-            username: 'alex_photo',
-            firstname: 'Alex',
-            lastname: 'Smith',
-            avatar_url: 'https://ui-avatars.com/api/?name=Alex+Smith',
-          },
-          reviewee: {
-            id: userId,
-            username: 'hmed_samaki',
-            firstname: 'Jean',
-            lastname: 'Dupont',
-            avatar_url: 'https://ui-avatars.com/api/?name=Jean+Dupont',
-          },
-          rating: 4,
-          comment:
-            'Good experience overall. The camera was clean and worked perfectly. Jean was helpful with setup instructions.',
-          created_at: '2025-03-22T09:15:00Z',
-          type: 'forPartner',
-        },
-      ],
-      given_reviews: [
-        {
-          id: 156,
-          reviewer: {
-            id: userId,
-            username: 'hmed_samaki',
-            firstname: 'Jean',
-            lastname: 'Dupont',
-            avatar_url: 'https://ui-avatars.com/api/?name=Jean+Dupont',
-          },
-          reviewee: {
-            id: 54,
-            username: 'camera_pro',
-            firstname: 'Michael',
-            lastname: 'Wong',
-            avatar_url: 'https://ui-avatars.com/api/?name=Michael+Wong',
-          },
-          rating: 5,
-          comment:
-            'Great camera equipment, would rent again! Michael was extremely professional and offered excellent advice on the best settings for my shoot.',
-          created_at: '2025-01-20T10:15:00Z',
-          type: 'forPartner',
-        },
-        {
-          id: 203,
-          reviewer: {
-            id: userId,
-            username: 'hmed_samaki',
-            firstname: 'Jean',
-            lastname: 'Dupont',
-            avatar_url: 'https://ui-avatars.com/api/?name=Jean+Dupont',
-          },
-          reviewee: {
-            id: 67,
-            username: 'drone_master',
-            firstname: 'Emma',
-            lastname: 'Rodriguez',
-            avatar_url: 'https://ui-avatars.com/api/?name=Emma+Rodriguez',
-          },
-          rating: 3,
-          comment:
-            'The drone was in good condition, but battery life was less than advertised. Emma was responsive to messages though.',
-          created_at: '2025-03-05T16:30:00Z',
-          type: 'forPartner',
-        },
-      ],
-    }; */
-  //  return of(mockResponse).pipe(delay(800));
-    return this.http.get<UserReviewsResponse>(`${this.apiUrl}/users/${userId}/reviews`);
-  }
+// With this implementation:
+public getUserReviews(userId: number): Observable<UserReviewsResponse> {
+  return this.http.get<UserReviewsResponse>(`${this.apiUrl}/users/${userId}/reviews`)
+    .pipe(
+      map(response => {
+        // Ensure all arrays exist even if backend doesn't provide them
+        return {
+          received_reviews_as_partner: response.received_reviews_as_partner || [],
+          received_reviews_as_client: response.received_reviews_as_client || [],
+          given_reviews_as_client: response.given_reviews_as_client || [],
+          given_reviews_as_partner: response.given_reviews_as_partner || []
+        };
+      })
+    );
+}
 
   submitReview(request: ReviewSubmitRequest): Observable<void> {
     // return this.http.post<Review>(`${this.apiUrl}/reviews`, request);
