@@ -192,7 +192,7 @@ signUp(request: SignUpRequest): Observable<SignUpResponse> {
     this.tokenService.clearStorage();
     this.userService.reset();
     this.authStateSubject.next(false);
-    this.router.navigate(['/']);
+    this.router.navigate(['/auth/sign-in']);
   }
 
   isAuthenticated(): boolean {
