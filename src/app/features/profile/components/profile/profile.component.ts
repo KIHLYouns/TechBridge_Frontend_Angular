@@ -286,6 +286,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   switchInterface(event: any): void {
     const isChecked = event.target.checked;
+    console.log(
+      'Switching interface to partner mode:',)
     this.userService.switchInterface(isChecked);
   }
 
