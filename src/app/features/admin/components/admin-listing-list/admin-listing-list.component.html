@@ -1,0 +1,94 @@
+<div class="admin-content-container">
+  <div class="admin-content-header">
+    <h1>Listings Management</h1>
+    <div class="filter-controls">
+      <div class="status-filter">
+        <select [(ngModel)]="statusFilter" (change)="applyFilter()">
+          <option value="">All statuses</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+          <option value="archived">Archived</option>
+        </select>
+        <button class="btn btn-outline-secondary btn-sm" (click)="clearFilter()">Clear</button>
+      </div>
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery" 
+          placeholder="Search listings..."
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-info" *ngIf="filteredListings.length === 0 && !isLoading">
+    No listings found.
+  </div>
+
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <div class="loading-spinner" *ngIf="isLoading">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading listings...
+  </div>
+
+  <table class="data-table" *ngIf="filteredListings.length > 0 && !isLoading">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Owner</th>
+        <th>Price (per day)</th>
+        <th>Category</th>
+        <th>Status</th>
+        <th>Premium</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let listing of filteredListings">
+        <td>{{ listing.id }}</td>
+        <td>{{ listing.title }}</td>
+        <td>{{ listing.partner?.username || 'N/A' }}</td>
+        <td>{{ listing.price_per_day | currency }}</td>
+        <td>{{ listing.category?.name || 'N/A' }}</td>
+        <td>
+          <span class="status-badge" [ngClass]="{
+            'status-active': listing.status === 'active',
+            'status-inactive': listing.status === 'inactive',
+            'status-archived': listing.status === 'archived'
+          }">
+            {{ listing.status }}
+          </span>
+        </td>
+        <td>
+          <span class="badge" [ngClass]="listing.is_premium ? 'badge-premium' : 'badge-regular'">
+            {{ listing.is_premium ? 'Premium' : 'Regular' }}
+          </span>
+        </td>
+        <td>
+          <div class="action-buttons">
+            <button 
+              class="btn btn-primary btn-sm" 
+              (click)="toggleStatus(listing)"
+              [disabled]="listing.status === 'archived'"
+              title="Toggle active/inactive"
+            >
+              <i [class]="listing.status === 'active' ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+            </button>
+            <button 
+              class="btn btn-warning btn-sm" 
+              (click)="toggleArchived(listing)"
+              title="Toggle archived status"
+            >
+              <i [class]="listing.status === 'archived' ? 'fas fa-box-open' : 'fas fa-archive'"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

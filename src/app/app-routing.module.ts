@@ -31,6 +31,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./features/add-listing/add-listing.module').then(m => m.AddListingModule)
   },
+  { 
+    path: 'admin', 
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule)
+  },
 ];
 
 @NgModule({

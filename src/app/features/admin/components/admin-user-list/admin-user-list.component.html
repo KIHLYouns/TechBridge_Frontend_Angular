@@ -1,0 +1,65 @@
+<div class="admin-content-container">
+  <div class="admin-content-header">
+    <h1>Gestion des Utilisateurs</h1>
+    <div class="filter-controls">
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input 
+          type="text" 
+          [(ngModel)]="searchQuery" 
+          placeholder="Rechercher par nom ou email" 
+        />
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i>
+    Chargement des utilisateurs...
+  </div>
+
+  <table *ngIf="!isLoading && filteredUsers.length > 0" class="data-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom d'utilisateur</th>
+        <th>Email</th>
+        <th>Date d'inscription</th>
+        <th>Rôle</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of filteredUsers">
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
+        <td>
+          <span *ngIf="user.role === 'ADMIN'" class="role-badge role-admin">Admin</span>
+          <span *ngIf="user.role === 'USER'" class="role-badge role-partner">User</span>
+        </td>
+        <td>
+          <span *ngIf="!user.is_suspend" class="status-badge status-active">Actif</span>
+          <span *ngIf="user.is_suspend" class="status-badge status-suspended">Suspendu</span>
+        </td>
+        <td class="action-buttons">
+          <button class="btn btn-sm" [ngClass]="{'btn-warning': !user.is_suspend, 'btn-success': user.is_suspend}" 
+            (click)="toggleSuspend(user)">
+            <i class="fas" [ngClass]="{'fa-ban': !user.is_suspend, 'fa-check': user.is_suspend}"></i>
+            {{ user.is_suspend ? 'Réactiver' : 'Suspendre' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!isLoading && filteredUsers.length === 0" class="alert alert-info">
+    Aucun utilisateur trouvé.
+  </div>
+</div>

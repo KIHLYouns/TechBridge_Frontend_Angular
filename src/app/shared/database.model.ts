@@ -31,6 +31,8 @@ export interface User {
   partner_reviews?: number;
   longitude?: number;
   latitude?: number;
+  is_suspend?: boolean;
+  created_at?: string;
   // Add other relevant user properties
 }
 
@@ -135,4 +137,16 @@ export interface Payment {
   client?: User;
   partner?: User;
   reservation?: Reservation;
+}
+
+export interface Claim {
+  id: number;
+  user_id: number;
+  listing_id?: number;
+  description: string;
+  status: 'pending' | 'resolved' | 'rejected';
+  created_at: string;
+  updated_at: string;
+  user?: { id: number; username: string; email: string; }; // Pour l'affichage
+  listing?: { id: number; title: string; }; // Pour l'affichage
 }

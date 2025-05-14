@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
+import { AdminModule } from './features/admin/admin.module';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { CoreModule } from './core/core.module';
     CoreModule, // importing this makes HeaderComponent available for use
     BrowserModule, // this includes CommonModule
     AppRoutingModule, // this configures the router service with root routes
+    AdminModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
