@@ -27,6 +27,9 @@
          <!-- Authenticated - common links -->
          <ng-container *ngIf="nav.isAuthenticated">
             <a routerLink="/profile" class="header-nav-item">Profile</a>
+            <button *ngIf="isAuthenticated" (click)="logout()" class="logout-btn">
+                Logout
+            </button>
         </ng-container>
     </ng-container>
 </nav>

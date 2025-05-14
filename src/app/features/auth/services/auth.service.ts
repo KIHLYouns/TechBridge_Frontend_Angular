@@ -27,7 +27,7 @@ export interface SignUpResponse {
 })
 export class AuthService {
   // BehaviorSubject to track authentication state - it holds the current value and emits it to new subscribers
-  private authStateSubject: BehaviorSubject<boolean>;
+  public authStateSubject: BehaviorSubject<boolean>;
 
   // Observable that components can subscribe to
   public authState$: Observable<boolean>;

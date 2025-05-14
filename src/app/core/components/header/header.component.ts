@@ -18,6 +18,7 @@ interface NavState {
 export class HeaderComponent implements OnInit {
   public isAuthenticated$!: Observable<boolean>;
   public navState$!: Observable<NavState>;
+    isAuthenticated = false;
   constructor(private authService: AuthService,
     private userService: UserService) {}
   ngOnInit(): void {
@@ -32,6 +33,14 @@ export class HeaderComponent implements OnInit {
         isPartnerInterface
       }))
     );
+  // Subscribe to authentication state changes
+    this.authService.authStateSubject.subscribe(
+      (authState) => (this.isAuthenticated = authState)
+    );
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
   
 }
