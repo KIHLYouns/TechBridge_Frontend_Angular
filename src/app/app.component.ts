@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AuthService } from './features/auth/services/auth.service';
 import { UserService } from './features/profile/services/user.service';
 
@@ -10,6 +11,8 @@ import { UserService } from './features/profile/services/user.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+    // Initialisation avec la valeur correcte dès le départ
+  showHeader = !window.location.pathname.startsWith('/admin');
   
   constructor(
     private authService: AuthService,
@@ -18,8 +21,12 @@ export class AppComponent implements OnInit {
   ) {}
   
   ngOnInit(): void {
-    // Check token validity when app starts - do this with minimal delay
-    // to ensure it runs before other components are fully initialized
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.showHeader = !event.url.startsWith('/admin');
+    });
+    
     setTimeout(() => {
       this.restoreStateIfTokenStillValid();
     }, 0);

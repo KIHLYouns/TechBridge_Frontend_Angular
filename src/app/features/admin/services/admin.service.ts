@@ -18,7 +18,7 @@ export class AdminService {
   }
 
   toggleSuspendUser(userId: number): Observable<any> {
-    return this.http.patch(`${this.API_URL}/admin/users/${userId}/toggle-suspend`, {});
+    return this.http.post(`${this.API_URL}/admin/users/${userId}/toggle-suspend`, {});
   }
 
   // Annonces

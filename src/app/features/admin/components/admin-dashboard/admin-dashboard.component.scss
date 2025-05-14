@@ -1,7 +1,6 @@
 .admin-container {
   display: flex;
-  min-height: calc(100vh - var(--core-header-height));
-  margin-top: var(--core-header-height);
+  min-height: 100vh;
 }
 
 .admin-sidebar {
@@ -26,8 +25,8 @@
   }
   
   h2 {
-    font-size: var(--font-size-lg);
-    color: var(--color-text-light);
+    font-size: var(--font-size-2xl);
+    color: var(--color-primary);
     font-weight: var(--font-semibold);
     margin: 0;
   }
