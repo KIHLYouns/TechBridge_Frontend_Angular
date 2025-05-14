@@ -27,7 +27,7 @@ export interface SignUpResponse {
 })
 export class AuthService {
   // BehaviorSubject to track authentication state - it holds the current value and emits it to new subscribers
-  private authStateSubject: BehaviorSubject<boolean>;
+  public authStateSubject: BehaviorSubject<boolean>;
 
   // Observable that components can subscribe to
   public authState$: Observable<boolean>;
@@ -192,7 +192,7 @@ signUp(request: SignUpRequest): Observable<SignUpResponse> {
     this.tokenService.clearStorage();
     this.userService.reset();
     this.authStateSubject.next(false);
-    this.router.navigate(['/']);
+    this.router.navigate(['/auth/sign-in']);
   }
 
   isAuthenticated(): boolean {
