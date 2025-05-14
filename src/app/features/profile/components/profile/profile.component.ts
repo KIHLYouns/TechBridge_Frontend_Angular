@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       email: ['', [Validators.required, Validators.email]],
       phone: [''],
       address: [''],
-      is_partner: [false, Validators.requiredTrue],
+      isPartner: [false, Validators.requiredTrue],
     });
   }
 

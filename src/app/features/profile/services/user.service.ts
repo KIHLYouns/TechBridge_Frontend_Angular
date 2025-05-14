@@ -90,18 +90,19 @@ private apiUrl = 'http://localhost:8000/api';
     return of(true).pipe(
       delay(1000),
       tap(() => {
-        this.mockUser.is_partner = true;
-        // Get current user from storage
-        const user = this.getCurrentUserFromLocalStorage();
-        if (!user) {
-          console.error('No user found in storage');
+        const userId = this.getCurrentUserId();
+        if (!userId) {
+          console.error('No user ID found');
           return;
         }
-        // Update is_partner flag
-        user.is_partner = true;
-        // Save updated user to storage
-        this.saveUserToStorage(user);
-        this.isPartnerInterfaceSubject.next(user.is_partner);
+        this.updateUserProfile(userId, { is_partner: true }).subscribe({
+          next: (user) => {
+            // Save updated user to storage
+            this.saveUserToStorage(user);
+            this.isPartnerInterfaceSubject.next(user.is_partner);
+          },
+          error: (err) => console.error('Error updating user profile:', err),
+        });
       })
     );
   }
