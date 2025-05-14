@@ -38,6 +38,9 @@ export class AppComponent implements OnInit {
       
       if (currentUser) {
         console.log('User data found, partner status:', currentUser.is_partner);
+        
+        // The UserService constructor now handles interface preference initialization
+        // No need to manually set anything here
       } else {
         // Token is valid but user data is missing - likely an inconsistent state
         console.warn('Token valid but user data missing - attempting to fetch user data');
@@ -63,9 +66,9 @@ export class AppComponent implements OnInit {
       
       // Only redirect to login if on a protected route
       // This prevents redirect loops when already on auth pages
-
+      if (!this.router.url.includes('/auth')) {
         this.router.navigate(['/auth/sign-in']);
-
+      }
     }
   }
 }
