@@ -1,3 +1,5 @@
+@import '../../styles/admin-shared.scss';
+
 .admin-content-container {
   padding: 1rem;
 }
@@ -118,7 +120,44 @@
 }
 
 .role-user {
-  background-color: var(--color-bg-medium);
+  background-color: var(--color-bg-light);
+  color: var(--color-text-medium);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--color-primary-lighter-bg);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-semibold);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+  }
+  
+  .user-info {
+    .user-name {
+      font-weight: var(--font-semibold);
+      margin-bottom: 0.25rem;
+    }
+    
+    .user-email {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-medium);
+    }
+  }
+}
+
+.user-created {
+  font-size: var(--font-size-sm);
   color: var(--color-text-medium);
 }
 
@@ -144,6 +183,15 @@
 .status-inactive {
   background-color: var(--color-warning-lighter-bg);
   color: var(--color-warning);
+}
+
+.status-toggle-btn {
+  min-width: 100px;
+  justify-content: center;
+  
+  i {
+    margin-right: 0.5rem;
+  }
 }
 
 .action-buttons {

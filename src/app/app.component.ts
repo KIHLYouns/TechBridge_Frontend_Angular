@@ -27,6 +27,8 @@ export class AppComponent implements OnInit {
       this.showHeader = !event.url.startsWith('/admin');
     });
     
+    // Check token validity when app starts - do this with minimal delay
+    // to ensure it runs before other components are fully initialized
     setTimeout(() => {
       this.restoreStateIfTokenStillValid();
     }, 0);

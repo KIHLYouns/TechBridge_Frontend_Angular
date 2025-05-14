@@ -1,3 +1,5 @@
+@import '../../styles/admin-shared.scss';
+
 .admin-content-container {
   padding: 1rem;
 }
@@ -78,6 +80,144 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  
+  &:hover {
+    white-space: normal;
+    overflow: visible;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.claim-details {
+  display: flex;
+  flex-direction: column;
+  
+  .claim-user {
+    font-weight: var(--font-semibold);
+    margin-bottom: 0.25rem;
+  }
+  
+  .claim-listing {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-medium);
+  }
+}
+
+.claim-date {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-medium);
+}
+
+.claim-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  
+  .claim-modal-content {
+    background-color: var(--color-bg-medium);
+    border-radius: 8px;
+    padding: 1.5rem;
+    max-width: 600px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    
+    .claim-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      
+      h2 {
+        margin: 0;
+        color: var(--color-text-light);
+      }
+      
+      .close-btn {
+        background: none;
+        border: none;
+        color: var(--color-text-light);
+        font-size: 1.5rem;
+        cursor: pointer;
+        
+        &:hover {
+          color: var(--color-danger);
+        }
+      }
+    }
+    
+    .claim-modal-body {
+      margin-bottom: 1rem;
+      
+      p {
+        color: var(--color-text-light);
+        line-height: 1.6;
+      }
+    }
+    
+    .claim-modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+  }
+}
+
+.action-btn {
+  min-width: 100px;
+  justify-content: center;
+  
+  i {
+    margin-right: 0.5rem;
+  }
+}
+
+.status-history {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-light);
+  
+  h3 {
+    font-size: var(--font-size-md);
+    margin-bottom: 0.5rem;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    li {
+      display: flex;
+      align-items: flex-start;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--color-border-light);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      .status-time {
+        min-width: 150px;
+        font-size: var(--font-size-sm);
+        color: var(--color-text-medium);
+      }
+      
+      .status-text {
+        flex: 1;
+      }
+    }
+  }
 }
 
 .status-badge {

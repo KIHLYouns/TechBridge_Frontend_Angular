@@ -1,3 +1,5 @@
+@import '../../styles/admin-shared.scss';
+
 .admin-content-container {
   padding: 1rem;
 }
@@ -137,8 +139,48 @@
 }
 
 .badge-regular {
-  background-color: var(--color-bg-medium);
+  background-color: var(--color-bg-light);
   color: var(--color-text-medium);
+}
+
+.listing-title {
+  font-weight: var(--font-semibold);
+  margin-bottom: 0.25rem;
+  color: var(--color-text-light);
+  
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+.listing-owner {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-medium);
+}
+
+.listing-category {
+  display: inline-block;
+  background-color: var(--color-bg-light);
+  color: var(--color-text-medium);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: var(--font-size-xs);
+  margin-top: 0.25rem;
+}
+
+.price {
+  font-weight: var(--font-semibold);
+  color: var(--color-text-light);
+}
+
+.toggle-btn {
+  min-width: 36px;
+  justify-content: center;
+  
+  i {
+    font-size: var(--font-size-sm);
+  }
 }
 
 .action-buttons {

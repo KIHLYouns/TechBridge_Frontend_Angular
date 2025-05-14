@@ -235,7 +235,7 @@ export class ListingDetailComponent
       mode: 'range',
       inline: true,
       dateFormat: 'Y-m-d', // Format standard pour la logique
-      minDate: 'today', // Empêche la sélection de dates passées
+      minDate: new Date(new Date().setDate(new Date().getDate() + 1)),
       showMonths: 2,
       locale: english,
       enable: enabledDates.length > 0 ? enabledDates : [],
