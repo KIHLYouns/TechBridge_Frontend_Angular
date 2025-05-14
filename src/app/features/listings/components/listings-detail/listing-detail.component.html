@@ -47,30 +47,35 @@
         <div class="item-essentials">
           <h1 class="item-title">{{ listing.title }}</h1>
           <!-- Informations partenaire -->
-          <div class="partner-info" *ngIf="listing.partner">
-            <img
-              [src]="listing.partner.avatar_url"
-              alt="Avatar de {{ listing.partner.username }}"
-              class="partner-avatar"
-              (error)="getDefaultAvatar($event, listing.partner.username)">  
-            <div class="partner-details">
-              <div class="partner-name">{{ listing.partner.username }}</div>
-              <div class="partner-rating"
-                *ngIf="listing.partner.partner_rating !== undefined && listing.partner.partner_rating !== null">
-                <ng-container *ngFor="let i of getStarArray(listing.partner.partner_rating)">
-                  <i class="fas fa-star star"></i>
-                </ng-container>
-                <span class="rating-value">{{ listing.partner.partner_rating |
-                  number:'1.1-1' }}</span>
-                <span class="rating-count">({{ listing.partner.partner_reviews
-                  || 0 }} reviews)</span>
-              </div>
-              <div class="partner-rating"
-                *ngIf="listing.partner.partner_rating === undefined || listing.partner.partner_rating === null">
-                <span class="rating-count">No reviews yet</span>
-              </div>
-            </div>
-          </div>
+    <!-- Find the partner-info div and update it to include the Reviews button -->
+<div class="partner-info" *ngIf="listing.partner">
+  <img
+    [src]="listing.partner.avatar_url"
+    alt="Avatar de {{ listing.partner.username }}"
+    class="partner-avatar"
+    (error)="getDefaultAvatar($event, listing.partner.username)">  
+  <div class="partner-details">
+    <div class="partner-name">{{ listing.partner.username }}</div>
+    <div class="partner-rating"
+      *ngIf="listing.partner.partner_rating !== undefined && listing.partner.partner_rating !== null">
+      <ng-container *ngFor="let i of getStarArray(listing.partner.partner_rating)">
+        <i class="fas fa-star star"></i>
+      </ng-container>
+      <span class="rating-value">{{ listing.partner.partner_rating |
+        number:'1.1-1' }}</span>
+      <span class="rating-count">
+        ({{ listing.partner.partner_reviews || 0 }} reviews)
+        <button class="reviews-btn" (click)="viewPartnerReviews(listing.partner.id); $event.stopPropagation()">
+          <i class="fas fa-star"></i> View Reviews
+        </button>
+      </span>
+    </div>
+    <div class="partner-rating"
+      *ngIf="listing.partner.partner_rating === undefined || listing.partner.partner_rating === null">
+      <span class="rating-count">No reviews yet</span>
+    </div>
+  </div>
+</div>
           <!-- Détails -->
           <div class="item-details">
             <div class="detail-item" *ngIf="listing.category">
@@ -198,3 +203,9 @@
 
 
 </ng-container>
+
+<app-partner-reviews 
+  *ngIf="showPartnerReviewsModal" 
+  [partnerId]="selectedPartnerId"
+  (close)="closePartnerReviewsModal()">
+</app-partner-reviews>

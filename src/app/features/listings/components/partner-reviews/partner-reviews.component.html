@@ -1,0 +1,67 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="reviews-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Partner Reviews</h2>
+      <button type="button" class="close-btn" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Loading state -->
+      <div *ngIf="isLoading" class="loading-state">
+        <i class="fas fa-spinner fa-spin"></i> Loading reviews...
+      </div>
+
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="error-message">
+        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+
+      <!-- Reviews summary -->
+      <div *ngIf="!isLoading && !errorMessage && reviews.length > 0" class="reviews-summary">
+        <div class="average-rating">
+          <div class="rating-number">{{ averageRating.toFixed(1) }}</div>
+          <div class="star-display">
+            <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+              <i class="fas fa-star" [class.filled]="i <= averageRating"></i>
+            </ng-container>
+          </div>
+          <div class="reviews-count">{{ reviews.length }} reviews</div>
+        </div>
+      </div>
+
+      <!-- Reviews list -->
+      <div *ngIf="!isLoading && !errorMessage && reviews.length > 0" class="reviews-list">
+        <div *ngFor="let review of reviews" class="review-item">
+          <div class="reviewer-info">
+            <img 
+              [src]="review.reviewer.avatar_url || 'assets/images/default-avatar.jpeg'" 
+              alt="Reviewer avatar" 
+              class="reviewer-avatar"
+              (error)="getDefaultAvatar($event, review.reviewer.username)"
+            />
+            <div class="reviewer-details">
+              <div class="reviewer-name">{{ review.reviewer.username }}</div>
+              <div class="review-date">{{ review.created_at | date:'mediumDate' }}</div>
+            </div>
+            <div class="review-rating">
+              <ng-container *ngFor="let i of [1, 2, 3, 4, 5]">
+                <i class="fas fa-star" [class.filled]="i <= review.rating"></i>
+              </ng-container>
+            </div>
+          </div>
+          <div class="review-comment">
+            {{ review.comment }}
+          </div>
+        </div>
+      </div>
+
+      <!-- No reviews message -->
+      <div *ngIf="!isLoading && !errorMessage && reviews.length === 0" class="no-reviews">
+        <i class="fas fa-star-half-alt"></i>
+        <p>This partner has no reviews yet.</p>
+      </div>
+    </div>
+  </div>
+</div>
