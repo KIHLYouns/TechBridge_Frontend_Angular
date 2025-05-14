@@ -96,8 +96,7 @@
           <div class="star-rating">
             <i class="fas fa-star"></i>
           </div>
-          <span>({{ user.client_reviews || reviews.length }} reviews)</span>
-        </div>
+<span>({{ user.client_reviews || (reviews ? reviews.length : 0) }} reviews)</span>        </div>
         <div
           class="stat-divider"
           *ngIf="
