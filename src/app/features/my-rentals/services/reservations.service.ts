@@ -124,9 +124,7 @@ export class ReservationsService {
       map(() => void 0) // Explicitly return void to match Observable<void>
     ); */
     // Need to implement endpoint to match backend
-    return this.http.patch<void>(`${this.apiUrl}/reservations/${reservation_id}`, {
-      status: 'canceled',
-    });
+    return this.http.put<void>(`${this.apiUrl}/reservations/${reservation_id}/cancel`, {});
   }
 
   // Accept a pending reservation (partner action)
@@ -143,17 +141,13 @@ export class ReservationsService {
       map(() => void 0) // Explicitly return void to match Observable<void>
     ); */
     // Need to implement endpoint to match backend
-    return this.http.patch<void>(`${this.apiUrl}/reservations/${reservation_id}`, {
-      status: 'confirmed',
-    });
+    return this.http.put<void>(`${this.apiUrl}/reservations/${reservation_id}/confirm`, {});
   }
 
   // Current Angular method
   declineReservation(reservation_id: number): Observable<void> {
     // Need to implement endpoint to match backend
-    return this.http.patch<void>(`${this.apiUrl}/reservations/${reservation_id}`, {
-      status: 'canceled',
-    });
+    return this.http.put<void>(`${this.apiUrl}/reservations/${reservation_id}/decline`, {});
 
     /*const url = `/api/reservations/${reservation_id}/decline`;
   return this.http.delete<any>(url).pipe(
