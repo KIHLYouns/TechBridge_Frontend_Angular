@@ -105,9 +105,15 @@ login(request: SignInRequest): Observable<SignInResponse> {
         
         // Get user data based on userId from token
         this.userService.getUserById(response.id).subscribe({
-          next: () => {
+          next: (userData) => {
             this.authStateSubject.next(true);
-            this.router.navigate(['/listings']);
+            
+            // Rediriger vers l'interface admin si l'utilisateur est un administrateur
+            if (userData && userData.role === 'ADMIN') {
+              this.router.navigate(['/admin']);
+            } else {
+              this.router.navigate(['/listings']);
+            }
           },
           error: (error) => console.error('Error getting user data:', error)
         });

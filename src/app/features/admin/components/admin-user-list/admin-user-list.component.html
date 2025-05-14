@@ -7,13 +7,14 @@
         <input 
           type="text" 
           [(ngModel)]="searchQuery" 
-          placeholder="Rechercher par nom ou email" 
+          placeholder="Rechercher par nom ou email"
         />
       </div>
     </div>
   </div>
 
   <div *ngIf="errorMessage" class="alert alert-danger">
+    <i class="fas fa-exclamation-circle"></i>
     {{ errorMessage }}
   </div>
 
@@ -26,8 +27,7 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>Nom d'utilisateur</th>
-        <th>Email</th>
+        <th>Utilisateur</th>
         <th>Date d'inscription</th>
         <th>Rôle</th>
         <th>Statut</th>
@@ -37,19 +37,25 @@
     <tbody>
       <tr *ngFor="let user of filteredUsers">
         <td>{{ user.id }}</td>
-        <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
+        <td>
+          <div class="user-profile">
+            <div class="user-info">
+              <div class="user-name">{{ user.username }}</div>
+              <div class="user-email">{{ user.email }}</div>
+            </div>
+          </div>
+        </td>
+        <td class="user-created">{{ user.created_at | date:'dd/MM/yyyy' }}</td>
         <td>
           <span *ngIf="user.role === 'ADMIN'" class="role-badge role-admin">Admin</span>
-          <span *ngIf="user.role === 'USER'" class="role-badge role-partner">User</span>
+          <span *ngIf="user.role === 'USER'" class="role-badge role-user">User</span>
         </td>
         <td>
           <span *ngIf="!user.is_suspend" class="status-badge status-active">Actif</span>
           <span *ngIf="user.is_suspend" class="status-badge status-suspended">Suspendu</span>
         </td>
         <td class="action-buttons">
-          <button class="btn btn-sm" [ngClass]="{'btn-warning': !user.is_suspend, 'btn-success': user.is_suspend}" 
+          <button class="btn btn-sm status-toggle-btn" [ngClass]="{'btn-warning': !user.is_suspend, 'btn-success': user.is_suspend}" 
             (click)="toggleSuspend(user)">
             <i class="fas" [ngClass]="{'fa-ban': !user.is_suspend, 'fa-check': user.is_suspend}"></i>
             {{ user.is_suspend ? 'Réactiver' : 'Suspendre' }}
@@ -59,7 +65,8 @@
     </tbody>
   </table>
 
-  <div *ngIf="!isLoading && filteredUsers.length === 0" class="alert alert-info">
-    Aucun utilisateur trouvé.
+  <div *ngIf="!isLoading && filteredUsers.length === 0" class="empty-state">
+    <i class="fas fa-user-slash"></i>
+    <p>Aucun utilisateur trouvé.</p>
   </div>
 </div>
