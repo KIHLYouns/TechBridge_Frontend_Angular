@@ -62,9 +62,17 @@
           <div class="star-rating">
             <i class="fas fa-star"></i>
           </div>
+<<<<<<< HEAD
          <!-- <span>({{ user.client_reviews || (reviews ? reviews.length : 0) }} reviews)</span> -->
         </div>
         <div class="stat-divider" *ngIf="
+=======
+          <span>({{ user.client_reviews || (reviews ? reviews.length : 0) }} reviews)</span>
+        </div>
+        <div
+          class="stat-divider"
+          *ngIf="
+>>>>>>> 501b3580e2c6b924569dcf1a9afd0cb2282e2b14
             user.client_rating !== null && user.client_rating !== undefined
           "></div>
         <div class="stat-item">
