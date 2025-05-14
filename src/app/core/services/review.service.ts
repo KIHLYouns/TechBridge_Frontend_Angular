@@ -52,6 +52,19 @@ export interface ClientReview {
     avatar_url: string;
   };
 }
+  // Interface for Partner Reviews - similar to ClientReview
+export interface PartnerReview {
+  id: number;
+  rating: number;
+  comment: string;
+  created_at: string;
+  reviewer: {
+    id: number;
+    username: string;
+    avatar_url: string;
+  };
+}
+
 
 export interface ListingReview {
   id: number;
@@ -73,6 +86,13 @@ export class ReviewService {
 
   constructor(private http: HttpClient) {}
 
+
+
+// Add this method to the ReviewService class:
+getPartnerReviews(partnerId: number): Observable<PartnerReview[]> {
+  return this.http.get<{total: number, data: PartnerReview[]}>(`${this.apiUrl}/reviews/partners/${partnerId}`)
+    .pipe(map(response => response.data));
+}
 // With this implementation:
 public getUserReviews(userId: number): Observable<UserReviewsResponse> {
   return this.http.get<UserReviewsResponse>(`${this.apiUrl}/users/${userId}/reviews`)

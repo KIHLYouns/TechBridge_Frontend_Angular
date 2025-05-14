@@ -712,3 +712,58 @@ span.flatpickr-weekday {
   border: 1px dashed var(--color-border-light);
   border-radius: 8px;
 }
+
+/* Add these styles to the listing-detail.component.scss file */
+
+/* Style for the reviews button */
+.reviews-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.reviews-btn:hover {
+  background-color: var(--color-primary-lighter-bg);
+}
+
+.reviews-btn i {
+  font-size: var(--font-size-xs);
+  color: var(--color-warning);
+}
+
+/* Update partner info and rating styles for better alignment */
+.partner-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.partner-details {
+  flex-grow: 1;
+}
+
+.partner-rating {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  color: var(--color-text-medium);
+}
+
+.rating-count {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}

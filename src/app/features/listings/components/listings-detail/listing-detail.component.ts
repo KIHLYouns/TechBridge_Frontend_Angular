@@ -25,6 +25,7 @@ import {
 } from '../../../my-rentals/services/reservations.service';
 import { ListingsService } from '../../services/listings.service';
 
+
 const defaultIcon = L.icon({
   iconUrl: 'assets/images/marker-icon.png',
   iconRetinaUrl: 'assets/images/marker-icon-2x.png',
@@ -72,6 +73,10 @@ export class ListingDetailComponent
   listingReviews: ListingReview[] = [];
   isLoadingReviews: boolean = false;
   reviewsError: string | null = null;
+
+// Add these properties to the ListingDetailComponent class:
+showPartnerReviewsModal = false;
+selectedPartnerId: number | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -376,4 +381,33 @@ export class ListingDetailComponent
     target.src = `https://ui-avatars.com/api/?name=${encodedName}&background=random&color=fff&size=128`;
     target.onerror = null; // Prevents infinite error loops
   }
+
+  // Add this method to the ListingDetailComponent class:
+// Add this method to the ListingDetailComponent class:
+viewPartnerReviews(partnerId: number | undefined): void {
+  console.log('Opening partner reviews modal for partner ID:', partnerId);
+  
+  if (!partnerId) {
+    console.warn('Partner ID is undefined, cannot show reviews');
+    return;
+  }
+  
+  this.selectedPartnerId = partnerId;
+  this.showPartnerReviewsModal = true;
+  
+  // Force change detection to ensure modal appears immediately
+  this.cdRef.detectChanges();
+  console.log('Partner reviews modal opened, partner ID:', this.selectedPartnerId);
+}
+
+// Add this method to close the modal:
+closePartnerReviewsModal(): void {
+  console.log('Closing partner reviews modal');
+  this.showPartnerReviewsModal = false;
+  this.selectedPartnerId = null;
+  
+  // Force change detection to ensure modal is removed from DOM
+  this.cdRef.detectChanges();
+  console.log('Partner reviews modal closed');
+}
 }

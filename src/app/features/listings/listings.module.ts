@@ -11,6 +11,7 @@ import { ListingsListComponent } from './components/listings/listings-list/listi
 import { ListingsComponent } from './components/listings/listings.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PartnerReviewsComponent } from './components/partner-reviews/partner-reviews.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { FormsModule } from '@angular/forms';
     ListingDetailComponent,
     ListingCardComponent,
     CategoriesComponent,
-    FiltersSideBarComponent
+    FiltersSideBarComponent,
+    PartnerReviewsComponent
   ],
   imports: [
     SharedModule,
