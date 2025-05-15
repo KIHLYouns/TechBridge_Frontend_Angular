@@ -53,25 +53,28 @@
           </div>
         </div>
       </div>
-      <div class="profile-stats">
-        <div class="stat-item" *ngIf="
-            user.client_rating !== null && user.client_rating !== undefined
-          ">
-          <span class="stat-label">Rating</span>
-          <span class="stat-value">{{ user.client_rating }}</span>
-          <div class="star-rating">
-            <i class="fas fa-star"></i>
-          </div>
-          <span>({{ user.client_reviews }} reviews)</span> 
-        </div>
-        <div class="stat-divider" *ngIf="
-            user.client_rating !== null && user.client_rating !== undefined
-          "></div>
-        <div class="stat-item">
-          <span class="stat-label">Member</span>
-          <span class="stat-value">Since {{ user.join_date | date : "yyyy" }}</span>
-        </div>
-      </div>
+
+<div class="profile-stats">
+  <div class="stat-item" *ngIf="
+      (isPartnerInterface && user.partner_rating !== null && user.partner_rating !== undefined) || 
+      (!isPartnerInterface && user.client_rating !== null && user.client_rating !== undefined)
+    ">
+    <span class="stat-label">Rating</span>
+    <span class="stat-value">{{ isPartnerInterface ? user.partner_rating : user.client_rating }}</span>
+    <div class="star-rating">
+      <i class="fas fa-star" class="filled"></i>
+    </div>
+    <span>({{ isPartnerInterface ? user.partner_reviews : user.client_reviews || 0 }} reviews)</span> 
+  </div>
+  <div class="stat-divider" *ngIf="
+      (isPartnerInterface && user.partner_rating !== null && user.partner_rating !== undefined) || 
+      (!isPartnerInterface && user.client_rating !== null && user.client_rating !== undefined)
+    "></div>
+  <div class="stat-item">
+    <span class="stat-label">Member</span>
+    <span class="stat-value">Since {{ user.join_date | date : "yyyy" }}</span>
+  </div>
+</div>
     </div>
   </div>
 

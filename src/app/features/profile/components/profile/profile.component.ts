@@ -146,19 +146,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
   }
 
-    // New method to update which reviews are displayed based on interface mode
-  updateDisplayedReviews(): void {
-    if (this.isPartnerInterface) {
-      this.displayedIncomingReviews = this.receivedReviewsAsPartner;
-      this.displayedOutgoingReviews = this.givenReviewsAsPartner;
-    } else {
-      this.displayedIncomingReviews = this.receivedReviewsAsClient;
-      this.displayedOutgoingReviews = this.givenReviewsAsClient;
-    }
-    
-    // Force change detection to update the UI
-    this.cdRef.detectChanges();
+// Add this to updateDisplayedReviews() in profile.component.ts
+updateDisplayedReviews(): void {
+  if (this.isPartnerInterface) {
+    this.displayedIncomingReviews = this.receivedReviewsAsPartner;
+    this.displayedOutgoingReviews = this.givenReviewsAsPartner;
+    // Output current rating for debugging
+    console.log('Showing partner rating:', this.user?.partner_rating);
+  } else {
+    this.displayedIncomingReviews = this.receivedReviewsAsClient;
+    this.displayedOutgoingReviews = this.givenReviewsAsClient;
+    // Output current rating for debugging
+    console.log('Showing client rating:', this.user?.client_rating);
   }
+  
+  // Force change detection to update the UI
+  this.cdRef.detectChanges();
+}
 
 
 
