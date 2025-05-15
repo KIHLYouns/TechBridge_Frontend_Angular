@@ -72,11 +72,9 @@ export class AppComponent implements OnInit {
       
       // Clear user data to ensure consistency
       this.userService.reset();
-      
-      // Only redirect to login if on a protected route
-      // This prevents redirect loops when already on auth pages
+
       if (!this.router.url.includes('/auth')) {
-        this.router.navigate(['/auth/sign-in']);
+        this.router.navigate(['/listings']);
       }
     }
   }

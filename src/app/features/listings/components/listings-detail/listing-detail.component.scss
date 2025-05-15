@@ -767,3 +767,12 @@ span.flatpickr-weekday {
   align-items: center;
   flex-wrap: wrap;
 }
+
+.flatpickr-day.reserved {
+  text-decoration: line-through;
+  color: var(--color-text-dark) !important;
+  background-color: rgba(255, 59, 48, 0.1) !important;
+  border: 1px solid rgba(255, 59, 48, 0.2) !important;
+  cursor: not-allowed !important;
+  opacity: 0.8 !important;
+}
