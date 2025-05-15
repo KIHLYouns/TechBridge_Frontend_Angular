@@ -83,16 +83,28 @@ export class AdminListingListComponent implements OnInit {
     this.loadListings();
   }
 
-  get filteredListings(): Listing[] {
+    get filteredListings(): Listing[] {
+    // Filtrer d'abord par statut si un filtre est sélectionné
+    let filteredByStatus = this.listings;
+    
+    if (this.statusFilter) {
+      filteredByStatus = this.listings.filter(listing => 
+        listing.status === this.statusFilter
+      );
+    }
+    
+    // Ensuite, filtrer par texte de recherche
     if (!this.searchQuery.trim()) {
-      return this.listings;
+      return filteredByStatus;
     }
     
     const query = this.searchQuery.toLowerCase();
-    return this.listings.filter(listing => 
+    return filteredByStatus.filter(listing => 
       listing.title?.toLowerCase().includes(query) || 
       listing.description?.toLowerCase().includes(query) ||
-      listing.partner?.username?.toLowerCase().includes(query)
+      listing.partner?.username?.toLowerCase().includes(query) ||
+      listing.id?.toString().includes(query) ||
+      listing.category?.name?.toLowerCase().includes(query)
     );
   }
 }

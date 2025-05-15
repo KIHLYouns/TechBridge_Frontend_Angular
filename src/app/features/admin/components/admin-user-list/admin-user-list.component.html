@@ -40,8 +40,10 @@
         <td>
           <div class="user-profile">
             <div class="user-info">
-              <div class="user-name">{{ user.username }}</div>
-              <div class="user-email">{{ user.email }}</div>
+                <div class="user-name">
+                <span>{{ user.firstname }} {{ user.lastname }}</span>
+                <small class="username">({{ user.username }})</small>
+                </div>
             </div>
           </div>
         </td>

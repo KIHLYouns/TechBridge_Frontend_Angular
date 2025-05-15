@@ -7,7 +7,12 @@
     
     <form [formGroup]="loginForm" class="auth-form" (ngSubmit)="onSubmit()">
       <!-- Error message display -->
-      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="error-container" *ngIf="errorMessage">
+        <div class="error-message">
+          <i class="fas fa-exclamation-circle"></i>
+          {{ errorMessage }}
+        </div>
+      </div>
       
       <!-- Username/Email input -->
       <div class="form-group">
