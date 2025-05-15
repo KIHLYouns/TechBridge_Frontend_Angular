@@ -78,6 +78,11 @@ export class ListingDetailComponent
 showPartnerReviewsModal = false;
 selectedPartnerId: number | null = null;
 
+// Add to ListingDetailComponent class properties
+needsDelivery: boolean = false;
+deliveryFee: number = 10; // Default delivery fee - could be fetched from config or backend
+
+
   constructor(
     private route: ActivatedRoute,
     private listingsService: ListingsService,
@@ -132,6 +137,13 @@ selectedPartnerId: number | null = null;
       this.calendarInstance.destroy();
     }
   }
+
+  // Add this method to ListingDetailComponent class
+toggleDelivery(): void {
+  this.needsDelivery = !this.needsDelivery;
+  this.cdRef.markForCheck();
+}
+
 
   selectImage(imageUrl: string): void {
     this.selectedImageUrl = imageUrl;
@@ -516,14 +528,14 @@ selectedPartnerId: number | null = null;
         .padStart(2, '0')}`;
     };
 
-    // Create the request object
-    const request: CreateReservationRequest = {
-      listing_id: this.listingData.id,
-      start_date: formatDateForApi(this.selectedStartDate),
-      end_date: formatDateForApi(this.selectedEndDate),
-      client_id: clientId,
-      delivery_option: !!this.listingData.delivery_option,
-    };
+  // Create the request object - always include delivery_option (true/false)
+  const request: CreateReservationRequest = {
+    listing_id: this.listingData.id,
+    start_date: formatDateForApi(this.selectedStartDate),
+    end_date: formatDateForApi(this.selectedEndDate),
+    client_id: clientId,
+    delivery_option: this.needsDelivery
+  };
 
     console.log('the suubmitted reservation :');
     console.log(request);

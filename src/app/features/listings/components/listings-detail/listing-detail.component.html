@@ -102,58 +102,75 @@
           </div>
         </div>
         <!-- Carte de réservation -->
-        <div class="booking-card">
-          <h3 class="booking-title">Book This Item</h3>
-          <div class="item-price">
-            {{ listing.price_per_day | currency:'USD':'symbol':'1.0-0' }} <span class="price-period">/ day</span>
-          </div>
-          <div class="booking-form">
-            <div class="price-breakdown">
-              <div class="breakdown-item">
-                <span class="item-label">Selected dates:</span>
-                <span id="selected-dates" class="item-value">
-                  <ng-container *ngIf="selectedStartDate && selectedEndDate; else selectDatesText">
-                    {{ selectedStartDate }} to {{ selectedEndDate }} ({{
-                    numberOfDays }} days)
-                  </ng-container>
-                  <ng-template #selectDatesText>Select dates</ng-template>
-                </span>
-              </div>
-              <div class="breakdown-item">
-                <span class="item-label">Rental cost</span>
-                <span id="rental-cost" class="item-value">
-                  {{ rentalCost !== null ? (rentalCost |
-                  currency:'USD':'symbol':'1.0-0') : '-' }}
-                </span>
-              </div>
-              <div class="breakdown-item total">
-                <span class="item-label">Total</span>
-                <span id="total-price" class="item-value">
-                  {{ totalPrice !== null ? (totalPrice |
-                  currency:'USD':'symbol':'1.0-0') : '-' }}
-                </span>
-              </div>
-            </div>
-            <button class="reserve-button" (click)="rentObject()"
-              [disabled]="!selectedStartDate || !selectedEndDate || isSubmittingReservation">
-              <span *ngIf="!isSubmittingReservation && !reservationSubmittedSuccess">
-                <i class="fas fa-calendar-check"></i> Reserve Now
-              </span>
-              <span *ngIf="isSubmittingReservation">
-                <i class="fas fa-spinner fa-spin"></i> Processing...
-              </span>
-              <span *ngIf="!isSubmittingReservation && reservationSubmittedSuccess">
-                <i class="fas fa-check"></i> Reserved Successfully!
-              </span>
-            </button>
-            <div *ngIf="reservationError" class="reservation-error">
-              <i class="fas fa-exclamation-circle"></i> {{ reservationError }}
-            </div>
-            <div *ngIf="reservationSubmittedSuccess" class="reservation-success">
-              <i class="fas fa-check-circle"></i> Reservation submitted successfully! Redirecting...
-            </div>
-          </div>
+<!-- Only modifying the booking card section to add delivery option -->
+<div class="booking-card">
+  <h3 class="booking-title">Book This Item</h3>
+  <div class="item-price">
+    {{ listing.price_per_day | currency:'USD':'symbol':'1.0-0' }} <span class="price-period">/ day</span>
+  </div>
+  <div class="booking-form">
+    <div class="price-breakdown">
+      <div class="breakdown-item">
+        <span class="item-label">Selected dates:</span>
+        <span id="selected-dates" class="item-value">
+          <ng-container *ngIf="selectedStartDate && selectedEndDate; else selectDatesText">
+            {{ selectedStartDate }} to {{ selectedEndDate }} ({{
+            numberOfDays }} days)
+          </ng-container>
+          <ng-template #selectDatesText>Select dates</ng-template>
+        </span>
+      </div>
+      
+      <!-- Add delivery option checkbox when delivery is available -->
+      <div class="breakdown-item" *ngIf="listing.delivery_option">
+        <div class="delivery-option">
+          <input 
+            type="checkbox" 
+            id="delivery-checkbox" 
+            [checked]="needsDelivery" 
+            (change)="toggleDelivery()" 
+          />
+          <label for="delivery-checkbox">Request delivery</label>
         </div>
+      </div>
+      
+      
+      <div class="breakdown-item">
+        <span class="item-label">Rental cost</span>
+        <span id="rental-cost" class="item-value">
+          {{ rentalCost !== null ? (rentalCost |
+          currency:'USD':'symbol':'1.0-0') : '-' }}
+        </span>
+      </div>
+      
+      <div class="breakdown-item total">
+        <span class="item-label">Total</span>
+        <span id="total-price" class="item-value">
+          {{ totalPrice !== null ? (totalPrice |
+          currency:'USD':'symbol':'1.0-0') : '-' }}
+        </span>
+      </div>
+    </div>
+    <button class="reserve-button" (click)="rentObject()"
+      [disabled]="!selectedStartDate || !selectedEndDate || isSubmittingReservation">
+      <span *ngIf="!isSubmittingReservation && !reservationSubmittedSuccess">
+        <i class="fas fa-calendar-check"></i> Reserve Now
+      </span>
+      <span *ngIf="isSubmittingReservation">
+        <i class="fas fa-spinner fa-spin"></i> Processing...
+      </span>
+      <span *ngIf="!isSubmittingReservation && reservationSubmittedSuccess">
+        <i class="fas fa-check"></i> Reserved Successfully!
+      </span>
+    </button>
+    <div *ngIf="reservationError" class="reservation-error">
+      <i class="fas fa-exclamation-circle"></i> {{ reservationError }}
+    </div>
+    <div *ngIf="reservationSubmittedSuccess" class="reservation-success">
+      <i class="fas fa-check-circle"></i> Reservation submitted successfully! Redirecting...
+    </div>
+  </div>
+</div>
       </div>
     </div>
 
