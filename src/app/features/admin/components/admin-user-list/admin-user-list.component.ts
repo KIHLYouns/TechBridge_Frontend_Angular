@@ -66,6 +66,9 @@ export class AdminUserListComponent implements OnInit {
     const query = this.searchQuery.toLowerCase();
     return this.users.filter(user => 
       user.username?.toLowerCase().includes(query) || 
+      user.firstname?.toLowerCase().includes(query) ||
+      user.lastname?.toLowerCase().includes(query) ||
+      user.id?.toString().toLowerCase().includes(query) ||
       user.email?.toLowerCase().includes(query)
     );
   }

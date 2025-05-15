@@ -26,6 +26,12 @@
         </li>
       </ul>
     </nav>
+    <div class="admin-sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </button>
+    </div>
   </aside>
   <main class="admin-content">
     <router-outlet></router-outlet>

@@ -118,10 +118,6 @@ login(request: SignInRequest): Observable<SignInResponse> {
           error: (error) => console.error('Error getting user data:', error)
         });
       }
-    }),
-    catchError(error => {
-      console.error('Login error:', error);
-      return throwError(() => new Error('Login failed. Please check your credentials.'));
     })
   );
 }

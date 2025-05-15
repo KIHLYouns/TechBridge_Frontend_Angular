@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
 import { SignInRequest } from '../../models/sign-in.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -76,7 +76,23 @@ export class SignInComponent implements OnInit {
         },
         error: (error) => {
           this.loadingStateSubject.next(false);
-          this.errorMessage = error.message || 'Login failed. Please check your credentials.';
+          
+          // Amélioration de la gestion des erreurs
+          if (error.error && error.error.message) {
+            // Format d'erreur Laravel/API
+            this.errorMessage = error.error.message;
+          } else if (error.error && typeof error.error === 'string') {
+            // Erreur sous forme de texte simple
+            this.errorMessage = error.error;
+          } else if (error.message) {
+            // Message d'erreur standard
+            this.errorMessage = error.message;
+          } else {
+            // Message par défaut
+            this.errorMessage = 'Échec de connexion. Veuillez vérifier vos identifiants.';
+          }
+          
+          console.log('Error details:', error);
         }
       });
     } else {

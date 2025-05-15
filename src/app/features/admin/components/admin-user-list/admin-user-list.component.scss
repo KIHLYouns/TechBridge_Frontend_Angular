@@ -100,6 +100,10 @@
   }
 }
 
+td.action-buttons {
+  vertical-align: middle;
+}
+
 .role-badge {
   display: inline-block;
   padding: 0.25rem 0.5rem;
@@ -197,6 +201,7 @@
 .action-buttons {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
 }
 
 .loading-spinner {
