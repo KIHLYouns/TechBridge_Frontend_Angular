@@ -223,10 +223,18 @@ selectedPartnerId: number | null = null;
     }
   }
 
-  private initCalendar(element: HTMLElement): void {
+ /* private initCalendar(element: HTMLElement): void {
     if (this.calendarInstance || !this.listingData) {
       return;
     }
+
+    console.log("Initializing calendar with listing data:", this.listingData);
+
+      // Helper function to normalize any date format to YYYY-MM-DD
+  const formatToYYYYMMDD = (dateStr: string): string => {
+    const date = new Date(dateStr);
+    return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+  };
 
     const enabledDates =
       this.listingData.availabilities?.map((availability) => {
@@ -236,6 +244,39 @@ selectedPartnerId: number | null = null;
         };
       }) || [];
 
+  // Extract booked dates
+  const bookedDates: string[] = [];
+  if (this.listingData.booked && this.listingData.booked.length > 0) {
+    console.log("Processing booked dates:", this.listingData.booked);
+    
+    this.listingData.booked.forEach(booking => {
+      // Handle ISO format with microseconds
+      const startStr = formatToYYYYMMDD(booking.start_date);
+      const endStr = formatToYYYYMMDD(booking.end_date);
+      
+      const start = new Date(startStr);
+      const end = new Date(endStr);
+      
+      // Validate dates before processing
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        console.error(`Invalid booking dates: ${booking.start_date} - ${booking.end_date}`);
+        return;
+      }
+      
+      console.log(`Processing booked range: ${startStr} to ${endStr}`);
+      
+      // Loop through each day and add it to bookedDates
+      const currentDate = new Date(start);
+      while (currentDate <= end) {
+        const dateStr = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD
+        bookedDates.push(dateStr);
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+    });
+  }
+  
+  console.log("Booked dates to disable:", bookedDates);
+
     this.calendarInstance = flatpickr(element, {
       mode: 'range',
       inline: true,
@@ -244,10 +285,40 @@ selectedPartnerId: number | null = null;
       showMonths: 2,
       locale: english,
       enable: enabledDates.length > 0 ? enabledDates : [],
-      onChange: (selectedDates, _dateStr, _instance) => {
+      disable: bookedDates,
+    onChange: (selectedDates, _dateStr, _instance) => {
+      // Check if any selected date is in bookedDates
+      const hasBookedDate = selectedDates.some(date => {
+        const dateStr = date.toISOString().split('T')[0];
+        return bookedDates.includes(dateStr);
+      });
+      
+      if (hasBookedDate) {
+        // Reset selection if trying to select a booked date
+        this.calendarInstance?.clear();
+        this.selectedStartDate = null;
+        this.selectedEndDate = null;
+        this.rentalCost = null;
+        this.totalPrice = null;
+        console.warn("Cannot select booked dates");
+        // Optionally show a message to the user
+        this.reservationError = "Some selected dates are already booked. Please choose different dates.";
+        setTimeout(() => {
+          this.reservationError = null;
+          this.cdRef.markForCheck();
+        }, 5000);
+      } else {
+        this.reservationError = null;
         this.updatePriceCalculation(selectedDates);
-        this.cdRef.markForCheck();
-      },
+      }
+      this.cdRef.markForCheck();
+    },
+    onDayCreate: function(dObj, dStr, fp, dayElem) {
+      const dateStr = dayElem.dateObj.toISOString().split('T')[0];
+      if (bookedDates.includes(dateStr)) {
+        dayElem.classList.add('reserved');
+      }
+    }
     });
 
     if (enabledDates.length === 0) {
@@ -255,8 +326,135 @@ selectedPartnerId: number | null = null;
         "Aucune date de disponibilité n'est configurée pour cette annonce."
       );
     }
+  } */
+
+  private initCalendar(element: HTMLElement): void {
+  if (this.calendarInstance || !this.listingData) {
+    return;
   }
 
+  console.log("Initializing calendar with listing data:", this.listingData);
+  
+  // Helper function to extract just the date part (YYYY-MM-DD) from any date string
+  const extractDatePart = (dateStr: string): string => {
+    // For ISO format dates, split on T and take first part
+    if (dateStr.includes('T')) {
+      return dateStr.split('T')[0];
+    }
+    // For YYYY-MM-DD format, return as is
+    return dateStr;
+  };
+
+  // Extract available date ranges - keep as is since they're already in YYYY-MM-DD format
+  const enabledDates = this.listingData.availabilities?.map((availability) => {
+    return {
+      from: availability.start_date,
+      to: availability.end_date,
+    };
+  }) || [];
+  
+  console.log("Available date ranges:", enabledDates);
+
+  // Extract booked dates
+  const bookedDates: string[] = [];
+  if (this.listingData.booked && this.listingData.booked.length > 0) {
+    console.log("Processing booked dates:", this.listingData.booked);
+    
+    this.listingData.booked.forEach(booking => {
+      // Extract just the date parts from the ISO strings
+      const startDateStr = extractDatePart(booking.start_date);
+      const endDateStr = extractDatePart(booking.end_date);
+      
+      console.log(`Processing booked range: ${startDateStr} to ${endDateStr}`);
+      
+      // Parse dates using YYYY-MM-DD format to avoid timezone issues
+      const [startYear, startMonth, startDay] = startDateStr.split('-').map(Number);
+      const [endYear, endMonth, endDay] = endDateStr.split('-').map(Number);
+      
+      // Create dates setting hours to noon to avoid timezone shifts
+      const startDate = new Date(startYear, startMonth - 1, startDay, 12, 0, 0);
+      const endDate = new Date(endYear, endMonth - 1, endDay, 12, 0, 0);
+      
+      // Validate dates
+      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+        console.error(`Invalid booking dates: ${startDateStr} - ${endDateStr}`);
+        return;
+      }
+      
+      // Generate all days in the range
+      const currentDate = new Date(startDate);
+      while (currentDate <= endDate) {
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        
+        const formattedDate = `${year}-${month}-${day}`;
+        bookedDates.push(formattedDate);
+        
+        // Move to next day without timezone issues
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+    });
+  }
+  
+  console.log("Booked dates to disable:", bookedDates);
+
+  this.calendarInstance = flatpickr(element, {
+    mode: 'range',
+    inline: true,
+    dateFormat: 'Y-m-d',
+    minDate: new Date(new Date().setDate(new Date().getDate() + 1)),
+    showMonths: 2,
+    locale: english,
+    enable: enabledDates.length > 0 ? enabledDates : [],
+    disable: bookedDates,
+    onChange: (selectedDates, _dateStr, _instance) => {
+      // Check if any selected date is in bookedDates
+      const hasBookedDate = selectedDates.some(date => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const dateStr = `${year}-${month}-${day}`;
+        return bookedDates.includes(dateStr);
+      });
+      
+      if (hasBookedDate) {
+        // Reset selection if trying to select a booked date
+        this.calendarInstance?.clear();
+        this.selectedStartDate = null;
+        this.selectedEndDate = null;
+        this.rentalCost = null;
+        this.totalPrice = null;
+        console.warn("Cannot select booked dates");
+        this.reservationError = "Some selected dates are already booked. Please choose different dates.";
+        setTimeout(() => {
+          this.reservationError = null;
+          this.cdRef.markForCheck();
+        }, 5000);
+      } else {
+        this.reservationError = null;
+        this.updatePriceCalculation(selectedDates);
+      }
+      this.cdRef.markForCheck();
+    },
+    onDayCreate: function(dObj, dStr, fp, dayElem) {
+      // Format date to match our bookedDates format
+      const date = dayElem.dateObj;
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
+      
+      if (bookedDates.includes(dateStr)) {
+        dayElem.classList.add('reserved');
+      }
+    }
+  });
+
+  if (enabledDates.length === 0) {
+    console.warn("No availability dates configured for this listing.");
+  }
+}
   private updatePriceCalculation(dates: Date[]): void {
     if (dates.length === 2 && this.listingData?.price_per_day) {
       const start = dates[0];
