@@ -38,6 +38,15 @@ export class ReviewModalComponent implements OnInit {
         comment: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(500)]]
       })
     });
+
+    // Subscribe to form value changes to update selected ratings
+    this.partnerReviewForm.get('rating')?.valueChanges.subscribe(value => {
+      this.selectedPartnerRating = value || 0;
+    });
+    
+    this.itemReviewForm.get('rating')?.valueChanges.subscribe(value => {
+      this.selectedItemRating = value || 0;
+    });
     
   }
 
@@ -49,15 +58,17 @@ export class ReviewModalComponent implements OnInit {
     return this.reviewForm.get('itemReview') as FormGroup;
   }
 
-  // Added separate methods for each rating type
+  // Updated star selection methods
   selectPartnerRating(rating: number): void {
     this.selectedPartnerRating = rating;
-    this.partnerReviewForm.patchValue({ rating });
+    this.partnerReviewForm.get('rating')?.setValue(rating);
+    this.partnerReviewForm.get('rating')?.markAsTouched();
   }
 
   selectItemRating(rating: number): void {
     this.selectedItemRating = rating;
-    this.itemReviewForm.patchValue({ rating });
+    this.itemReviewForm.get('rating')?.setValue(rating);
+    this.itemReviewForm.get('rating')?.markAsTouched();
   }
 
   submitReview(): void {
