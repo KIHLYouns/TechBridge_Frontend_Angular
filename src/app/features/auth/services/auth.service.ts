@@ -1,26 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { catchError, delay, tap } from 'rxjs/operators';
-import { TokenService } from './token.service';
 import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 import { UserService } from '../../profile/services/user.service';
-import { SignUpRequest } from '../models/sign-up.model';
 import { SignInRequest } from '../models/sign-in.model';
+import { SignUpRequest } from '../models/sign-up.model';
+import { TokenService } from './token.service';
 
-// To this
 export interface SignInResponse {
   id: number;
   token: string;
 }
 
-
-// To this
 export interface SignUpResponse {
   id: number;
   token: string;
 }
-
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +28,7 @@ export class AuthService {
 
   // Observable that components can subscribe to
   public authState$: Observable<boolean>;
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private http: HttpClient,
@@ -63,115 +60,58 @@ export class AuthService {
     }
   }
 
-// Mock login implementation
-login(request: SignInRequest): Observable<SignInResponse> {
-  
-  // Create mock response (simulating Laravel Sanctum response)
-  /*const mockResponse: SignInResponse = {
-    userId: 1,
-    token: `mock_token_${Math.random().toString(36).substring(2)}`
-  };*/
-
-  // Return mock Observable with delay to simulate network request
-  /*return of(mockResponse).pipe(
-    delay(1000), // 1 second delay to simulate network
-    tap((response) => {
-      if (response && response.token) {
-        // Store both token and userId
-        this.tokenService.saveAccessToken(response.token, response.userId);
-        
-        // Get user data based on userId from token
-        this.userService.getUserById(response.userId).subscribe({
-          next: () => {
-            this.authStateSubject.next(true);
-            this.router.navigate(['/listings']);
-          },
-          error: (error) => console.error('Error getting user data:', error)
-        });
-      }
-    }),
-    catchError(error => {
-      console.error('Login error:', error);
-      return throwError(() => new Error('Login failed. Please check your credentials.'));
-    })
-  ); */
-
+  // Mock login implementation
+  login(request: SignInRequest): Observable<SignInResponse> {
     // Replace mock with actual endpoint
-  return this.http.post<SignInResponse>(`${this.apiUrl}/auth/login`, request).pipe(
-    tap((response) => {
-      if (response && response.token) {
-        // Store both token and userId
-        this.tokenService.saveAccessToken(response.token, response.id);
-        
-        // Get user data based on userId from token
-        this.userService.getUserById(response.id).subscribe({
-          next: (userData) => {
-            this.authStateSubject.next(true);
-            
-            // Rediriger vers l'interface admin si l'utilisateur est un administrateur
-            if (userData && userData.role === 'ADMIN') {
-              this.router.navigate(['/admin']);
-            } else {
+    return this.http.post<SignInResponse>(`${this.apiUrl}/auth/login`, request).pipe(
+      tap((response) => {
+        if (response && response.token) {
+          // Store both token and userId
+          this.tokenService.saveAccessToken(response.token, response.id);
+
+          // Get user data based on userId from token
+          this.userService.getUserById(response.id).subscribe({
+            next: (userData) => {
+              this.authStateSubject.next(true);
+
+              // Rediriger vers l'interface admin si l'utilisateur est un administrateur
+              if (userData && userData.role === 'ADMIN') {
+                this.router.navigate(['/admin']);
+              } else {
+                this.router.navigate(['/listings']);
+              }
+            },
+            error: (error) => console.error('Error getting user data:', error),
+          });
+        }
+      })
+    );
+  }
+
+  // Mock signUp implementation
+  signUp(request: SignUpRequest): Observable<SignUpResponse> {
+    // Replace mock with actual endpoint
+    return this.http.post<SignUpResponse>(`${this.apiUrl}/auth/signup`, request).pipe(
+      tap((response) => {
+        if (response && response.token) {
+          // Store both token and userId
+          this.tokenService.saveAccessToken(response.token, response.id);
+          // Get user data based on userId from token
+          this.userService.getUserById(response.id).subscribe({
+            next: () => {
+              this.authStateSubject.next(true);
               this.router.navigate(['/listings']);
-            }
-          },
-          error: (error) => console.error('Error getting user data:', error)
-        });
-      }
-    })
-  );
-}
-
-// Mock signUp implementation
-signUp(request: SignUpRequest): Observable<SignUpResponse> {
-  
-  // Create mock response
-  /*const mockResponse: SignUpResponse = {
-    userId: 1,
-    token: `mock_token_${Math.random().toString(36).substring(2)}`
-  };*/
-
-  // Return mock Observable with delay
-  /*return of(mockResponse).pipe(
-    delay(1500), // 1.5 second delay to simulate network
-    tap((response) => {
-      if (response && response.token) {
-        // Store both token and userId
-        this.tokenService.saveAccessToken(response.token, response.userId);
-        this.authStateSubject.next(true);
-        this.router.navigate(['/listings']);
-      }
-    }),
-    catchError(error => {
-      console.error('Signup error:', error);
-      return throwError(() => new Error('Registration failed. Please try again.'));
-    })
-  );*/
-
-    // Replace mock with actual endpoint
-  return this.http.post<SignUpResponse>(`${this.apiUrl}/auth/signup`, request).pipe(
-    tap((response) => {
-      if (response && response.token) {
-        // Store both token and userId
-        this.tokenService.saveAccessToken(response.token, response.id);
-        //this.authStateSubject.next(true);
-        //this.router.navigate(['/listings']);
-        // Get user data based on userId from token
-        this.userService.getUserById(response.id).subscribe({
-          next: () => {
-            this.authStateSubject.next(true);
-            this.router.navigate(['/listings']);
-          },
-          error: (error) => console.error('Error getting user data:', error)
-        });
-      }
-    }),
-    catchError(error => {
-      console.error('Signup error:', error);
-      return throwError(() => new Error('Registration failed. Please try again.'));
-    })
-  );
-}
+            },
+            error: (error) => console.error('Error getting user data:', error),
+          });
+        }
+      }),
+      catchError((error) => {
+        console.error('Signup error:', error);
+        return throwError(() => new Error('Registration failed. Please try again.'));
+      })
+    );
+  }
 
   checkAndRestoreAuth(): boolean {
     const isAuthenticated = this.tokenService.hasValidToken();
@@ -200,5 +140,4 @@ signUp(request: SignUpRequest): Observable<SignUpResponse> {
   isAuthenticated(): boolean {
     return this.tokenService.hasValidToken();
   }
-
 }

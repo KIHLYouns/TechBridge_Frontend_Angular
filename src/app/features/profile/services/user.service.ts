@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, delay, map, Observable, of, tap, throwError } from 'rxjs';
-import { TokenService } from '../../auth/services/token.service';
+import { BehaviorSubject, delay, map, Observable, of, tap } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 import { User } from '../../../shared/database.model'; // Adjust path as needed
+import { TokenService } from '../../auth/services/token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +39,7 @@ export class UserService {
   private interfaceToggleStateSubject = new BehaviorSubject<boolean>(false);
 public interfaceToggleState$ = this.interfaceToggleStateSubject.asObservable();
 
-private apiUrl = 'http://localhost:8000/api';
+private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private tokenService: TokenService) {
     // Initialize interface preference from localStorage

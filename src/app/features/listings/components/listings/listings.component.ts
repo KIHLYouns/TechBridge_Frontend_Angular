@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { switchMap, startWith, map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
 import { Listing } from '../../../../shared/database.model';
 import { ListingsService } from '../../services/listings.service';
 import { AppliedFilters } from './filters-side-bar/filters-side-bar.component'; // Importer l'interface
@@ -43,6 +43,17 @@ export class ListingsComponent implements OnInit {
         if (serviceFilters.equipment_rating_gte === 0) delete serviceFilters.equipment_rating_gte;
         
         return this.listingsService.getListings(serviceFilters);
+      }),
+      map(listings => { // Ajout de l'opérateur map pour le tri
+        return listings.sort((a, b) => {
+          if (a.is_premium && !b.is_premium) {
+            return -1; // a vient avant b
+          }
+          if (!a.is_premium && b.is_premium) {
+            return 1; // b vient avant a
+          }
+          return 0; // l'ordre reste inchangé
+        });
       }),
       startWith([]) // Émettre un tableau vide initialement
     );

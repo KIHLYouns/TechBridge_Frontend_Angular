@@ -38,7 +38,7 @@
       <!-- Current bookings list -->
       <div *ngIf="!isLoadingCurrent && currentBookings.length > 0" class="rentals-list">
         <div *ngFor="let booking of currentBookings" class="rental-card">
-          <img [src]="booking.listing.main_image || 'assets/images/item-placeholder.jpg'"
+          <img [src]="booking.listing.images[0].full_url || 'assets/images/item-placeholder.jpg'"
             [alt]="booking.listing.title || 'Booking item'" class="rental-image"
             (click)="goToListing(booking.listing.id)" style="cursor: pointer;" />
           <div class="rental-details">

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { delay, Observable, of, map, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 // You might already have a UserInfo interface in your models
 export interface UserInfo {
@@ -82,7 +83,7 @@ export interface ListingReview {
   providedIn: 'root',
 })
 export class ReviewService {
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

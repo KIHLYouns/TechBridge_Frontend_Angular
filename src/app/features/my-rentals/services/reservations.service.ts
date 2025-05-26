@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 import { ReviewService } from '../../../core/services/review.service';
 import { Image, ReservationStatus } from '../../../shared/database.model'; // Import Review
 import { TokenService } from '../../auth/services/token.service';
@@ -50,7 +51,7 @@ export interface CreateReservationRequest {
   providedIn: 'root',
 })
 export class ReservationsService {
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = environment.apiUrl;
 
   // Déclarer la propriété sans l'initialiser ici
   //  private mockReservations: Reservation[];
